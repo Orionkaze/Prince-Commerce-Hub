@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+:root {
+  --font-plus-jakarta: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --color-canvas: #ffffff;
+  --color-surface-soft: #f7f7f9;
+  --color-lavender-card: #ece8fa;
+  --color-brand-purple: #5b32d6;
+  --color-brand-purple-hover: #4a23c2;
+  --color-deep-indigo: #1d1136;
+  --color-obsidian: #16141b;
+  --color-highlighter-yellow: #fde047;
+}
+
+@theme {
+  --font-sans: var(--font-plus-jakarta), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --color-canvas: #ffffff;
+  --color-surface-soft: #f7f7f9;
+  --color-lavender-card: #ece8fa;
+  --color-brand-purple: #5b32d6;
+  --color-brand-purple-hover: #4a23c2;
+  --color-deep-indigo: #1d1136;
+  --color-obsidian: #16141b;
+  --color-highlighter-yellow: #fde047;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #ffffff;
+  color: #16141b;
+  font-family: var(--font-plus-jakarta), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbar styling */
+::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Embla Carousel styles */
+.embla {
+  overflow: hidden;
+}
+.embla__container {
+  display: flex;
+}
+.embla__slide {
+  flex: 0 0 auto;
+}
