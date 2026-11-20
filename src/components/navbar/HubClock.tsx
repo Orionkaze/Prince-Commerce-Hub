@@ -47,7 +47,7 @@ export function HubClock() {
 
   return (
     <div
-      className="relative hidden sm:flex flex-col items-end text-right cursor-pointer select-none group"
+      className="relative hidden sm:flex flex-col items-end text-right cursor-pointer select-none group shrink-0 whitespace-nowrap"
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
       onClick={() => setShowTooltip(!showTooltip)}

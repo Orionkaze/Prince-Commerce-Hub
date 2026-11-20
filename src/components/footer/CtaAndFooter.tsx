@@ -2,15 +2,16 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
-import { ContactModal } from "./ContactModal";
 
 interface CtaAndFooterProps {
-  onOpenContact: () => void;
+  onOpenContact?: () => void;
+  hideCtaBanner?: boolean;
 }
 
-export function CtaAndFooter({ onOpenContact }: CtaAndFooterProps) {
+export function CtaAndFooter({ onOpenContact, hideCtaBanner = false }: CtaAndFooterProps) {
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
 
@@ -20,86 +21,97 @@ export function CtaAndFooter({ onOpenContact }: CtaAndFooterProps) {
     setSubscribed(true);
     setTimeout(() => {
       setNewsletterEmail("");
-    }, 2000);
+    }, 2500);
   };
 
   const navLinks = [
-    { name: "Home", href: "#hero" },
-    { name: "Courses", href: "#courses" },
-    { name: "Schedule", href: "#schedule" },
-    { name: "About", href: "#about" },
-    { name: "Reviews", href: "#reviews" },
-    { name: "Contact", href: "#contact" },
+    { name: "Home", href: "/" },
+    { name: "Courses", href: "/courses" },
+    { name: "Webinars", href: "/webinars" },
+    { name: "Free Resources", href: "/resources" },
+    { name: "About Us", href: "/about" },
+    { name: "Contact Us", href: "/contact" },
+    { name: "Track Order", href: "/track-order" },
+    { name: "Login", href: "/login" },
   ];
 
   return (
-    <footer id="contact" className="bg-[#16141B] text-white">
-      {/* ================= Final CTA Split Section ================= */}
-      <div className="border-b border-white/10 py-20 lg:py-28">
-        <div className="max-w-[1240px] mx-auto px-5 sm:px-8 lg:px-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            {/* Left Column */}
-            <div className="lg:col-span-6 space-y-6">
-              <div>
-                <Badge variant="yellow">LET'S TALK</Badge>
+    <footer className="bg-[#16141B] text-white">
+      {/* ================= Optional Final CTA Split Section ================= */}
+      {!hideCtaBanner && (
+        <div className="border-b border-white/10 py-20 lg:py-28">
+          <div className="max-w-[1240px] mx-auto px-5 sm:px-8 lg:px-10">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+              {/* Left Column */}
+              <div className="lg:col-span-6 space-y-6">
+                <div>
+                  <Badge variant="yellow">LET'S TALK</Badge>
+                </div>
+
+                <h2 className="text-[36px] sm:text-[48px] lg:text-[56px] font-extrabold tracking-[-0.03em] leading-[1.08] text-white">
+                  Not sure where <br className="hidden sm:inline" />
+                  to start? Just ask.
+                </h2>
+
+                <p className="text-[16px] sm:text-[18px] leading-[1.6] text-white/80 max-w-[500px] font-normal">
+                  Tell us about your current class, syllabus, and academic goals. Parvesh Sir will personally guide you to the right batch and structured learning plan.
+                </p>
+
+                <div className="pt-2 flex flex-wrap gap-4">
+                  <Link href="/contact">
+                    <Button variant="white" size="lg">
+                      Contact Us
+                    </Button>
+                  </Link>
+                  <Link href="/courses">
+                    <Button variant="outline-white" size="lg">
+                      Explore Courses
+                    </Button>
+                  </Link>
+                </div>
               </div>
 
-              <h2 className="text-[36px] sm:text-[48px] lg:text-[56px] font-extrabold tracking-[-0.03em] leading-[1.08] text-white">
-                Not sure where <br className="hidden sm:inline" />
-                to start? Just ask.
-              </h2>
+              {/* Right Column: Parvesh Kumar Photo with Nameplate */}
+              <div className="lg:col-span-6 flex justify-center lg:justify-end">
+                <div className="relative w-full max-w-[500px] h-[340px] sm:h-[400px] rounded-[28px] overflow-hidden bg-neutral-800 shadow-2xl border border-white/10 group">
+                  <Image
+                    src="/images/parvesh-kumar.jpg"
+                    alt="Parvesh Kumar — Founder & Lead Educator, Prime Commerce Hub"
+                    fill
+                    className="object-cover object-top group-hover:scale-105 transition-transform duration-700 brightness-[0.95]"
+                    sizes="(max-width: 768px) 100vw, 500px"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
-              <p className="text-[16px] sm:text-[18px] leading-[1.6] text-white/80 max-w-[500px] font-normal">
-                Tell us about your current class, syllabus, and academic goals. Parvesh Sir will personally guide you to the right batch and structured learning plan.
-              </p>
-
-              <div className="pt-2">
-                <Button variant="white" size="lg" onClick={onOpenContact}>
-                  Contact Us
-                </Button>
-              </div>
-            </div>
-
-            {/* Right Column: Parvesh Kumar Photo with Nameplate */}
-            <div className="lg:col-span-6 flex justify-center lg:justify-end">
-              <div className="relative w-full max-w-[500px] h-[340px] sm:h-[400px] rounded-[28px] overflow-hidden bg-neutral-800 shadow-2xl border border-white/10 group">
-                <Image
-                  src="/images/parvesh-kumar.jpg"
-                  alt="Parvesh Kumar — Founder & Lead Educator, Prime Commerce Hub"
-                  fill
-                  className="object-cover object-top group-hover:scale-105 transition-transform duration-700 brightness-[0.95]"
-                  sizes="(max-width: 768px) 100vw, 500px"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-
-                {/* Nameplate at bottom left */}
-                <div className="absolute bottom-6 left-6 z-10">
-                  <div className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
-                    Parvesh Kumar
-                  </div>
-                  <div className="text-xs text-white/70 font-medium">
-                    Founder &amp; Lead Educator · 30+ Years Teaching Excellence
+                  {/* Nameplate at bottom left */}
+                  <div className="absolute bottom-6 left-6 z-10">
+                    <div className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
+                      Parvesh Kumar
+                    </div>
+                    <div className="text-xs text-white/70 font-medium">
+                      Founder &amp; Lead Educator · 30+ Years Teaching Excellence
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* ================= Main Footer ================= */}
       <div className="py-16 lg:py-20">
         <div className="max-w-[1240px] mx-auto px-5 sm:px-8 lg:px-10 space-y-16">
           {/* Top Nav Links Row */}
-          <nav className="flex flex-wrap items-center gap-6 sm:gap-10 border-b border-white/10 pb-8 text-sm font-semibold text-white/80">
+          <nav className="flex flex-wrap items-center gap-6 sm:gap-8 border-b border-white/10 pb-8 text-sm font-semibold text-white/80">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.name}
                 href={link.href}
                 className="hover:text-white transition-colors"
               >
                 {link.name}
-              </a>
+              </Link>
             ))}
           </nav>
 
@@ -107,17 +119,17 @@ export function CtaAndFooter({ onOpenContact }: CtaAndFooterProps) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
             {/* Left: Brand, description & Newsletter Box */}
             <div className="lg:col-span-6 space-y-6">
-              <div className="flex items-center gap-3">
-                <div className="relative w-10 h-10 rounded-lg overflow-hidden shrink-0 border border-white/20">
+              <div className="flex items-center gap-2.5">
+                <div className="relative w-8 h-8 rounded-lg overflow-hidden shrink-0 border border-white/20 bg-white">
                   <Image
                     src="/images/prime-commerce-hub-logo.jpg"
                     alt="Prime Commerce Hub Logo"
                     fill
-                    className="object-contain"
-                    sizes="40px"
+                    className="object-contain p-0.5"
+                    sizes="32px"
                   />
                 </div>
-                <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+                <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight text-white whitespace-nowrap">
                   PRIME COMMERCE HUB
                 </h3>
               </div>
@@ -153,7 +165,7 @@ export function CtaAndFooter({ onOpenContact }: CtaAndFooterProps) {
               </div>
             </div>
 
-            {/* Right: Prominent Bold Links */}
+            {/* Right: Contact & Quick Links */}
             <div className="lg:col-span-6 flex flex-col space-y-4 lg:pl-12">
               <a
                 href="mailto:contact@primecommercehub.com"
@@ -162,32 +174,29 @@ export function CtaAndFooter({ onOpenContact }: CtaAndFooterProps) {
                 contact@primecommercehub.com
               </a>
 
-              <a
-                href="https://wa.me"
-                target="_blank"
-                rel="noreferrer"
-                className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white/90 hover:text-emerald-400 transition-colors tracking-tight"
+              <Link
+                href="/contact"
+                className="text-xl sm:text-2xl font-bold text-white/90 hover:text-emerald-400 transition-colors tracking-tight flex items-center gap-2"
               >
-                Whatsapp Inquiry
-              </a>
+                <span>Admission Inquiries</span>
+                <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                  Open for 2026-27
+                </span>
+              </Link>
 
-              <a
-                href="https://youtube.com"
-                target="_blank"
-                rel="noreferrer"
-                className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white/90 hover:text-red-400 transition-colors tracking-tight"
+              <Link
+                href="/resources"
+                className="text-xl sm:text-2xl font-bold text-white/90 hover:text-[#C4B5FD] transition-colors tracking-tight"
               >
-                Youtube Lectures
-              </a>
+                Free Accountancy Study Library
+              </Link>
 
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noreferrer"
-                className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white/90 hover:text-pink-400 transition-colors tracking-tight"
+              <Link
+                href="/webinars"
+                className="text-xl sm:text-2xl font-bold text-white/90 hover:text-[#FDE047] transition-colors tracking-tight"
               >
-                Instagram
-              </a>
+                Live Concept Webinars
+              </Link>
             </div>
           </div>
 
@@ -196,12 +205,12 @@ export function CtaAndFooter({ onOpenContact }: CtaAndFooterProps) {
             <div>© 2026 Prime Commerce Hub. All rights reserved. Founded by Parvesh Kumar.</div>
 
             <div className="flex items-center gap-6">
-              <a href="#privacy" className="hover:text-white transition-colors">
-                Privacy Policy
-              </a>
-              <a href="#terms" className="hover:text-white transition-colors">
-                Terms of Admission
-              </a>
+              <Link href="/about" className="hover:text-white transition-colors">
+                About Founder
+              </Link>
+              <Link href="/contact" className="hover:text-white transition-colors">
+                Privacy &amp; Terms
+              </Link>
             </div>
           </div>
         </div>

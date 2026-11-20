@@ -22,61 +22,44 @@ export default function Home() {
     setIsContactModalOpen(true);
   };
 
-  const handleScrollToCourses = () => {
-    const el = document.getElementById("courses");
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
-  const handleSelectCourse = (courseId: string) => {
-    const el = document.getElementById("schedule");
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
   return (
     <div className="min-h-screen bg-white text-[#16141B] flex flex-col font-sans selection:bg-[#FDE047] selection:text-[#16141B]">
-      {/* Sticky Navigation Bar */}
+      {/* Sticky Multi-page Navbar */}
       <Navbar onOpenContact={handleOpenContact} />
 
       {/* Main Content */}
       <main className="flex-1">
-        {/* Section B: Hero Section */}
-        <HeroSection
-          onOpenContact={handleOpenContact}
-          onExploreCourses={handleScrollToCourses}
-        />
+        {/* Section 1: Hero Section */}
+        <HeroSection />
 
-        {/* Section C: Common Challenges Bento Grid */}
+        {/* Section 2: Common Challenges Bento Grid */}
         <CommonChallenges />
 
-        {/* Section D: What You'll Improve Carousel */}
+        {/* Section 3: Why Choose Us (The Prime Advantage) */}
         <WhatYoullImprove />
 
-        {/* Section E: Instructor Intro & Video Showcase */}
+        {/* Section 4: About Us Preview & Video Showcase */}
         <InstructorIntro />
 
-        {/* Section F: Sticky Stacking Course Cards */}
-        <StickyCourseCards onSelectCourse={handleSelectCourse} />
+        {/* Section 5: Courses Preview (Sticky Stacking Cards) */}
+        <StickyCourseCards />
 
-        {/* Section G: Online Lesson 6-Step Walkthrough */}
+        {/* Section 6: Accountancy Learning Walkthrough */}
         <OnlineLessonWalkthrough />
 
-        {/* Section H: Learning Path 5-Tier Ascending Staircase */}
+        {/* Section 7: Learning Path 5-Tier Ascending Staircase */}
         <LearningPath />
 
-        {/* Section I: Class Schedule Dark Section */}
+        {/* Section 8: Upcoming Batches Schedule */}
         <ClassSchedule />
 
-        {/* Section J: Starting is Simple 4-Step Onboarding */}
+        {/* Section 9: 4-Step Onboarding */}
         <StartingIsSimple onOpenContact={handleOpenContact} />
 
-        {/* Section K: Reviews & Student Feedback Carousels */}
+        {/* Section 10: Reviews & Student Feedback Carousels */}
         <ReviewsSection />
 
-        {/* Section L: Final CTA Banner & Obsidian Dark Footer */}
+        {/* Section 11: Final CTA Banner & Obsidian Dark Footer */}
         <CtaAndFooter onOpenContact={handleOpenContact} />
       </main>
 

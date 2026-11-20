@@ -2,83 +2,119 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { HubClock } from "./HubClock";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Button } from "../ui/Button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface NavbarProps {
-  onOpenContact: () => void;
+  onOpenContact?: () => void;
 }
 
 export function Navbar({ onOpenContact }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
 
-  const navLinks = [
-    { name: "Home", href: "#hero" },
-    { name: "Courses", href: "#courses" },
-    { name: "Schedule", href: "#schedule" },
-    { name: "About", href: "#about" },
-    { name: "Reviews", href: "#reviews" },
-    { name: "Contact", href: "#contact" },
+  const mainNavLinks = [
+    { name: "Home", href: "/" },
+    { name: "Courses", href: "/courses" },
+    { name: "Webinars", href: "/webinars" },
+    { name: "Free Resources", href: "/resources" },
+    { name: "About Us", href: "/about" },
+    { name: "Track Order", href: "/track-order" },
   ];
+
+  const allMobileLinks = [
+    { name: "Home", href: "/" },
+    { name: "Courses", href: "/courses" },
+    { name: "Webinars", href: "/webinars" },
+    { name: "Free Resources", href: "/resources" },
+    { name: "About Us", href: "/about" },
+    { name: "Track Order", href: "/track-order" },
+    { name: "Contact Us", href: "/contact" },
+    { name: "Student Login", href: "/login" },
+  ];
+
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === "/";
+    return pathname.startsWith(href);
+  };
 
   return (
     <header className="h-20 bg-white/95 backdrop-blur-md sticky top-0 z-50 border-b border-black/5 transition-all">
-      <div className="max-w-[1240px] h-full mx-auto px-5 sm:px-8 lg:px-10 flex items-center justify-between">
-        {/* Left: Logo & Wordmark */}
-        <a href="#hero" className="flex items-center gap-3 select-none group">
-          <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-lg overflow-hidden shrink-0 border border-neutral-200/80 shadow-xs">
+      <div className="max-w-[1240px] h-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+        {/* Left: Logo & Wordmark (Never wraps, never shrinks) */}
+        <Link href="/" className="flex items-center gap-2 select-none group shrink-0">
+          <div className="relative w-7 h-7 sm:w-8 sm:h-8 rounded-md overflow-hidden shrink-0 border border-neutral-200/70 shadow-xs bg-white">
             <Image
               src="/images/prime-commerce-hub-logo.jpg"
               alt="Prime Commerce Hub Logo"
               fill
-              className="object-contain"
-              sizes="40px"
+              className="object-contain p-0.5"
+              sizes="32px"
+              priority
             />
           </div>
-          <div className="flex items-baseline gap-1.5">
-            <span className="font-extrabold text-xl sm:text-2xl tracking-tight text-[#16141B] group-hover:text-[#5B32D6] transition-colors">
+          <div className="flex items-baseline gap-1 whitespace-nowrap">
+            <span className="font-extrabold text-[15px] sm:text-[16px] tracking-tight text-[#16141B] group-hover:text-[#5B32D6] transition-colors">
               PRIME
             </span>
-            <span className="font-normal text-xl sm:text-2xl text-neutral-600">
+            <span className="font-medium text-[15px] sm:text-[16px] tracking-tight text-neutral-600">
               COMMERCE HUB
             </span>
           </div>
-        </a>
+        </Link>
 
-        {/* Center: Nav links (Desktop) */}
-        <nav className="hidden md:flex items-center gap-7 lg:gap-8">
-          {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              className={`text-[15px] font-medium transition-colors hover:text-[#5B32D6] ${
-                link.name === "Home"
-                  ? "text-[#16141B] font-semibold relative after:absolute after:-bottom-1 after:left-0 after:right-0 after:h-[2px] after:bg-[#5B32D6] after:rounded-full"
-                  : "text-neutral-700"
-              }`}
-            >
-              {link.name}
-            </a>
-          ))}
+        {/* Center: Main Nav Links (Desktop - single line, no wrapping, clean spacing) */}
+        <nav className="hidden lg:flex items-center gap-4 xl:gap-6 shrink-0">
+          {mainNavLinks.map((link) => {
+            const active = isActive(link.href);
+            return (
+              <Link
+                key={link.name}
+                href={link.href}
+                className={`text-[13px] xl:text-[14px] font-medium whitespace-nowrap transition-colors py-1 hover:text-[#5B32D6] ${
+                  active
+                    ? "text-[#16141B] font-semibold relative after:absolute after:-bottom-1 after:left-0 after:right-0 after:h-[2px] after:bg-[#5B32D6] after:rounded-full"
+                    : "text-neutral-700"
+                }`}
+              >
+                {link.name}
+              </Link>
+            );
+          })}
         </nav>
 
-        {/* Right: Clock & CTA */}
-        <div className="flex items-center gap-5 sm:gap-6">
-          <HubClock />
+        {/* Right: Login, Clock & Contact CTA (Never wraps, cleanly spaced) */}
+        <div className="flex items-center gap-3 sm:gap-4 xl:gap-5 shrink-0">
+          {/* Login Link */}
+          <Link
+            href="/login"
+            className={`hidden sm:flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 rounded-lg transition-colors whitespace-nowrap ${
+              isActive("/login")
+                ? "text-[#5B32D6] bg-[#ECE8FA]"
+                : "text-neutral-700 hover:text-[#5B32D6] hover:bg-neutral-100"
+            }`}
+          >
+            <User className="w-3.5 h-3.5" />
+            <span>Login</span>
+          </Link>
 
-          <div className="hidden sm:block">
-            <Button variant="purple" size="md" onClick={onOpenContact}>
-              Contact Us
-            </Button>
+          {/* Contact Button */}
+          <div className="hidden sm:block shrink-0">
+            <Link href="/contact">
+              <Button variant="purple" size="md" className="whitespace-nowrap">
+                Contact Us
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile menu toggle button */}
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-800 cursor-pointer"
+            className="lg:hidden w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-800 cursor-pointer shrink-0"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -93,31 +129,36 @@ export function Navbar({ onOpenContact }: NavbarProps) {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white border-b border-neutral-100 px-6 py-6 shadow-xl"
+            className="lg:hidden bg-white border-b border-neutral-100 px-6 py-6 shadow-xl max-h-[85vh] overflow-y-auto"
           >
-            <nav className="flex flex-col gap-4">
-              {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
+            <nav className="flex flex-col gap-3">
+              {allMobileLinks.map((link) => {
+                const active = isActive(link.href);
+                return (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`text-base font-semibold py-2 flex items-center justify-between border-b border-neutral-100 ${
+                      active ? "text-[#5B32D6]" : "text-neutral-800 hover:text-[#5B32D6]"
+                    }`}
+                  >
+                    <span>{link.name}</span>
+                    {active && <span className="w-2 h-2 rounded-full bg-[#5B32D6]" />}
+                  </Link>
+                );
+              })}
+
+              <div className="pt-4 flex flex-col gap-3">
+                <Link
+                  href="/contact"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-lg font-semibold text-neutral-800 hover:text-[#5B32D6] py-1"
+                  className="w-full"
                 >
-                  {link.name}
-                </a>
-              ))}
-              <div className="pt-4 border-t border-neutral-100 flex flex-col gap-3">
-                <Button
-                  variant="purple"
-                  size="md"
-                  className="w-full justify-center"
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    onOpenContact();
-                  }}
-                >
-                  Contact Us
-                </Button>
+                  <Button variant="purple" size="md" className="w-full justify-center">
+                    Contact Us
+                  </Button>
+                </Link>
               </div>
             </nav>
           </motion.div>

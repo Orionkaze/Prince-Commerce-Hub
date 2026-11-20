@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
 import {
@@ -12,12 +13,7 @@ import {
 import { CheckCircle2, GraduationCap } from "lucide-react";
 import { motion } from "framer-motion";
 
-interface HeroSectionProps {
-  onOpenContact: () => void;
-  onExploreCourses: () => void;
-}
-
-export function HeroSection({ onOpenContact, onExploreCourses }: HeroSectionProps) {
+export function HeroSection() {
   return (
     <section
       id="hero"
@@ -69,17 +65,16 @@ export function HeroSection({ onOpenContact, onExploreCourses }: HeroSectionProp
 
             {/* CTA Buttons */}
             <div className="flex flex-wrap items-center gap-4 pt-4">
-              <Button
-                variant="white"
-                size="lg"
-                onClick={onExploreCourses}
-                href="#courses"
-              >
-                Explore Courses
-              </Button>
-              <Button variant="outline-white" size="lg" onClick={onOpenContact}>
-                Contact Us
-              </Button>
+              <Link href="/courses">
+                <Button variant="white" size="lg">
+                  Explore Courses
+                </Button>
+              </Link>
+              <Link href="/contact">
+                <Button variant="outline-white" size="lg">
+                  Contact Us
+                </Button>
+              </Link>
             </div>
 
             {/* Sparkle and Curly Arrow Doodles */}
@@ -128,7 +123,7 @@ export function HeroSection({ onOpenContact, onExploreCourses }: HeroSectionProp
                     src="/images/accountancy-classroom.jpg"
                     alt="Accountancy Classroom Session"
                     fill
-                    className="object-cover"
+                    className="object-cover object-center"
                     sizes="180px"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
@@ -165,7 +160,7 @@ export function HeroSection({ onOpenContact, onExploreCourses }: HeroSectionProp
                     <CheckCircle2 className="w-5 h-5 text-emerald-500 fill-emerald-50" />
                   </div>
                   <div className="text-[14px] font-medium text-neutral-600">
-                    Founder & Lead Educator
+                    Founder &amp; Lead Educator
                   </div>
                   <div className="text-[13px] text-neutral-400">
                     30+ Years Teaching Excellence

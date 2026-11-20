@@ -2,10 +2,11 @@
 
 import React, { useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { BookOpen, GraduationCap, MonitorPlay } from "lucide-react";
+import { BookOpen, GraduationCap, MonitorPlay, ArrowRight } from "lucide-react";
 
 interface CourseItem {
   id: string;
@@ -48,12 +49,9 @@ const courses: CourseItem[] = [
 
 function CardStackItem({
   course,
-  index,
-  onSelectCourse,
 }: {
   course: CourseItem;
   index: number;
-  onSelectCourse: (courseId: string) => void;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -61,7 +59,6 @@ function CardStackItem({
     offset: ["start end", "start start"],
   });
 
-  // Subtle scale down as user scrolls past
   const scale = useTransform(scrollYProgress, [0, 1], [0.97, 1]);
 
   return (
@@ -102,14 +99,12 @@ function CardStackItem({
         {/* Bottom Bar: Action and Floating Info Card */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pt-8">
           <div className="flex items-center gap-4">
-            <Button
-              variant="white"
-              size="md"
-              onClick={() => onSelectCourse(course.id)}
-              href="#schedule"
-            >
-              Check Batch Schedule
-            </Button>
+            <Link href="/courses">
+              <Button variant="white" size="md" className="gap-2">
+                <span>Explore Full Course</span>
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
           </div>
 
           {/* Floating White Course Info Card */}
@@ -147,25 +142,33 @@ function CardStackItem({
   );
 }
 
-export function StickyCourseCards({
-  onSelectCourse,
-}: {
-  onSelectCourse: (courseId: string) => void;
-}) {
+export function StickyCourseCards() {
   return (
     <section id="courses" className="bg-white py-16 lg:py-24">
       <div className="max-w-[1240px] mx-auto px-5 sm:px-8 lg:px-10">
         {/* Section Header */}
-        <div className="space-y-4 max-w-[680px] mb-12 sm:mb-16">
-          <div>
-            <Badge variant="yellow">OUR PROGRAMS</Badge>
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 sm:mb-16 gap-6">
+          <div className="space-y-4 max-w-[680px]">
+            <div>
+              <Badge variant="yellow">OUR PROGRAMS</Badge>
+            </div>
+            <h2 className="text-[36px] sm:text-[46px] lg:text-[54px] font-extrabold tracking-[-0.03em] leading-[1.08] text-[#16141B]">
+              Expert Accountancy Courses
+            </h2>
+            <p className="text-[16px] lg:text-[18px] leading-[1.6] text-neutral-600 font-normal">
+              Comprehensive learning modules designed for Class 11 and 12 Commerce students.
+            </p>
           </div>
-          <h2 className="text-[36px] sm:text-[46px] lg:text-[54px] font-extrabold tracking-[-0.03em] leading-[1.08] text-[#16141B]">
-            Expert Accountancy Courses
-          </h2>
-          <p className="text-[16px] lg:text-[18px] leading-[1.6] text-neutral-600 font-normal">
-            Comprehensive learning modules designed for Class 11 and 12 Commerce students.
-          </p>
+
+          {/* Explore All Courses Button */}
+          <div>
+            <Link href="/courses">
+              <Button variant="purple" size="md" className="gap-2">
+                <span>Explore All Courses</span>
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
+          </div>
         </div>
 
         <div className="relative">
@@ -174,7 +177,6 @@ export function StickyCourseCards({
               key={course.id}
               course={course}
               index={idx}
-              onSelectCourse={onSelectCourse}
             />
           ))}
         </div>

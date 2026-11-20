@@ -2,10 +2,12 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Badge } from "../ui/Badge";
+import { Button } from "../ui/Button";
 import { SunburstDoodle } from "../doodles/Doodles";
 import { VideoModal } from "./VideoModal";
-import { Play, Award, BookOpen, CheckCircle2 } from "lucide-react";
+import { Play, Award, BookOpen, CheckCircle2, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
 export function InstructorIntro() {
@@ -64,6 +66,16 @@ export function InstructorIntro() {
                 <div className="text-[15px] font-extrabold text-[#5B32D6]">30+ years TEACHING EXCELLENCE</div>
               </div>
             </div>
+          </div>
+
+          {/* Button linking to complete About Us page */}
+          <div className="pt-2">
+            <Link href="/about">
+              <Button variant="purple" size="md" className="gap-2">
+                <span>Learn More About Us &amp; Teaching Philosophy</span>
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
           </div>
         </div>
 

@@ -10,20 +10,32 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "PRIME COMMERCE HUB — Master Accountancy for Class 11th & 12th Commerce",
+  title: {
+    default: "Prime Commerce Hub | Accountancy Coaching for Class 11 & 12",
+    template: "%s | Prime Commerce Hub",
+  },
   description:
-    "Prime Commerce Hub, founded by Parvesh Kumar (Founder & Lead Educator, 30+ years teaching experience), provides top-tier Accountancy coaching focused on conceptual clarity, personalized guidance, and board exam excellence for Class 11th and 12th Commerce students.",
+    "Prime Commerce Hub provides expert Accountancy coaching for Class 11th and 12th Commerce students, focusing on conceptual clarity, structured learning and personalized guidance. Founded by Parvesh Kumar (30+ years teaching experience).",
   keywords: [
     "Prime Commerce Hub",
     "Parvesh Kumar",
-    "Accountancy coaching",
+    "Accountancy Coaching",
     "Class 11 Accountancy",
     "Class 12 Accountancy",
-    "Commerce coaching institute",
-    "CBSE Class 12 Accounts",
-    "Concept based learning commerce",
+    "CBSE Commerce Coaching",
+    "Conceptual Learning Accountancy",
+    "Commerce Board Exam Preparation",
   ],
   authors: [{ name: "Parvesh Kumar" }],
+  openGraph: {
+    title: "Prime Commerce Hub | Accountancy Coaching for Class 11 & 12",
+    description:
+      "Expert Accountancy coaching for Class 11th and 12th Commerce students, focusing on conceptual clarity, structured learning, and personalized guidance.",
+    url: "https://primecommercehub.com",
+    siteName: "Prime Commerce Hub",
+    locale: "en_IN",
+    type: "website",
+  },
 };
 
 export const viewport: Viewport = {
