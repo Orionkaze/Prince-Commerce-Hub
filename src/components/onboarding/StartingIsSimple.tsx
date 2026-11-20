@@ -1,9 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 import { Badge } from "../ui/Badge";
 import { LevelTestModal } from "./LevelTestModal";
+import {
+  Step1InquiryDoodle,
+  Step2AssessmentDoodle,
+  Step3BatchDoodle,
+  Step4EnrollDoodle,
+} from "../doodles/CommerceDoodles";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
@@ -18,28 +23,28 @@ export function StartingIsSimple({ onOpenContact }: StartingIsSimpleProps) {
     {
       step: "STEP 1",
       title: "Tell Parvesh Sir what you need",
-      doodle: "/images/onboarding-step-1.png",
+      renderDoodle: () => <Step1InquiryDoodle className="w-28 h-28 sm:w-32 sm:h-32" />,
       action: onOpenContact,
       actionLabel: "Send inquiry",
     },
     {
       step: "STEP 2",
       title: "Take the commerce assessment",
-      doodle: "/images/onboarding-step-2.png",
+      renderDoodle: () => <Step2AssessmentDoodle className="w-28 h-28 sm:w-32 sm:h-32" />,
       action: () => setIsLevelTestOpen(true),
       actionLabel: "Start test now",
     },
     {
       step: "STEP 3",
       title: "Choose your Class 11th or 12th batch",
-      doodle: "/images/onboarding-step-3.png",
+      renderDoodle: () => <Step3BatchDoodle className="w-28 h-28 sm:w-32 sm:h-32" />,
       href: "#schedule",
       actionLabel: "View schedule",
     },
     {
       step: "STEP 4",
       title: "Confirm, enroll, and excel",
-      doodle: "/images/onboarding-step-4.png",
+      renderDoodle: () => <Step4EnrollDoodle className="w-28 h-28 sm:w-32 sm:h-32" />,
       action: onOpenContact,
       actionLabel: "Get started",
     },
@@ -77,17 +82,9 @@ export function StartingIsSimple({ onOpenContact }: StartingIsSimpleProps) {
                 </h3>
               </div>
 
-              {/* Hand-drawn Line-art SVG / Doodle Illustration */}
-              <div className="relative w-full h-[160px] flex items-center justify-center pt-2">
-                <div className="relative w-40 h-40">
-                  <Image
-                    src={item.doodle}
-                    alt={item.title}
-                    fill
-                    className="object-contain group-hover:scale-105 transition-transform duration-300"
-                    sizes="180px"
-                  />
-                </div>
+              {/* Hand-drawn Line-art Vector Doodle */}
+              <div className="w-full h-[150px] flex items-center justify-center">
+                {item.renderDoodle()}
               </div>
 
               {/* Interactive micro CTA link */}

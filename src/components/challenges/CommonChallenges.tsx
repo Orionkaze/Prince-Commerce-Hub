@@ -4,12 +4,21 @@ import React from "react";
 import Image from "next/image";
 import { Badge } from "../ui/Badge";
 import { PurpleQuotation, PurpleCurvedArrow } from "../doodles/Doodles";
+import {
+  AccountingZeroDoodle,
+  LedgerBalanceDoodle,
+  AdjustmentPuzzleDoodle,
+  TargetScoreDoodle,
+  SyllabusStackDoodle,
+  ConceptLightbulbDoodle,
+  TimeManagementDoodle,
+} from "../doodles/CommerceDoodles";
 import { motion } from "framer-motion";
 import { HelpCircle } from "lucide-react";
 
 interface DoodleChallenge {
   type: "lavender" | "card";
-  doodle: string;
+  renderDoodle: () => React.ReactNode;
   title: string;
   description: string;
 }
@@ -17,48 +26,48 @@ interface DoodleChallenge {
 const doodleChallenges: DoodleChallenge[] = [
   {
     type: "lavender",
-    doodle: "/images/doodle-starting-zero.png",
+    renderDoodle: () => <AccountingZeroDoodle className="w-28 h-28 sm:w-32 sm:h-32" />,
     title: "Starting from zero in Commerce",
     description: "You find accounting fundamentals, debits and credits confusing and don't know where to begin.",
   },
   {
     type: "card",
-    doodle: "/images/doodle-understand-cant-speak.png",
+    renderDoodle: () => <LedgerBalanceDoodle className="w-28 h-28 sm:w-32 sm:h-32" />,
     title: "Understood in class, stuck at home",
     description:
       "Journal entries make sense in lecture, but balancing ledgers and final accounts independently feels daunting.",
   },
   {
     type: "card",
-    doodle: "/images/doodle-afraid-mistakes.png",
+    renderDoodle: () => <AdjustmentPuzzleDoodle className="w-28 h-28 sm:w-32 sm:h-32" />,
     title: "Fear of complex adjustments",
     description:
       "You worry about tricky adjustment entries in Partnership, Share Capital, or Cash Flow Statements.",
   },
   {
     type: "card",
-    doodle: "/images/doodle-score-same.png",
+    renderDoodle: () => <TargetScoreDoodle className="w-28 h-28 sm:w-32 sm:h-32" />,
     title: "Studying hard, but marks stay the same",
     description:
       "You practice questions randomly without a structured conceptual framework or marking scheme insights.",
   },
   {
     type: "card",
-    doodle: "/images/doodle-travel-abroad.png",
+    renderDoodle: () => <SyllabusStackDoodle className="w-28 h-28 sm:w-32 sm:h-32" />,
     title: "Overwhelmed by the vast syllabus",
     description:
       "You struggle to balance theory, ledger formats, and time-consuming numerical problems under exam conditions.",
   },
   {
     type: "card",
-    doodle: "/images/doodle-too-old.png",
+    renderDoodle: () => <ConceptLightbulbDoodle className="w-28 h-28 sm:w-32 sm:h-32" />,
     title: "Lost in rote memorization",
     description:
       "Memorizing golden rules without understanding the financial logic behind them leads to silly mistakes and exam panic.",
   },
   {
     type: "card",
-    doodle: "/images/doodle-struggle-colleagues.png",
+    renderDoodle: () => <TimeManagementDoodle className="w-28 h-28 sm:w-32 sm:h-32" />,
     title: "Board exam time management",
     description:
       "Lengthy 6-mark numerical problems leave you rushing through the question paper without finishing working notes.",
@@ -120,17 +129,9 @@ export function CommonChallenges() {
                 item.type === "lavender" ? "bg-[#ECE8FA]" : "bg-[#F7F7F9]"
               }`}
             >
-              {/* Line-art Doodle Illustration */}
-              <div className="relative w-full h-[150px] flex items-center justify-center">
-                <div className="relative w-36 h-36">
-                  <Image
-                    src={item.doodle}
-                    alt={item.title}
-                    fill
-                    className="object-contain"
-                    sizes="160px"
-                  />
-                </div>
+              {/* Crisp Vector Doodle Illustration */}
+              <div className="w-full h-[140px] flex items-center justify-center">
+                {item.renderDoodle()}
               </div>
 
               {/* Title & Description */}
