@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Badge } from "../ui/Badge";
 import { PurpleQuotation, PurpleCurvedArrow } from "../doodles/Doodles";
 import { motion } from "framer-motion";
-import { Sparkles } from "lucide-react";
+import { HelpCircle } from "lucide-react";
 
 interface DoodleChallenge {
   type: "lavender" | "card";
@@ -18,50 +18,50 @@ const doodleChallenges: DoodleChallenge[] = [
   {
     type: "lavender",
     doodle: "/images/doodle-starting-zero.png",
-    title: "Starting from zero",
-    description: "You know very little English and don't know where to begin.",
+    title: "Starting from zero in Commerce",
+    description: "You find accounting fundamentals, debits and credits confusing and don't know where to begin.",
   },
   {
     type: "card",
     doodle: "/images/doodle-understand-cant-speak.png",
-    title: "You understand but can't speak",
+    title: "Understood in class, stuck at home",
     description:
-      "You understand a lot, but answering quickly is still difficult.",
+      "Journal entries make sense in lecture, but balancing ledgers and final accounts independently feels daunting.",
   },
   {
     type: "card",
     doodle: "/images/doodle-afraid-mistakes.png",
-    title: "You're afraid of making mistakes when you speak",
+    title: "Fear of complex adjustments",
     description:
-      "You avoid speaking because you worry about saying something wrong.",
+      "You worry about tricky adjustment entries in Partnership, Share Capital, or Cash Flow Statements.",
   },
   {
     type: "card",
     doodle: "/images/doodle-score-same.png",
-    title: "You keep studying, but your score stays the same",
+    title: "Studying hard, but marks stay the same",
     description:
-      "You need a clear roadmap instead of studying randomly.",
+      "You practice questions randomly without a structured conceptual framework or marking scheme insights.",
   },
   {
     type: "card",
     doodle: "/images/doodle-travel-abroad.png",
-    title: "You want to travel or move abroad, but your English holds you back",
+    title: "Overwhelmed by the vast syllabus",
     description:
-      "You worry about handling everyday situations without relying on translation.",
+      "You struggle to balance theory, ledger formats, and time-consuming numerical problems under exam conditions.",
   },
   {
     type: "card",
     doodle: "/images/doodle-too-old.png",
-    title: "You feel too old to start",
+    title: "Lost in rote memorization",
     description:
-      "You worry that most English classes are for younger students, or that you'll feel out of place learning with them.",
+      "Memorizing golden rules without understanding the financial logic behind them leads to silly mistakes and exam panic.",
   },
   {
     type: "card",
     doodle: "/images/doodle-struggle-colleagues.png",
-    title: "You struggle to communicate with colleagues in English",
+    title: "Board exam time management",
     description:
-      "You know what you want to say, but meetings, chats, and everyday conversations at work can still feel difficult.",
+      "Lengthy 6-mark numerical problems leave you rushing through the question paper without finishing working notes.",
   },
 ];
 
@@ -80,8 +80,7 @@ export function CommonChallenges() {
             </h2>
           </div>
           <p className="max-w-[380px] text-[16px] lg:text-[17px] leading-[1.6] text-neutral-600 font-normal">
-            These are some of the common challenges you may be facing while learning
-            and using English.
+            These are some of the common challenges commerce students face while studying Accountancy and preparing for board exams.
           </p>
         </div>
 
@@ -97,15 +96,15 @@ export function CommonChallenges() {
           >
             <Image
               src="/images/hesitant-speaker.jpg"
-              alt="Hesitant English speaker looking thoughtful"
+              alt="Commerce student pondering accounting problem"
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-500"
               sizes="(max-width: 768px) 100vw, 400px"
             />
-            {/* Floating Pill Badge: I... um... */}
+            {/* Floating Pill Badge: Debit or Credit? */}
             <div className="absolute bottom-6 right-6 bg-white/95 backdrop-blur-xs py-2 px-3.5 rounded-full shadow-lg border border-neutral-200/60 flex items-center gap-1.5 z-10">
-              <Sparkles className="w-3.5 h-3.5 text-[#5B32D6]" />
-              <span className="text-xs font-bold text-[#16141B]">I... um...</span>
+              <HelpCircle className="w-3.5 h-3.5 text-[#5B32D6]" />
+              <span className="text-xs font-bold text-[#16141B]">Debit or Credit?</span>
             </div>
           </motion.div>
 
@@ -165,10 +164,10 @@ export function CommonChallenges() {
             {/* Reassurance text */}
             <div className="space-y-2">
               <h3 className="text-[20px] lg:text-[22px] font-bold tracking-[-0.02em] leading-[1.3] text-[#16141B]">
-                You don’t need to be good at English before you start.
+                You don’t need to be an accounting genius before you start.
               </h3>
               <p className="text-[16px] lg:text-[17px] font-bold text-[#5B32D6]">
-                We’ll begin from your current level.
+                We’ll build your concepts step by step from the ground up.
               </p>
             </div>
           </motion.div>

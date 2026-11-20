@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { DublinClock } from "./DublinClock";
+import Image from "next/image";
+import { HubClock } from "./HubClock";
 import { Button } from "../ui/Button";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -18,19 +19,32 @@ export function Navbar({ onOpenContact }: NavbarProps) {
     { name: "Courses", href: "#courses" },
     { name: "Schedule", href: "#schedule" },
     { name: "About", href: "#about" },
-    { name: "Blog", href: "#reviews" },
+    { name: "Reviews", href: "#reviews" },
     { name: "Contact", href: "#contact" },
   ];
 
   return (
     <header className="h-20 bg-white/95 backdrop-blur-md sticky top-0 z-50 border-b border-black/5 transition-all">
       <div className="max-w-[1240px] h-full mx-auto px-5 sm:px-8 lg:px-10 flex items-center justify-between">
-        {/* Left: Wordmark */}
-        <a href="#hero" className="flex items-baseline gap-1 select-none group">
-          <span className="font-extrabold text-2xl tracking-tight text-[#16141B] group-hover:text-[#5B32D6] transition-colors">
-            jave
-          </span>
-          <span className="font-normal text-2xl text-neutral-600">english</span>
+        {/* Left: Logo & Wordmark */}
+        <a href="#hero" className="flex items-center gap-3 select-none group">
+          <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-lg overflow-hidden shrink-0 border border-neutral-200/80 shadow-xs">
+            <Image
+              src="/images/prime-commerce-hub-logo.jpg"
+              alt="Prime Commerce Hub Logo"
+              fill
+              className="object-contain"
+              sizes="40px"
+            />
+          </div>
+          <div className="flex items-baseline gap-1.5">
+            <span className="font-extrabold text-xl sm:text-2xl tracking-tight text-[#16141B] group-hover:text-[#5B32D6] transition-colors">
+              PRIME
+            </span>
+            <span className="font-normal text-xl sm:text-2xl text-neutral-600">
+              COMMERCE HUB
+            </span>
+          </div>
         </a>
 
         {/* Center: Nav links (Desktop) */}
@@ -52,11 +66,11 @@ export function Navbar({ onOpenContact }: NavbarProps) {
 
         {/* Right: Clock & CTA */}
         <div className="flex items-center gap-5 sm:gap-6">
-          <DublinClock />
+          <HubClock />
 
           <div className="hidden sm:block">
             <Button variant="purple" size="md" onClick={onOpenContact}>
-              Contact Jave
+              Contact Us
             </Button>
           </div>
 
@@ -64,7 +78,7 @@ export function Navbar({ onOpenContact }: NavbarProps) {
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-800"
+            className="md:hidden w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-800 cursor-pointer"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -102,7 +116,7 @@ export function Navbar({ onOpenContact }: NavbarProps) {
                     onOpenContact();
                   }}
                 >
-                  Contact Jave
+                  Contact Us
                 </Button>
               </div>
             </nav>

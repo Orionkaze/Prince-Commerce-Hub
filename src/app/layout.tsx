@@ -10,25 +10,26 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Jave English — Speak English with more confidence in real life",
+  title: "PRIME COMMERCE HUB — Master Accountancy for Class 11th & 12th Commerce",
   description:
-    "Practical online English lessons for everyday conversation, travel, work, young learners, and international exam preparation by CELTA-certified Irish teacher Jave Carter.",
+    "Prime Commerce Hub, founded by Parvesh Kumar (Founder & Lead Educator, 30+ years teaching experience), provides top-tier Accountancy coaching focused on conceptual clarity, personalized guidance, and board exam excellence for Class 11th and 12th Commerce students.",
   keywords: [
-    "English tutor",
-    "CELTA certified English teacher",
-    "Dublin English lessons",
-    "online English coach",
-    "English for work",
-    "IELTS preparation",
-    "Kids English",
+    "Prime Commerce Hub",
+    "Parvesh Kumar",
+    "Accountancy coaching",
+    "Class 11 Accountancy",
+    "Class 12 Accountancy",
+    "Commerce coaching institute",
+    "CBSE Class 12 Accounts",
+    "Concept based learning commerce",
   ],
-  authors: [{ name: "Jave Carter" }],
+  authors: [{ name: "Parvesh Kumar" }],
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#5B32D6",
+  themeColor: "#4E2EC2",
 };
 
 export default function RootLayout({

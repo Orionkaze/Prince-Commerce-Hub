@@ -16,67 +16,67 @@ interface LevelTestModalProps {
 const quizQuestions: QuizQuestion[] = [
   {
     id: 1,
-    question: "When someone speaks to you in English, what usually happens?",
+    question: "When solving an Accountancy question, what usually happens?",
     options: [
       {
-        label: "I recognize few words, get nervous, and don't know where to start.",
-        level: "Starter",
+        label: "I get confused with debit and credit rules and struggle to start journal entries.",
+        level: "Foundation",
       },
       {
-        label: "I understand basic greetings and simple questions, but answer slowly.",
-        level: "Elementary",
+        label: "I know basic ledgers, but trial balance rectification and adjustments trip me up.",
+        level: "Class 11",
       },
       {
-        label: "I understand everyday conversations well, but pause to search for words.",
-        level: "Intermediate",
+        label: "I am comfortable with Class 11 basics and want to master Class 12 Partnership and Shares.",
+        level: "Class 12",
       },
       {
-        label: "I handle meetings and discussions easily, but want nuance and fluency.",
-        level: "Upper Intermediate",
+        label: "I know the theory well, but need speed, accuracy, and board exam presentation mastery.",
+        level: "Board Prep",
       },
     ],
   },
   {
     id: 2,
-    question: "How do you feel about English grammar and vocabulary?",
+    question: "Which academic stage or class are you currently preparing for?",
     options: [
       {
-        label: "I need to learn fundamental sentence building from scratch.",
-        level: "Starter",
+        label: "Class 11 Commerce — Building rock-solid fundamentals from scratch.",
+        level: "Foundation",
       },
       {
-        label: "I know basic tenses (past/present), but mix them up when speaking.",
-        level: "Elementary",
+        label: "Class 11 Commerce — Covering the complete syllabus and scoring top marks in school exams.",
+        level: "Class 11",
       },
       {
-        label: "My grammar is decent, but my vocabulary feels repetitive or simple.",
-        level: "Intermediate",
+        label: "Class 12 Commerce — Mastering Partnership, Company Accounts & Cash Flow.",
+        level: "Class 12",
       },
       {
-        label: "I want to sound more natural, use idioms, and fix subtle recurring mistakes.",
-        level: "Upper Intermediate",
+        label: "Class 12 Commerce — Targeted revision, mock tests, and 100/100 board preparation.",
+        level: "Board Prep",
       },
     ],
   },
   {
     id: 3,
-    question: "What is your primary goal right now?",
+    question: "What is your primary goal with Prime Commerce Hub?",
     options: [
       {
-        label: "Gain the courage to say my first sentences without fear.",
-        level: "Starter",
+        label: "Move beyond rote memorization to deep conceptual understanding of accounting principles.",
+        level: "Foundation",
       },
       {
-        label: "Travel and order food, ask directions, and introduce myself easily.",
-        level: "Elementary",
+        label: "Build high confidence in solving complex numerical problems independently.",
+        level: "Class 11",
       },
       {
-        label: "Speak up in workplace meetings and hold 15-minute natural conversations.",
-        level: "Intermediate",
+        label: "Achieve 95%+ in Class 12 Board Examinations with Parvesh Sir's proven roadmap.",
+        level: "Class 12",
       },
       {
-        label: "Score 7.5+ in IELTS or lead presentations with international colleagues.",
-        level: "Upper Intermediate",
+        label: "Master board-pattern question papers, time management, and error-free working notes.",
+        level: "Board Prep",
       },
     ],
   },
@@ -98,13 +98,12 @@ export function LevelTestModal({
     if (currentStep + 1 < quizQuestions.length) {
       setCurrentStep(currentStep + 1);
     } else {
-      // Calculate recommended level
       const counts: Record<string, number> = {};
       updated.forEach((l) => {
         counts[l] = (counts[l] || 0) + 1;
       });
       const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
-      const recommended = (sorted[0]?.[0] as CourseLevel) || "Intermediate";
+      const recommended = (sorted[0]?.[0] as CourseLevel) || "Class 12";
       setResultLevel(recommended);
       try {
         confetti({
@@ -128,7 +127,7 @@ export function LevelTestModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={resultLevel ? "Diagnostic Result" : `Free Level Test (${currentStep + 1}/${quizQuestions.length})`}
+      title={resultLevel ? "Commerce Assessment Result" : `Commerce Assessment (${currentStep + 1}/${quizQuestions.length})`}
       maxWidth="max-w-xl"
     >
       {resultLevel ? (
@@ -138,30 +137,30 @@ export function LevelTestModal({
               <Award className="w-9 h-9" />
             </div>
             <div className="text-xs font-bold uppercase tracking-wider text-neutral-400">
-              Your Recommended Starting Point
+              Your Recommended Learning Track
             </div>
             <h3 className="text-3xl font-extrabold text-[#16141B]">
-              Level: {resultLevel}
+              Track: {resultLevel} Accountancy
             </h3>
             <p className="text-sm text-neutral-600 max-w-md mx-auto leading-relaxed">
-              Based on your answers, starting at the <strong>{resultLevel}</strong> level
-              will give you the most rewarding progress without feeling overwhelmed or bored.
+              Based on your answers, enrolling in the <strong>{resultLevel}</strong> batch at Prime Commerce Hub
+              will give you the strongest conceptual clarity, personal mentorship, and academic growth.
             </p>
           </div>
 
           <div className="p-4 rounded-2xl bg-[#F7F7F9] space-y-2 text-xs text-neutral-700">
-            <div className="font-bold text-neutral-900">What to expect in this tier:</div>
+            <div className="font-bold text-neutral-900">What to expect in this program:</div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>12-week focused curriculum with Jave Carter</span>
+              <span>Concept-based learning led directly by Parvesh Kumar (30+ years exp)</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>Small group or 1-on-1 private lesson formats</span>
+              <span>Comprehensive coverage of NCERT, standard reference books &amp; board patterns</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>Google Meet live practice with post-class notes</span>
+              <span>Regular assessment tests, personalized error correction &amp; doubt sessions</span>
             </div>
           </div>
 
@@ -169,10 +168,10 @@ export function LevelTestModal({
             <button
               type="button"
               onClick={handleRestart}
-              className="text-xs font-bold text-neutral-500 hover:text-neutral-800 flex items-center gap-1.5"
+              className="text-xs font-bold text-neutral-500 hover:text-neutral-800 flex items-center gap-1.5 cursor-pointer"
             >
               <RotateCcw className="w-3.5 h-3.5" />
-              <span>Retake Test</span>
+              <span>Retake Quiz</span>
             </button>
             <Button
               variant="purple"
@@ -183,7 +182,7 @@ export function LevelTestModal({
                 if (onSelectLevelSchedule) onSelectLevelSchedule(resultLevel);
               }}
             >
-              View Class Schedule
+              View Batch Schedule
             </Button>
           </div>
         </div>

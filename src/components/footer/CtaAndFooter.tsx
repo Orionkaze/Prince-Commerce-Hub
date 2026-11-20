@@ -5,8 +5,6 @@ import Image from "next/image";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
 import { ContactModal } from "./ContactModal";
-import { Check, Mail } from "lucide-react";
-import { motion } from "framer-motion";
 
 interface CtaAndFooterProps {
   onOpenContact: () => void;
@@ -30,7 +28,7 @@ export function CtaAndFooter({ onOpenContact }: CtaAndFooterProps) {
     { name: "Courses", href: "#courses" },
     { name: "Schedule", href: "#schedule" },
     { name: "About", href: "#about" },
-    { name: "Blog", href: "#reviews" },
+    { name: "Reviews", href: "#reviews" },
     { name: "Contact", href: "#contact" },
   ];
 
@@ -52,25 +50,24 @@ export function CtaAndFooter({ onOpenContact }: CtaAndFooterProps) {
               </h2>
 
               <p className="text-[16px] sm:text-[18px] leading-[1.6] text-white/80 max-w-[500px] font-normal">
-                Tell me what you want to improve, and I'll help you choose the
-                right course, starting level, and learning format.
+                Tell us about your current class, syllabus, and academic goals. Parvesh Sir will personally guide you to the right batch and structured learning plan.
               </p>
 
               <div className="pt-2">
                 <Button variant="white" size="lg" onClick={onOpenContact}>
-                  Contact Jave
+                  Contact Us
                 </Button>
               </div>
             </div>
 
-            {/* Right Column: Jave Photo with Nameplate */}
+            {/* Right Column: Parvesh Kumar Photo with Nameplate */}
             <div className="lg:col-span-6 flex justify-center lg:justify-end">
               <div className="relative w-full max-w-[500px] h-[340px] sm:h-[400px] rounded-[28px] overflow-hidden bg-neutral-800 shadow-2xl border border-white/10 group">
                 <Image
-                  src="/images/cta-jave.jpg"
-                  alt="Jave Carter smiling ready to help you learn English"
+                  src="/images/parvesh-kumar.jpg"
+                  alt="Parvesh Kumar — Founder & Lead Educator, Prime Commerce Hub"
                   fill
-                  className="object-cover object-center group-hover:scale-105 transition-transform duration-700 brightness-[0.95]"
+                  className="object-cover object-top group-hover:scale-105 transition-transform duration-700 brightness-[0.95]"
                   sizes="(max-width: 768px) 100vw, 500px"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
@@ -78,10 +75,10 @@ export function CtaAndFooter({ onOpenContact }: CtaAndFooterProps) {
                 {/* Nameplate at bottom left */}
                 <div className="absolute bottom-6 left-6 z-10">
                   <div className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
-                    Jave Carter
+                    Parvesh Kumar
                   </div>
                   <div className="text-xs text-white/70 font-medium">
-                    CELTA Certified · Dublin, Ireland
+                    Founder &amp; Lead Educator · 30+ Years Teaching Excellence
                   </div>
                 </div>
               </div>
@@ -110,19 +107,28 @@ export function CtaAndFooter({ onOpenContact }: CtaAndFooterProps) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
             {/* Left: Brand, description & Newsletter Box */}
             <div className="lg:col-span-6 space-y-6">
-              <h3 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
-                Jave English
-              </h3>
+              <div className="flex items-center gap-3">
+                <div className="relative w-10 h-10 rounded-lg overflow-hidden shrink-0 border border-white/20">
+                  <Image
+                    src="/images/prime-commerce-hub-logo.jpg"
+                    alt="Prime Commerce Hub Logo"
+                    fill
+                    className="object-contain"
+                    sizes="40px"
+                  />
+                </div>
+                <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+                  PRIME COMMERCE HUB
+                </h3>
+              </div>
 
-              <p className="text-[15px] sm:text-[16px] text-white/70 leading-relaxed max-w-[440px]">
-                Practical online English lessons with Jave Carter — small groups
-                and private 1-on-1 lessons.
+              <p className="text-[15px] sm:text-[16px] text-white/70 leading-relaxed max-w-[460px]">
+                A professional accountancy coaching institute focused on conceptual clarity, personalized student guidance, structured learning and academic excellence for Class 11th and 12th Commerce students.
               </p>
 
               <div className="pt-2 space-y-3">
                 <div className="text-[13px] text-white/80 font-medium">
-                  Subscribe to get an email when I share a new English tip,
-                  lesson, or video.
+                  Subscribe to receive accountancy formulas, revision notes, and board exam tips.
                 </div>
 
                 <form
@@ -150,10 +156,10 @@ export function CtaAndFooter({ onOpenContact }: CtaAndFooterProps) {
             {/* Right: Prominent Bold Links */}
             <div className="lg:col-span-6 flex flex-col space-y-4 lg:pl-12">
               <a
-                href="mailto:hello@mrjaveenglish.com"
+                href="mailto:contact@primecommercehub.com"
                 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white hover:text-[#FDE047] transition-colors break-all tracking-tight"
               >
-                hello@mrjaveenglish.com
+                contact@primecommercehub.com
               </a>
 
               <a
@@ -162,16 +168,7 @@ export function CtaAndFooter({ onOpenContact }: CtaAndFooterProps) {
                 rel="noreferrer"
                 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white/90 hover:text-emerald-400 transition-colors tracking-tight"
               >
-                Whatsapp
-              </a>
-
-              <a
-                href="https://messenger.com"
-                target="_blank"
-                rel="noreferrer"
-                className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white/90 hover:text-blue-400 transition-colors tracking-tight"
-              >
-                Messenger
+                Whatsapp Inquiry
               </a>
 
               <a
@@ -180,7 +177,7 @@ export function CtaAndFooter({ onOpenContact }: CtaAndFooterProps) {
                 rel="noreferrer"
                 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white/90 hover:text-red-400 transition-colors tracking-tight"
               >
-                Youtube Channel
+                Youtube Lectures
               </a>
 
               <a
@@ -196,15 +193,14 @@ export function CtaAndFooter({ onOpenContact }: CtaAndFooterProps) {
 
           {/* Bottom Bar */}
           <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/50">
-            <div>© 2026 Jave English. All rights reserved.</div>
+            <div>© 2026 Prime Commerce Hub. All rights reserved. Founded by Parvesh Kumar.</div>
 
             <div className="flex items-center gap-6">
-              <span>Created by RedSignal.Red</span>
               <a href="#privacy" className="hover:text-white transition-colors">
                 Privacy Policy
               </a>
               <a href="#terms" className="hover:text-white transition-colors">
-                Terms of Use
+                Terms of Admission
               </a>
             </div>
           </div>

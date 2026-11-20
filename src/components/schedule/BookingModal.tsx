@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Modal } from "../ui/Modal";
 import { Button } from "../ui/Button";
 import { ScheduleItem } from "@/types";
-import { CheckCircle2, Calendar, Clock, DollarSign, UserCheck } from "lucide-react";
+import { CheckCircle2, Calendar, Clock, UserCheck, BookOpen } from "lucide-react";
 import confetti from "canvas-confetti";
 
 interface BookingModalProps {
@@ -39,7 +39,7 @@ export function BookingModal({
           origin: { y: 0.6 },
         });
       } catch {
-        // Safe fallback if canvas-confetti doesn't run
+        // Safe fallback
       }
     }, 700);
   };
@@ -58,7 +58,7 @@ export function BookingModal({
     <Modal
       isOpen={isOpen}
       onClose={handleReset}
-      title={isSuccess ? "Registration Reserved!" : `Reserve Slot — ${selectedSlot.courseName}`}
+      title={isSuccess ? "Enrollment Reserved!" : `Reserve Seat — ${selectedSlot.courseName}`}
       maxWidth="max-w-xl"
     >
       {isSuccess ? (
@@ -68,14 +68,14 @@ export function BookingModal({
           </div>
           <h4 className="text-2xl font-bold text-[#16141B]">You're all set, {name}!</h4>
           <p className="text-sm text-neutral-600 max-w-md mx-auto leading-relaxed">
-            A confirmation email and onboarding guide for{" "}
-            <strong>{selectedSlot.courseName} ({selectedSlot.level})</strong> have been sent to{" "}
+            Your seat reservation and batch onboarding information for{" "}
+            <strong>{selectedSlot.courseName} ({selectedSlot.level})</strong> have been confirmed. We've sent details to{" "}
             <span className="text-[#5B32D6] font-semibold">{email}</span>.
           </p>
           <div className="p-4 rounded-2xl bg-[#F7F7F9] max-w-sm mx-auto text-left text-xs space-y-1 text-neutral-700">
-            <div><strong>Schedule:</strong> {selectedSlot.days} ({selectedSlot.time} GMT+1)</div>
-            <div><strong>Starts:</strong> {selectedSlot.startDate}</div>
-            <div><strong>Teacher:</strong> Jave Carter (Google Meet)</div>
+            <div><strong>Schedule:</strong> {selectedSlot.days} ({selectedSlot.time} IST)</div>
+            <div><strong>Batch:</strong> {selectedSlot.level}</div>
+            <div><strong>Educator:</strong> Parvesh Kumar (Prime Commerce Hub)</div>
           </div>
           <div className="pt-4">
             <Button variant="purple" onClick={handleReset}>
@@ -102,15 +102,15 @@ export function BookingModal({
               </div>
               <div className="flex items-center gap-1.5">
                 <Clock className="w-3.5 h-3.5 text-neutral-500" />
-                <span>{selectedSlot.time} GMT+1</span>
+                <span>{selectedSlot.time} IST</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <UserCheck className="w-3.5 h-3.5 text-neutral-500" />
-                <span>Starts {selectedSlot.startDate}</span>
+                <span>{selectedSlot.startDate}</span>
               </div>
               <div className="flex items-center gap-1.5 font-bold text-[#16141B]">
-                <DollarSign className="w-3.5 h-3.5 text-neutral-500" />
-                <span>{selectedSlot.price} / 12-wk level</span>
+                <BookOpen className="w-3.5 h-3.5 text-[#5B32D6]" />
+                <span>Prime Commerce Hub</span>
               </div>
             </div>
           </div>
@@ -119,14 +119,14 @@ export function BookingModal({
           <div className="space-y-4">
             <div>
               <label className="block text-xs font-bold text-neutral-700 mb-1.5 uppercase tracking-wider">
-                Full Name *
+                Student Full Name *
               </label>
               <input
                 type="text"
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Liam O'Connor"
+                placeholder="e.g. Rahul Sharma"
                 className="w-full px-4 py-2.5 rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-[#5B32D6] text-sm text-[#16141B]"
               />
             </div>
@@ -147,13 +147,13 @@ export function BookingModal({
 
             <div>
               <label className="block text-xs font-bold text-neutral-700 mb-1.5 uppercase tracking-wider">
-                Your Goals or Prior Experience (Optional)
+                Your Academic Goals or Current Topic (Optional)
               </label>
               <textarea
                 rows={2}
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="Tell Jave what you would like to focus on most..."
+                placeholder="e.g. Preparing for Class 12 CBSE Board Exams, need help with Partnership accounts..."
                 className="w-full px-4 py-2 rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-[#5B32D6] text-sm text-[#16141B]"
               />
             </div>
@@ -163,12 +163,12 @@ export function BookingModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-semibold text-neutral-600 hover:text-neutral-900"
+              className="px-4 py-2 text-sm font-semibold text-neutral-600 hover:text-neutral-900 cursor-pointer"
             >
               Cancel
             </button>
             <Button variant="purple" size="md">
-              {isSubmitting ? "Reserving..." : "Confirm Reservation"}
+              {isSubmitting ? "Reserving..." : "Confirm Seat Reservation"}
             </Button>
           </div>
         </form>

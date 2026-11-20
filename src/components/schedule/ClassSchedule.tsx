@@ -13,76 +13,51 @@ interface ScheduleGroup {
 
 const scheduleData: ScheduleGroup[] = [
   {
-    groupName: "Everyday Conversation English",
+    groupName: "Class 11 Accountancy (Foundation & Conceptual Clarity)",
     items: [
       {
-        id: "ece-1",
-        courseName: "Everyday Conversation English",
-        level: "Starter",
+        id: "c11-1",
+        courseName: "Class 11 Accountancy",
+        level: "Class 11",
         days: "Mon · Wed · Fri",
-        startDate: "Oct 12, 2026",
-        time: "9:00 AM – 10:00 AM",
-        price: "$290",
-        status: "Full",
-      },
-      {
-        id: "ece-2",
-        courseName: "Everyday Conversation English",
-        level: "Starter",
-        days: "Tue · Thu · Sat",
-        startDate: "Oct 13, 2026",
-        time: "7:00 AM – 8:00 AM",
-        price: "$290",
+        startDate: "Admissions Open",
+        time: "4:30 PM – 6:00 PM",
+        price: "Inquire",
         status: "Open",
       },
       {
-        id: "ece-3",
-        courseName: "Everyday Conversation English",
-        level: "Elementary",
-        days: "Mon · Wed · Fri",
-        startDate: "Jan 11, 2027",
-        time: "9:00 AM – 10:00 AM",
-        price: "$290",
+        id: "c11-2",
+        courseName: "Class 11 Accountancy",
+        level: "Class 11",
+        days: "Tue · Thu · Sat",
+        startDate: "Admissions Open",
+        time: "6:00 PM – 7:30 PM",
+        price: "Inquire",
         status: "Open",
       },
     ],
   },
   {
-    groupName: "Travel English",
+    groupName: "Class 12 Accountancy (Board Excellence & Target 100/100)",
     items: [
       {
-        id: "te-1",
-        courseName: "Travel English",
-        level: "Beginner",
-        days: "Tue · Thu · Sat",
-        startDate: "Oct 13, 2026",
-        time: "9:00 AM – 10:00 AM",
-        price: "$290",
+        id: "c12-1",
+        courseName: "Class 12 Accountancy",
+        level: "Class 12",
+        days: "Mon · Wed · Fri",
+        startDate: "Admissions Open",
+        time: "6:00 PM – 7:30 PM",
+        price: "Inquire",
         status: "2 Slots Left",
       },
-    ],
-  },
-  {
-    groupName: "Kids English",
-    items: [
       {
-        id: "ke-1",
-        courseName: "Kids English",
-        level: "Beginner",
-        days: "Mon · Wed · Fri",
-        startDate: "Oct 12, 2026",
-        time: "2:00 PM – 3:00 PM",
-        price: "$290",
-        status: "Open",
-      },
-      {
-        id: "ke-2",
-        courseName: "Kids English",
-        level: "Elementary",
-        days: "Mon · Wed · Fri",
-        startDate: "Jan 11, 2027",
-        time: "2:00 PM – 3:00 PM",
-        price: "$290",
+        id: "c12-2",
+        courseName: "Class 12 Accountancy",
+        level: "Class 12",
+        days: "Tue · Thu · Sat",
+        startDate: "Admissions Open",
+        time: "4:30 PM – 6:00 PM",
+        price: "Inquire",
         status: "Open",
       },
     ],
@@ -101,7 +76,7 @@ export function ClassSchedule() {
             onClick={() => setSelectedSlot(item)}
             className="inline-flex items-center justify-center px-4 py-1.5 rounded-full text-xs font-bold bg-[#E6F8DC] text-[#2C6E14] hover:bg-[#D4F3C4] transition-colors cursor-pointer select-none"
           >
-            Open
+            Enroll
           </button>
         );
       case "2 Slots Left":
@@ -129,28 +104,27 @@ export function ClassSchedule() {
         {/* Header Section */}
         <div className="space-y-4 max-w-[760px] mb-12 sm:mb-16">
           <div>
-            <Badge variant="yellow">UPCOMING CLASSES</Badge>
+            <Badge variant="yellow">UPCOMING BATCHES</Badge>
           </div>
           <h2 className="text-[36px] sm:text-[46px] lg:text-[54px] font-extrabold tracking-[-0.03em] leading-[1.08] text-white">
             Class Schedule
           </h2>
           <p className="text-[16px] lg:text-[18px] leading-[1.6] text-[#C4B5FD]/90 font-normal">
-            Group classes follow fixed weekly schedules. If you need more flexibility,
-            private 1-on-1 lessons can be arranged around my remaining availability.
+            Structured batches for Class 11th and Class 12th Commerce students. Personalized attention, interactive concept discussions, and individual doubt-clearing sessions led by Parvesh Kumar.
           </p>
           <div className="text-sm font-bold text-white pt-1">
-            All class schedules are shown in GMT+1.
+            All batch schedules are shown in IST (New Delhi).
           </div>
         </div>
 
         {/* Column Header Row (Desktop only) */}
         <div className="hidden md:grid grid-cols-12 px-8 pb-4 text-sm font-semibold text-[#C4B5FD] select-none">
-          <div className="col-span-2">Level</div>
+          <div className="col-span-2">Class</div>
           <div className="col-span-2">Days</div>
-          <div className="col-span-2">Start Date</div>
+          <div className="col-span-2">Start Status</div>
           <div className="col-span-3">Time</div>
-          <div className="col-span-1 text-right">Price</div>
-          <div className="col-span-2 text-right">Status</div>
+          <div className="col-span-1 text-right">Fee</div>
+          <div className="col-span-2 text-right">Enrollment</div>
         </div>
 
         {/* Grouped White Schedule Cards */}
@@ -192,7 +166,7 @@ export function ClassSchedule() {
                     {/* Start Date */}
                     <div className="md:col-span-2 text-neutral-600 text-[14px]">
                       <span className="md:hidden font-semibold text-neutral-400 mr-2">
-                        Starts:
+                        Status:
                       </span>
                       {item.startDate}
                     </div>
@@ -206,7 +180,7 @@ export function ClassSchedule() {
                     </div>
 
                     {/* Price */}
-                    <div className="md:col-span-1 md:text-right font-extrabold text-[#16141B] text-[16px]">
+                    <div className="md:col-span-1 md:text-right font-extrabold text-[#5B32D6] text-[15px]">
                       {item.price}
                     </div>
 

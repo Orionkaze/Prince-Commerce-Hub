@@ -1,4 +1,8 @@
 export type CourseLevel =
+  | "Class 11"
+  | "Class 12"
+  | "Foundation"
+  | "Board Prep"
   | "Starter"
   | "Elementary"
   | "Intermediate"

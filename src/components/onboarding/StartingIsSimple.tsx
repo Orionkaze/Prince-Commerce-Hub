@@ -17,28 +17,28 @@ export function StartingIsSimple({ onOpenContact }: StartingIsSimpleProps) {
   const steps = [
     {
       step: "STEP 1",
-      title: "Tell Jave what you need",
+      title: "Tell Parvesh Sir what you need",
       doodle: "/images/onboarding-step-1.png",
       action: onOpenContact,
       actionLabel: "Send inquiry",
     },
     {
       step: "STEP 2",
-      title: "Take the free level test",
+      title: "Take the commerce assessment",
       doodle: "/images/onboarding-step-2.png",
       action: () => setIsLevelTestOpen(true),
       actionLabel: "Start test now",
     },
     {
       step: "STEP 3",
-      title: "Choose your class based on your level",
+      title: "Choose your Class 11th or 12th batch",
       doodle: "/images/onboarding-step-3.png",
       href: "#schedule",
       actionLabel: "View schedule",
     },
     {
       step: "STEP 4",
-      title: "Confirm, pay, and start",
+      title: "Confirm, enroll, and excel",
       doodle: "/images/onboarding-step-4.png",
       action: onOpenContact,
       actionLabel: "Get started",

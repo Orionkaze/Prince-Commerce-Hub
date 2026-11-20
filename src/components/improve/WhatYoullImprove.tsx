@@ -30,7 +30,6 @@ export function WhatYoullImprove() {
     };
 
     updateDimensions();
-    // Re-check after images have loaded
     const timer = setTimeout(updateDimensions, 600);
     window.addEventListener("resize", updateDimensions);
     return () => {
@@ -69,7 +68,6 @@ export function WhatYoullImprove() {
     const sectionTop = currentScroll + rect.top;
     const scrollableDistance = containerRef.current.scrollHeight - window.innerHeight;
     
-    // Smoothly scroll down to advance the carousel
     window.scrollTo({
       top: Math.min(sectionTop + scrollableDistance, window.scrollY + window.innerHeight * 0.9),
       behavior: "smooth",
@@ -82,7 +80,6 @@ export function WhatYoullImprove() {
     const currentScroll = window.scrollY;
     const sectionTop = currentScroll + rect.top;
     
-    // Smoothly scroll up to reverse the carousel
     window.scrollTo({
       top: Math.max(sectionTop, window.scrollY - window.innerHeight * 0.9),
       behavior: "smooth",
@@ -101,23 +98,21 @@ export function WhatYoullImprove() {
           <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-8 sm:mb-10 gap-6">
             <div className="space-y-4 max-w-[620px]">
               <div>
-                <Badge variant="yellow">WHAT YOU'LL IMPROVE</Badge>
+                <Badge variant="yellow">WHY CHOOSE US</Badge>
               </div>
               <h2 className="text-[36px] sm:text-[46px] lg:text-[54px] font-extrabold tracking-[-0.03em] leading-[1.08] text-[#16141B]">
-                Here’s what I’ll <br className="hidden sm:inline" />
-                help you improve.
+                The Prime <br className="hidden sm:inline" />
+                Advantage.
               </h2>
             </div>
             <div className="max-w-[400px] space-y-2">
               <p className="text-[16px] lg:text-[17px] leading-[1.6] text-neutral-600 font-normal">
-                I’ll guide you in turning those challenges into practical English
-                skills you can use in conversations, work, travel, exams, and
-                everyday life.
+                We provide more than just coaching; we provide a roadmap to academic success in commerce.
               </p>
               {/* Subtle scroll hint */}
               <div className="hidden sm:flex items-center gap-2 text-xs font-semibold text-[#5B32D6]">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#5B32D6] animate-ping" />
-                <span>Scroll down to slide through all cards</span>
+                <span>Scroll down to explore all benefits</span>
               </div>
             </div>
           </div>
@@ -130,11 +125,11 @@ export function WhatYoullImprove() {
             style={{ x }}
             className="flex gap-6 will-change-transform pr-10"
           >
-            {/* Card 1: Full-bleed Photo Card */}
+            {/* Card 1: 30+ years experience */}
             <div className="flex-none w-[320px] sm:w-[400px] lg:w-[440px] h-[440px] sm:h-[480px] rounded-[28px] overflow-hidden relative shadow-md group select-none">
               <Image
-                src="/images/improve-speak-naturally.jpg"
-                alt="Two friends speaking naturally in conversation"
+                src="/images/accountancy-classroom.jpg"
+                alt="30+ years experience in Accountancy coaching"
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-700"
                 sizes="(max-width: 768px) 320px, 440px"
@@ -150,20 +145,19 @@ export function WhatYoullImprove() {
               {/* Bottom Content */}
               <div className="absolute bottom-8 left-8 right-8 text-white space-y-2">
                 <h3 className="text-[22px] lg:text-[24px] font-bold tracking-[-0.02em] leading-[1.25]">
-                  Speak naturally in everyday conversations
+                  30+ years experience
                 </h3>
                 <p className="text-[14px] lg:text-[15px] leading-[1.5] text-white/80">
-                  Express your thoughts without searching for words or pausing
-                  mid-sentence.
+                  A decade and a half of proven results and academic excellence in accountancy.
                 </p>
               </div>
             </div>
 
-            {/* Card 2: Full-bleed Photo Card */}
+            {/* Card 2: Concept-Based Learning */}
             <div className="flex-none w-[320px] sm:w-[400px] lg:w-[440px] h-[440px] sm:h-[480px] rounded-[28px] overflow-hidden relative shadow-md group select-none">
               <Image
                 src="/images/improve-understand-faster.jpg"
-                alt="Smiling woman understanding natural English"
+                alt="Concept-Based Learning in Commerce"
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-700"
                 sizes="(max-width: 768px) 320px, 440px"
@@ -178,25 +172,23 @@ export function WhatYoullImprove() {
               {/* Bottom Content */}
               <div className="absolute bottom-8 left-8 right-8 text-white space-y-2">
                 <h3 className="text-[22px] lg:text-[24px] font-bold tracking-[-0.02em] leading-[1.25]">
-                  Understand faster, more natural English
+                  Concept-Based Learning
                 </h3>
                 <p className="text-[14px] lg:text-[15px] leading-[1.5] text-white/80">
-                  Follow movies, videos, and speakers who talk at a more natural
-                  pace.
+                  Moving beyond rote memorization to deep conceptual understanding of every topic.
                 </p>
               </div>
             </div>
 
-            {/* Card 3: White Split Card (Text on Top, Photo on Bottom with Doodle) */}
+            {/* Card 3: Student-Focused (White Split Card) */}
             <div className="flex-none w-[320px] sm:w-[400px] lg:w-[440px] h-[440px] sm:h-[480px] rounded-[28px] bg-white border border-neutral-200/90 p-7 flex flex-col justify-between shadow-xs select-none">
               {/* Top Text */}
               <div className="space-y-3">
                 <h3 className="text-[22px] lg:text-[24px] font-bold tracking-[-0.02em] leading-[1.25] text-[#16141B]">
-                  Pronounce words more clearly
+                  Student-Focused
                 </h3>
                 <p className="text-[14px] lg:text-[15px] leading-[1.5] text-neutral-600">
-                  Improve difficult sounds, word stress, and sentence rhythm so
-                  your English is easier to understand.
+                  Personalized attention and guidance tailored to each student's learning pace.
                 </p>
               </div>
 
@@ -204,7 +196,7 @@ export function WhatYoullImprove() {
               <div className="relative w-full h-[220px] sm:h-[230px] rounded-[20px] overflow-hidden bg-neutral-100">
                 <Image
                   src="/images/improve-pronounce-clearly.jpg"
-                  alt="Students practicing pronunciation"
+                  alt="Student focused personalized guidance"
                   fill
                   className="object-cover hover:scale-105 transition-transform duration-500"
                   sizes="(max-width: 768px) 320px, 440px"
@@ -215,13 +207,13 @@ export function WhatYoullImprove() {
               </div>
             </div>
 
-            {/* Card 4: White Split Card (Photo on Top, Text on Bottom) */}
+            {/* Card 4: Structured Syllabus (White Split Card) */}
             <div className="flex-none w-[320px] sm:w-[400px] lg:w-[440px] h-[440px] sm:h-[480px] rounded-[28px] bg-white border border-neutral-200/90 p-7 flex flex-col justify-between shadow-xs select-none">
               {/* Top Rounded Photo */}
               <div className="relative w-full h-[220px] sm:h-[230px] rounded-[20px] overflow-hidden bg-neutral-100">
                 <Image
                   src="/images/improve-what-to-say.jpg"
-                  alt="Student finding the right words in conversation"
+                  alt="Structured syllabus and exam preparation"
                   fill
                   className="object-cover hover:scale-105 transition-transform duration-500"
                   sizes="(max-width: 768px) 320px, 440px"
@@ -231,11 +223,10 @@ export function WhatYoullImprove() {
               {/* Bottom Text */}
               <div className="space-y-3 pt-4">
                 <h3 className="text-[22px] lg:text-[24px] font-bold tracking-[-0.02em] leading-[1.25] text-[#16141B]">
-                  Know what to say next
+                  Structured Syllabus
                 </h3>
                 <p className="text-[14px] lg:text-[15px] leading-[1.5] text-neutral-600">
-                  Build useful vocabulary and phrases so you don't freeze
-                  mid-sentence.
+                  Well-organized study plans and easy explanations for complex accounting problems.
                 </p>
               </div>
             </div>
@@ -253,7 +244,7 @@ export function WhatYoullImprove() {
               />
             </div>
             <span className="text-[11px] font-bold uppercase tracking-wider text-neutral-400">
-              {scrollPercent > 0.6 ? "Cards 3–4" : "Cards 1–2"}
+              {scrollPercent > 0.6 ? "Benefits 3–4" : "Benefits 1–2"}
             </span>
           </div>
 
@@ -268,7 +259,7 @@ export function WhatYoullImprove() {
                   ? "bg-[#16141B] text-white hover:bg-neutral-800"
                   : "bg-neutral-200 text-neutral-400 cursor-not-allowed"
               }`}
-              aria-label="Previous cards"
+              aria-label="Previous benefits"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
@@ -281,7 +272,7 @@ export function WhatYoullImprove() {
                   ? "bg-[#16141B] text-white hover:bg-neutral-800"
                   : "bg-neutral-200 text-neutral-400 cursor-not-allowed"
               }`}
-              aria-label="Next cards"
+              aria-label="Next benefits"
             >
               <ChevronRight className="w-5 h-5" />
             </button>

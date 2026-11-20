@@ -19,7 +19,7 @@ export function OnlineLessonWalkthrough() {
   const row1Steps: (StepItem & { offsetClass: string })[] = [
     {
       num: "01",
-      title: "Join scheduled class on Google Meet.",
+      title: "Join scheduled classroom or live interactive batch.",
       image: "/images/step-01.jpg",
       tapeTopRotation: "rotate-[-3deg]",
       tapeBottomRotation: "rotate-[2deg]",
@@ -27,7 +27,7 @@ export function OnlineLessonWalkthrough() {
     },
     {
       num: "02",
-      title: "Review what you learned last time.",
+      title: "Review previous concepts & homework problems.",
       image: "/images/step-02.jpg",
       tapeTopRotation: "rotate-[3deg]",
       tapeBottomRotation: "rotate-[-3deg]",
@@ -35,7 +35,7 @@ export function OnlineLessonWalkthrough() {
     },
     {
       num: "03",
-      title: "Learn new English with Jave.",
+      title: "Master new accounting concepts with Parvesh Sir.",
       image: "/images/step-03.jpg",
       tapeTopRotation: "rotate-[-2deg]",
       tapeBottomRotation: "rotate-[4deg]",
@@ -46,8 +46,8 @@ export function OnlineLessonWalkthrough() {
   const row2Steps: (StepItem & { offsetClass: string })[] = [
     {
       num: "06",
-      title: "Review and practice before your next lesson.",
-      desc: "After class, Jave shares the lesson materials, notes, and short homework or practice activities. When a lesson recording is available, you can also watch it again later.",
+      title: "Review and practice before your next session.",
+      desc: "After every session, students receive chapter summary sheets, curated practice assignments, and step-by-step model solutions to cement their conceptual understanding.",
       image: "/images/step-06.jpg",
       tapeTopRotation: "rotate-[3deg]",
       tapeBottomRotation: "rotate-[-2deg]",
@@ -55,7 +55,7 @@ export function OnlineLessonWalkthrough() {
     },
     {
       num: "05",
-      title: "Jave helps you fix mistakes as you learn.",
+      title: "Instant doubt resolution and error correction.",
       image: "/images/step-05.jpg",
       tapeTopRotation: "rotate-[-3deg]",
       tapeBottomRotation: "rotate-[3deg]",
@@ -63,7 +63,7 @@ export function OnlineLessonWalkthrough() {
     },
     {
       num: "04",
-      title: "You spend most of the lesson actually using English.",
+      title: "Solve comprehensive numerical problems & working notes.",
       image: "/images/step-04.jpg",
       tapeTopRotation: "rotate-[2deg]",
       tapeBottomRotation: "rotate-[-4deg]",
@@ -77,14 +77,13 @@ export function OnlineLessonWalkthrough() {
         {/* Centered Header */}
         <div className="text-center max-w-[720px] mx-auto space-y-4 mb-20 lg:mb-24">
           <div>
-            <Badge variant="yellow">ONLINE LESSONS</Badge>
+            <Badge variant="yellow">LEARNING METHODOLOGY</Badge>
           </div>
           <h2 className="text-[36px] sm:text-[46px] lg:text-[54px] font-extrabold tracking-[-0.03em] leading-[1.08] text-[#16141B]">
-            What does an online lesson with Jave look like?
+            What does an Accountancy session with Parvesh Sir look like?
           </h2>
           <p className="text-[16px] lg:text-[18px] leading-[1.6] text-neutral-600 font-normal pt-2">
-            Each lesson follows a clear structure with time to learn, practice, get
-            feedback, and know what to work on next.
+            Each session follows a structured pedagogical approach with time to understand core concepts, solve practical questions, clear doubts, and master board exam techniques.
           </p>
         </div>
 

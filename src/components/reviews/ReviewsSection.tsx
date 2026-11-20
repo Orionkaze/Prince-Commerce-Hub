@@ -17,55 +17,55 @@ const publicReviews: PublicReview[] = [
     author: "Google Reviewer",
     platform: "google",
     rating: 5,
-    text: "I needed English mainly for work meetings. We practiced situations that actually happen in my job, so the lessons always felt useful and relevant.",
+    text: "Parvesh Sir's clarity in Partnership and Company Accounts is simply unmatched. I used to be terrified of Cash Flow Statements, but he made the concepts crystal clear. Scored 98 in my Board Exams!",
   },
   {
     id: "pr-2",
     author: "Google Reviewer",
     platform: "google",
     rating: 5,
-    text: "Jave explains things in a very simple way and gives me enough time to speak. I used to think too much before answering, but now conversations feel much easier.",
+    text: "The personal attention and step-by-step guidance transformed my confidence in Class 11 and 12 Accountancy. No rote memorization, only deep logic and solid conceptual foundation.",
   },
   {
     id: "pr-3",
     author: "Google Reviewer",
     platform: "google",
     rating: 5,
-    text: "I started with very basic English and was nervous about speaking. Jave is patient and corrects mistakes without making the lesson stressful. I feel much more comfortable now.",
+    text: "Best coaching for Class 11 Commerce fundamentals. The way Parvesh Sir explains the logic behind Debit and Credit makes complex journal entries feel effortless.",
   },
   {
     id: "pr-4",
     author: "Facebook Reviewer",
     platform: "facebook",
     rating: 5,
-    text: "I used to give short answers and run out of ideas. The speaking practice and clear feedback helped me explain my thoughts with much more detail.",
+    text: "His 30+ years of teaching experience really shows. He predicts exact exam patterns, teaches time management, and shows how to write full-mark working notes.",
   },
   {
     id: "pr-5",
     author: "Google Reviewer",
     platform: "google",
     rating: 5,
-    text: "After 12 weeks of IELTS coaching with Jave, I improved from 6.0 to 7.5 in Speaking and 7.0 overall. His feedback on structure and vocabulary made the difference.",
+    text: "After joining Prime Commerce Hub, my score jumped from 62% in school pre-boards to 96% in the final CBSE Board Examination. His guidance changed my academic trajectory.",
   },
 ];
 
 const studentFeedback: StudentFeedback[] = [
   {
     id: "sf-1",
-    author: "Lucas Ferreira",
-    tagline: "English for Work · Intermediate",
-    quote: "I can finally speak in meetings without preparing every sentence first.",
+    author: "Aman Sharma",
+    tagline: "Class 12 CBSE Board · 99/100 in Accountancy",
+    quote: "I finally understood the 'why' behind every ledger entry instead of just memorizing steps.",
     story:
-      "Before this course, I usually prepared what I wanted to say before every meeting and avoided speaking unless I had to. After 12 weeks, I can give project updates, answer follow-up questions, and explain my ideas much more naturally. I still make mistakes, but I don't freeze when someone asks me something unexpectedly anymore.",
+      "Before joining Prime Commerce Hub, Balance Sheets were a nightmare for me and my adjustments never tallied. Parvesh Sir's concept-first approach completely demystified accounting principles. In the board exam, I finished the paper 25 minutes early with complete working notes.",
     image: "/images/review-lucas.jpg",
   },
   {
     id: "sf-2",
-    author: "Emma Park",
-    tagline: "Parent of Mia, age 10",
-    quote: "She's started using English on her own instead of waiting for me to ask.",
+    author: "Pooja Malhotra",
+    tagline: "Class 11 & 12 Commerce Student",
+    quote: "Parvesh Sir's personal guidance gave me the confidence to pursue top commerce careers.",
     story:
-      "Mia could understand simple English before the course, but rarely wanted to speak. Now she answers in longer sentences, uses new words by herself, and sometimes speaks English with her cousin during video calls. The biggest difference is that she's much less worried about making mistakes.",
+      "I was hesitant when I took Commerce in Class 11. Parvesh Sir broke down difficult concepts into simple real-world financial situations. His structured study plans and regular doubt clearing sessions made Accountancy my highest-scoring subject.",
     image: "/images/review-emma.jpg",
   },
 ];
@@ -109,7 +109,7 @@ export function ReviewsSection() {
           </div>
           <h2 className="text-[36px] sm:text-[46px] lg:text-[54px] font-extrabold tracking-[-0.03em] leading-[1.08] text-[#16141B]">
             Different goals. <br />
-            Meaningful progress.
+            Proven excellence.
           </h2>
         </div>
 
@@ -123,7 +123,7 @@ export function ReviewsSection() {
               Public Reviews
             </h3>
             <p className="text-sm sm:text-base text-neutral-600 max-w-md mx-auto">
-              Read reviews shared publicly on Google, Facebook, and other platforms.
+              Read reviews shared publicly on Google, Facebook, and by our student community.
             </p>
           </div>
 
@@ -167,7 +167,7 @@ export function ReviewsSection() {
                   </div>
 
                   <div className="pt-6 border-t border-neutral-100 flex items-center justify-between text-xs text-neutral-400">
-                    <span>Verified Student</span>
+                    <span>Verified Student / Parent</span>
                     <span className="capitalize">{rev.platform} Reviews</span>
                   </div>
                 </div>
@@ -186,7 +186,7 @@ export function ReviewsSection() {
               Student Feedback
             </h3>
             <p className="text-sm sm:text-base text-neutral-600 max-w-md mx-auto">
-              See feedback from students after completing a course or level with Jave.
+              See feedback from students after mastering Accountancy with Parvesh Sir.
             </p>
           </div>
 

@@ -17,40 +17,40 @@ interface TierItem {
 const tiers: TierItem[] = [
   {
     num: "01",
-    title: "Starter",
-    desc: "Basic vocabulary, simple sentences, listening, and everyday expressions.",
+    title: "Accounting Basics",
+    desc: "Basic terminology, accounting equation, and foundational rules of Debit & Credit.",
     heightDesktop: "lg:h-[250px]",
     heightMobile: "h-[220px]",
     bgColor: "#352659",
   },
   {
     num: "02",
-    title: "Elementary",
-    desc: "Common words, questions and answers, basic pronunciation, and simple listening.",
+    title: "Books of Entry",
+    desc: "Journal entries, Cash Book, subsidiary books, and Bank Reconciliation Statement (BRS).",
     heightDesktop: "lg:h-[310px]",
     heightMobile: "h-[240px]",
     bgColor: "#412D73",
   },
   {
     num: "03",
-    title: "Intermediate",
-    desc: "Longer conversations, practical vocabulary, natural sentences, and clearer speech.",
+    title: "Ledgers & Trial Balance",
+    desc: "Ledger posting, Trial Balance, Depreciation, Provisions, Reserves & Rectification of Errors.",
     heightDesktop: "lg:h-[370px]",
     heightMobile: "h-[260px]",
     bgColor: "#4D348C",
   },
   {
     num: "04",
-    title: "Upper Intermediate",
-    desc: "Work, travel, social situations, longer discussions, and natural expressions.",
+    title: "Financial Statements",
+    desc: "Trading & P&L A/c, Balance Sheet with adjustments, and Partnership fundamentals.",
     heightDesktop: "lg:h-[430px]",
     heightMobile: "h-[280px]",
     bgColor: "#583BA6",
   },
   {
     num: "05",
-    title: "Advanced",
-    desc: "Fluency, accuracy, precise vocabulary, and more complex conversations.",
+    title: "Board Exam Mastery",
+    desc: "Company Accounts (Shares & Debentures), Cash Flow Statements, and target 100/100 mock series.",
     heightDesktop: "lg:h-[490px]",
     heightMobile: "h-[300px]",
     bgColor: "#6342C2",
@@ -68,13 +68,12 @@ export function LearningPath() {
               <Badge variant="yellow">LEARNING PATH</Badge>
             </div>
             <h2 className="text-[36px] sm:text-[46px] lg:text-[54px] font-extrabold tracking-[-0.03em] leading-[1.08] text-white">
-              Start at your level. <br />
-              Know what comes next.
+              Start with strong concepts. <br />
+              Master every chapter.
             </h2>
           </div>
           <p className="max-w-[420px] text-[16px] lg:text-[17px] leading-[1.6] text-[#C4B5FD]/90 font-normal">
-            Each course is divided into clear 12-week levels, so you always know
-            where you're starting and what you're working toward.
+            A structured, progressive roadmap designed to take Class 11th and 12th students from fundamental accounting principles to complete board exam confidence.
           </p>
         </div>
 

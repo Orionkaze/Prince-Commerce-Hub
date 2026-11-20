@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { BarChart3, MonitorPlay, GraduationCap, ArrowRight } from "lucide-react";
+import { BookOpen, GraduationCap, MonitorPlay } from "lucide-react";
 
 interface CourseItem {
   id: string;
@@ -21,40 +21,28 @@ interface CourseItem {
 
 const courses: CourseItem[] = [
   {
-    id: "work",
-    tag: "PROFESSIONAL ENGLISH",
-    title: "English for Work",
+    id: "class-11",
+    tag: "COMMERCE FOUNDATION",
+    title: "Class 11 Accountancy",
     subtitle:
-      "Practice meetings, emails, presentations, and workplace English so you can communicate more clearly at work.",
-    image: "/images/course-work.jpg",
+      "Comprehensive foundational learning module for Class 11 Commerce students, focusing on core concepts, journal entries, ledgers, and financial accounting principles.",
+    image: "/images/accountancy-classroom.jpg",
     topOffset: "top-24",
-    levels: "4 Levels (Elementary–Advanced)",
-    format: "100% Online",
-    highlightIcon: <BarChart3 className="w-5 h-5 text-[#5B32D6]" />,
+    levels: "Class 11 Commerce",
+    format: "Classroom & Online",
+    highlightIcon: <BookOpen className="w-5 h-5 text-[#5B32D6]" />,
   },
   {
-    id: "kids",
-    tag: "KIDS ENGLISH",
-    title: "English for Kids",
+    id: "class-12",
+    tag: "BOARD EXCELLENCE",
+    title: "Class 12 Accountancy",
     subtitle:
-      "Build speaking, listening, pronunciation, and vocabulary so children can use English more confidently in everyday situations.",
-    image: "/images/course-kids.jpg",
+      "Comprehensive learning module designed for Class 12 Commerce students, covering Partnership Accounts, Company Accounts, and Financial Analysis for board exam mastery.",
+    image: "/images/course-work.jpg",
     topOffset: "top-28",
-    levels: "3 Levels (Beginner–Intermediate)",
-    format: "100% Online",
+    levels: "Class 12 Commerce",
+    format: "Classroom & Online",
     highlightIcon: <GraduationCap className="w-5 h-5 text-[#5B32D6]" />,
-  },
-  {
-    id: "ielts",
-    tag: "EXAM PREPARATION",
-    title: "IELTS Preparation",
-    subtitle:
-      "Build your IELTS skills step by step with a clear band-based study plan for Listening, Reading, Writing, and Speaking.",
-    image: "/images/course-ielts.jpg",
-    topOffset: "top-32",
-    levels: "Target: Band 6.0 – 8.0+",
-    format: "100% Online",
-    highlightIcon: <MonitorPlay className="w-5 h-5 text-[#5B32D6]" />,
   },
 ];
 
@@ -120,22 +108,22 @@ function CardStackItem({
               onClick={() => onSelectCourse(course.id)}
               href="#schedule"
             >
-              Check Class Schedule
+              Check Batch Schedule
             </Button>
           </div>
 
           {/* Floating White Course Info Card */}
           <div className="rounded-[20px] p-5 sm:p-6 bg-white shadow-xl text-[#16141B] max-w-[380px] w-full border border-neutral-100">
             <div className="text-xs font-bold uppercase tracking-wider text-neutral-400 mb-3 flex items-center justify-between">
-              <span>Course Info</span>
-              <span className="text-[#5B32D6] font-bold">12-Week Module</span>
+              <span>Program Details</span>
+              <span className="text-[#5B32D6] font-bold">Prime Commerce Hub</span>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
                 <div className="text-[11px] font-bold text-neutral-500 uppercase tracking-tight flex items-center gap-1">
                   {course.highlightIcon}
-                  <span>Course Levels</span>
+                  <span>Target Class</span>
                 </div>
                 <div className="text-[13px] font-bold text-[#16141B]">
                   {course.levels}
@@ -145,7 +133,7 @@ function CardStackItem({
               <div className="space-y-1 border-l border-neutral-100 pl-4">
                 <div className="text-[11px] font-bold text-neutral-500 uppercase tracking-tight flex items-center gap-1">
                   <MonitorPlay className="w-4 h-4 text-emerald-600" />
-                  <span>Class Format</span>
+                  <span>Learning Mode</span>
                 </div>
                 <div className="text-[13px] font-bold text-[#16141B]">
                   {course.format}
@@ -167,6 +155,19 @@ export function StickyCourseCards({
   return (
     <section id="courses" className="bg-white py-16 lg:py-24">
       <div className="max-w-[1240px] mx-auto px-5 sm:px-8 lg:px-10">
+        {/* Section Header */}
+        <div className="space-y-4 max-w-[680px] mb-12 sm:mb-16">
+          <div>
+            <Badge variant="yellow">OUR PROGRAMS</Badge>
+          </div>
+          <h2 className="text-[36px] sm:text-[46px] lg:text-[54px] font-extrabold tracking-[-0.03em] leading-[1.08] text-[#16141B]">
+            Expert Accountancy Courses
+          </h2>
+          <p className="text-[16px] lg:text-[18px] leading-[1.6] text-neutral-600 font-normal">
+            Comprehensive learning modules designed for Class 11 and 12 Commerce students.
+          </p>
+        </div>
+
         <div className="relative">
           {courses.map((course, idx) => (
             <CardStackItem
