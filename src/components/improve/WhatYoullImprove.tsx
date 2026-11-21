@@ -8,14 +8,19 @@ import {
   AdvantageStudentDoodle,
   AdvantageSyllabusDoodle,
 } from "../doodles/CommerceDoodles";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { ChevronLeft, ChevronRight, CheckCircle2 } from "lucide-react";
+
+interface AdvantagePoint {
+  title: string;
+  detail: string;
+}
 
 interface AdvantageItem {
   step: string;
   badge: string;
   title: string;
   description: string;
+  points: AdvantagePoint[];
   pills: string[];
   type: "lavender" | "card";
   renderDoodle: () => React.ReactNode;
@@ -24,253 +29,277 @@ interface AdvantageItem {
 const advantages: AdvantageItem[] = [
   {
     step: "01",
-    badge: "HERITAGE & EXCELLENCE",
+    badge: "HERITAGE & TRUST",
     title: "30+ years experience",
     description:
-      "A decade and a half of proven results and academic excellence in accountancy, guiding generations of commerce students to top ranks.",
-    pills: ["30+ Years Trust", "CBSE Specialization", "Proven Pedagogy"],
+      "Three decades of proven results and academic excellence in accountancy, mentoring commerce students to top ranks.",
+    points: [
+      {
+        title: "10,000+ Students Mentored",
+        detail: "Decades of guiding Class 11th and 12th students to 95%+ and 100/100 board scores.",
+      },
+      {
+        title: "CBSE & ISC Blueprint Expertise",
+        detail: "Deep understanding of syllabus trends, tricky examiner traps, and marking schemes.",
+      },
+      {
+        title: "Proven Pedagogical Methods",
+        detail: "Time-tested teaching frameworks that make complex financial statements simple.",
+      },
+    ],
+    pills: ["30+ Years Trust", "CBSE Specialization", "Board Rankers"],
     type: "lavender",
-    renderDoodle: () => <AdvantageExperienceDoodle className="w-36 h-36 sm:w-40 sm:h-40" />,
+    renderDoodle: () => <AdvantageExperienceDoodle className="w-32 h-32 sm:w-36 sm:h-36" />,
   },
   {
     step: "02",
     badge: "LOGIC OVER ROTE",
     title: "Concept-Based Learning",
     description:
-      "Moving beyond rote memorization to deep conceptual understanding of every accounting standard, financial principle, and adjustment.",
-    pills: ["Zero Rote Cramming", "Modern Accounting Rules", "Conceptual Logic"],
+      "Moving beyond blind memorization to deep conceptual clarity of every accounting standard and principle.",
+    points: [
+      {
+        title: "Accounting Logic First",
+        detail: "Understanding the financial reasoning behind every Debit and Credit entry.",
+      },
+      {
+        title: "Zero Rote Cramming",
+        detail: "Mastering modern accounting rules intuitively without mugging up endless formats.",
+      },
+      {
+        title: "Practical Business Context",
+        detail: "Connecting textbook ledger entries to real-world corporate balance sheets.",
+      },
+    ],
+    pills: ["Zero Blind Cramming", "Modern Rules", "Financial Logic"],
     type: "card",
-    renderDoodle: () => <AdvantageConceptDoodle className="w-36 h-36 sm:w-40 sm:h-40" />,
+    renderDoodle: () => <AdvantageConceptDoodle className="w-32 h-32 sm:w-36 sm:h-36" />,
   },
   {
     step: "03",
     badge: "PERSONAL ATTENTION",
     title: "Student-Focused",
     description:
-      "Personalized attention and individual guidance tailored to each student's learning pace, clearing doubts before they become bottlenecks.",
-    pills: ["1-on-1 Guidance", "Instant Doubt Resolution", "Individual Pace"],
+      "Personalized attention and individual guidance tailored to each student's unique learning pace and doubts.",
+    points: [
+      {
+        title: "Individual Pace Monitoring",
+        detail: "Continuous assessment to catch weaknesses early before they turn into exam panic.",
+      },
+      {
+        title: "Direct 1-on-1 Doubt Sessions",
+        detail: "Personalized doubt clearing with Parvesh Sir for tricky adjustment entries.",
+      },
+      {
+        title: "Supportive Mentorship",
+        detail: "Encouraging environment where no student hesitates to ask foundational questions.",
+      },
+    ],
+    pills: ["Small Batch Focus", "1-on-1 Doubts", "Paced Learning"],
     type: "lavender",
-    renderDoodle: () => <AdvantageStudentDoodle className="w-36 h-36 sm:w-40 sm:h-40" />,
+    renderDoodle: () => <AdvantageStudentDoodle className="w-32 h-32 sm:w-36 sm:h-36" />,
   },
   {
     step: "04",
     badge: "BOARD EXAM BLUEPRINT",
     title: "Structured Syllabus",
     description:
-      "Well-organized study plans, comprehensive working notes, and easy explanations for complex 6-mark board exam numerical problems.",
+      "Well-organized study plans, comprehensive working notes, and easy explanations for complex numerical problems.",
+    points: [
+      {
+        title: "Curated Chapter Roadmaps",
+        detail: "Step-by-step coverage from Partnership to Share Capital and Cash Flow Statements.",
+      },
+      {
+        title: "Full-Mark Working Notes",
+        detail: "Detailed training on writing clean, step-by-step working notes per CBSE marking criteria.",
+      },
+      {
+        title: "Timed Mock Drills",
+        detail: "Regular exam-condition tests to build speed, composure, and calculation accuracy.",
+      },
+    ],
     pills: ["Working Notes Mastery", "CBSE Marking Scheme", "Chapter-Wise Tests"],
     type: "card",
-    renderDoodle: () => <AdvantageSyllabusDoodle className="w-36 h-36 sm:w-40 sm:h-40" />,
+    renderDoodle: () => <AdvantageSyllabusDoodle className="w-32 h-32 sm:w-36 sm:h-36" />,
   },
 ];
 
 export function WhatYoullImprove() {
-  const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
-  const [maxScroll, setMaxScroll] = useState(800);
-  const [scrollPercent, setScrollPercent] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
 
-  // Measure track scrollable distance
+  // Update scroll buttons and progress indicator on manual scroll
+  const handleScroll = () => {
+    if (!trackRef.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = trackRef.current;
+    const maxScrollLeft = scrollWidth - clientWidth;
+    
+    setCanScrollLeft(scrollLeft > 20);
+    setCanScrollRight(scrollLeft < maxScrollLeft - 20);
+
+    if (maxScrollLeft > 0) {
+      setScrollProgress(scrollLeft / maxScrollLeft);
+    }
+  };
+
   useEffect(() => {
-    const updateDimensions = () => {
-      if (trackRef.current) {
-        const trackWidth = trackRef.current.scrollWidth;
-        const viewportWidth = window.innerWidth;
-        // Padding offset so the last card aligns comfortably at the right edge
-        const distance = Math.max(0, trackWidth - viewportWidth + 80);
-        setMaxScroll(distance);
-      }
-    };
-
-    updateDimensions();
-    const timer = setTimeout(updateDimensions, 600);
-    window.addEventListener("resize", updateDimensions);
+    handleScroll();
+    const track = trackRef.current;
+    if (track) {
+      track.addEventListener("scroll", handleScroll, { passive: true });
+      window.addEventListener("resize", handleScroll);
+    }
     return () => {
-      clearTimeout(timer);
-      window.removeEventListener("resize", updateDimensions);
+      if (track) track.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
     };
   }, []);
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"],
-  });
-
-  // Track progress percentage for buttons and indicator
-  useEffect(() => {
-    const unsubscribe = scrollYProgress.on("change", (latest) => {
-      setScrollPercent(latest);
-    });
-    return () => unsubscribe();
-  }, [scrollYProgress]);
-
-  // Framer-quality smooth spring physics
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 110,
-    damping: 25,
-    mass: 0.6,
-  });
-
-  const x = useTransform(smoothProgress, [0, 1], [0, -maxScroll]);
-
-  // Navigation button handlers
-  const handleNext = () => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const currentScroll = window.scrollY;
-    const sectionTop = currentScroll + rect.top;
-    const scrollableDistance = containerRef.current.scrollHeight - window.innerHeight;
-    
-    window.scrollTo({
-      top: Math.min(sectionTop + scrollableDistance, window.scrollY + window.innerHeight * 0.9),
-      behavior: "smooth",
-    });
-  };
-
-  const handlePrev = () => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const currentScroll = window.scrollY;
-    const sectionTop = currentScroll + rect.top;
-    
-    window.scrollTo({
-      top: Math.max(sectionTop, window.scrollY - window.innerHeight * 0.9),
-      behavior: "smooth",
-    });
+  // Manual scroll handlers (clicking chevron buttons)
+  const scrollByAmount = (amount: number) => {
+    if (trackRef.current) {
+      trackRef.current.scrollBy({ left: amount, behavior: "smooth" });
+    }
   };
 
   return (
-    <section
-      ref={containerRef}
-      className="relative h-[250vh] sm:h-[280vh] bg-white border-t border-neutral-100"
-    >
-      {/* Sticky Full-Viewport Container */}
-      <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-between py-12 sm:py-16">
-        <div className="max-w-[1240px] w-full mx-auto px-5 sm:px-8 lg:px-10">
-          {/* Header Row (Stays pinned in view while cards move) */}
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-8 sm:mb-10 gap-6">
-            <div className="space-y-4 max-w-[620px]">
-              <div>
-                <Badge variant="yellow">WHY CHOOSE US</Badge>
-              </div>
-              <h2 className="text-[36px] sm:text-[46px] lg:text-[54px] font-extrabold tracking-[-0.03em] leading-[1.08] text-[#16141B]">
-                The Prime <br className="hidden sm:inline" />
-                Advantage.
-              </h2>
+    <section className="bg-white py-20 lg:py-28 border-t border-neutral-100">
+      <div className="max-w-[1240px] mx-auto px-5 sm:px-8 lg:px-10">
+        {/* Section Header */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-12 lg:mb-14 gap-6">
+          <div className="space-y-4 max-w-[620px]">
+            <div>
+              <Badge variant="yellow">WHY CHOOSE US</Badge>
             </div>
-            <div className="max-w-[400px] space-y-2">
-              <p className="text-[16px] lg:text-[17px] leading-[1.6] text-neutral-600 font-normal">
-                We provide more than just coaching; we provide a roadmap to academic success in commerce.
-              </p>
-              {/* Subtle scroll hint */}
-              <div className="hidden sm:flex items-center gap-2 text-xs font-semibold text-[#5B32D6]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#5B32D6] animate-ping" />
-                <span>Scroll down to explore all benefits</span>
+            <h2 className="text-[36px] sm:text-[46px] lg:text-[54px] font-extrabold tracking-[-0.03em] leading-[1.08] text-[#16141B]">
+              The Prime <br className="hidden sm:inline" />
+              Advantage.
+            </h2>
+          </div>
+          <div className="max-w-[420px] space-y-4">
+            <p className="text-[16px] lg:text-[17px] leading-[1.6] text-neutral-600 font-normal">
+              We provide more than just coaching; we provide a structured roadmap to conceptual mastery and board exam excellence in commerce.
+            </p>
+            {/* Desktop Navigation Controls in Header */}
+            <div className="flex items-center gap-4 pt-1">
+              {/* Progress Bar Indicator */}
+              <div className="flex items-center gap-2.5">
+                <div className="w-24 sm:w-28 h-1.5 bg-neutral-200 rounded-full overflow-hidden">
+                  <div
+                    className="bg-[#5B32D6] h-full rounded-full transition-all duration-150"
+                    style={{ width: `${Math.max(scrollProgress * 100, 20)}%` }}
+                  />
+                </div>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-neutral-400 whitespace-nowrap">
+                  {scrollProgress > 0.5 ? "Benefits 3–4" : "Benefits 1–2"}
+                </span>
+              </div>
+
+              {/* Prev / Next Manual Scroll Buttons */}
+              <div className="flex items-center gap-2 ml-auto">
+                <button
+                  type="button"
+                  onClick={() => scrollByAmount(-440)}
+                  disabled={!canScrollLeft}
+                  className={`w-10 h-10 rounded-full flex items-center justify-center transition-all cursor-pointer border ${
+                    canScrollLeft
+                      ? "bg-[#16141B] text-white hover:bg-neutral-800 border-[#16141B]"
+                      : "bg-neutral-100 text-neutral-400 border-neutral-200 cursor-not-allowed"
+                  }`}
+                  aria-label="Previous advantages"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => scrollByAmount(440)}
+                  disabled={!canScrollRight}
+                  className={`w-10 h-10 rounded-full flex items-center justify-center transition-all cursor-pointer border ${
+                    canScrollRight
+                      ? "bg-[#16141B] text-white hover:bg-neutral-800 border-[#16141B]"
+                      : "bg-neutral-100 text-neutral-400 border-neutral-200 cursor-not-allowed"
+                  }`}
+                  aria-label="Next advantages"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Scroll-Driven Horizontal Track (Clean Uniform Illustrated Advantage Cards) */}
-        <div className="w-full overflow-hidden pl-5 sm:pl-8 lg:pl-[max(2.5rem,calc((100vw-1240px)/2+2.5rem))]">
-          <motion.div
-            ref={trackRef}
-            style={{ x }}
-            className="flex gap-6 will-change-transform pr-10"
+      {/* Manual Horizontal Scroll Track (Natural, No Page Lock, Snap-Scrollable) */}
+      <div
+        ref={trackRef}
+        className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory px-5 sm:px-8 lg:px-[max(2.5rem,calc((100vw-1240px)/2+2.5rem))] pb-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] select-none"
+      >
+        {advantages.map((item) => (
+          <div
+            key={item.title}
+            className={`flex-none w-[320px] sm:w-[380px] lg:w-[410px] rounded-[28px] p-7 sm:p-8 flex flex-col justify-between shadow-xs transition-transform duration-300 hover:-translate-y-1.5 snap-start border border-neutral-200/70 ${
+              item.type === "lavender" ? "bg-[#ECE8FA]" : "bg-[#F7F7F9]"
+            }`}
           >
-            {advantages.map((item) => (
-              <div
-                key={item.title}
-                className={`flex-none w-[320px] sm:w-[380px] lg:w-[420px] h-[440px] sm:h-[480px] rounded-[28px] p-7 sm:p-9 flex flex-col justify-between shadow-xs transition-transform duration-300 hover:-translate-y-2 select-none border border-neutral-200/70 ${
-                  item.type === "lavender" ? "bg-[#ECE8FA]" : "bg-[#F7F7F9]"
-                }`}
-              >
-                {/* Top: Header Badge & Vector Illustration */}
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <Badge variant="yellow">{item.badge}</Badge>
-                    <span className="text-xs font-bold text-[#5B32D6] tracking-wider uppercase">
-                      BENEFIT {item.step}
-                    </span>
-                  </div>
-
-                  {/* Centered Vector Doodle */}
-                  <div className="w-full h-[160px] sm:h-[180px] flex items-center justify-center pt-2">
-                    {item.renderDoodle()}
-                  </div>
-                </div>
-
-                {/* Bottom: Title, Description & Feature Pills */}
-                <div className="space-y-3 pt-4 border-t border-neutral-200/50">
-                  <h3 className="text-[22px] sm:text-[25px] font-extrabold tracking-[-0.02em] leading-[1.2] text-[#16141B]">
-                    {item.title}
-                  </h3>
-                  <p className="text-[14px] sm:text-[15px] leading-[1.55] text-neutral-600">
-                    {item.description}
-                  </p>
-
-                  {/* Micro Pills */}
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {item.pills.map((pill) => (
-                      <span
-                        key={pill}
-                        className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-white/80 border border-neutral-200/80 text-neutral-700 shadow-2xs"
-                      >
-                        {pill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+            {/* Top: Header Badge & Vector Illustration */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <Badge variant="yellow">{item.badge}</Badge>
+                <span className="text-xs font-bold text-[#5B32D6] tracking-wider uppercase">
+                  BENEFIT {item.step}
+                </span>
               </div>
-            ))}
-          </motion.div>
-        </div>
 
-        {/* Carousel Bottom Controls & Progress Sync */}
-        <div className="max-w-[1240px] w-full mx-auto px-5 sm:px-8 lg:px-10 flex items-center justify-between pt-4">
-          {/* Progress Bar Indicator */}
-          <div className="flex items-center gap-3">
-            <div className="w-28 sm:w-36 h-1.5 bg-neutral-200 rounded-full overflow-hidden">
-              <div
-                className="bg-[#5B32D6] h-full rounded-full transition-all duration-150"
-                style={{ width: `${Math.max(scrollPercent * 100, 15)}%` }}
-              />
+              {/* Centered Vector Doodle */}
+              <div className="w-full h-[140px] flex items-center justify-center pt-1">
+                {item.renderDoodle()}
+              </div>
+
+              {/* Title & Core Description */}
+              <div className="space-y-2 pt-2">
+                <h3 className="text-[22px] sm:text-[24px] font-extrabold tracking-[-0.02em] leading-[1.2] text-[#16141B]">
+                  {item.title}
+                </h3>
+                <p className="text-[14px] leading-[1.55] text-neutral-600">
+                  {item.description}
+                </p>
+              </div>
             </div>
-            <span className="text-[11px] font-bold uppercase tracking-wider text-neutral-400">
-              {scrollPercent > 0.6 ? "Benefits 3–4" : "Benefits 1–2"}
-            </span>
-          </div>
 
-          {/* Navigation Buttons */}
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={handlePrev}
-              disabled={scrollPercent <= 0.05}
-              className={`w-11 h-11 rounded-full flex items-center justify-center transition-all cursor-pointer ${
-                scrollPercent > 0.05
-                  ? "bg-[#16141B] text-white hover:bg-neutral-800"
-                  : "bg-neutral-200 text-neutral-400 cursor-not-allowed"
-              }`}
-              aria-label="Previous benefits"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button
-              type="button"
-              onClick={handleNext}
-              disabled={scrollPercent >= 0.95}
-              className={`w-11 h-11 rounded-full flex items-center justify-center transition-all cursor-pointer ${
-                scrollPercent < 0.95
-                  ? "bg-[#16141B] text-white hover:bg-neutral-800"
-                  : "bg-neutral-200 text-neutral-400 cursor-not-allowed"
-              }`}
-              aria-label="Next benefits"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
+            {/* Middle: Precise Key Points */}
+            <div className="my-5 pt-4 border-t border-neutral-200/60 space-y-3">
+              <div className="text-[11px] font-extrabold tracking-wider uppercase text-[#5B32D6]">
+                Key Educational Highlights:
+              </div>
+              <ul className="space-y-2.5">
+                {item.points.map((pt) => (
+                  <li key={pt.title} className="flex items-start gap-2.5 text-xs sm:text-[13px] leading-[1.45] text-neutral-700">
+                    <CheckCircle2 className="w-4 h-4 text-[#5B32D6] shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="font-bold text-[#16141B]">{pt.title}: </strong>
+                      <span className="text-neutral-600">{pt.detail}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Bottom: Feature Pills */}
+            <div className="pt-3 border-t border-neutral-200/50 flex flex-wrap gap-1.5">
+              {item.pills.map((pill) => (
+                <span
+                  key={pill}
+                  className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-white border border-neutral-200 text-neutral-700 shadow-2xs"
+                >
+                  {pill}
+                </span>
+              ))}
+            </div>
           </div>
-        </div>
+        ))}
       </div>
     </section>
   );
