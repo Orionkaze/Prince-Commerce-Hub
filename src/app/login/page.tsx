@@ -194,8 +194,8 @@ export default function LoginPage() {
                 </div>
                 <div>
                   Need enrollment help?{" "}
-                  <a href="mailto:contact@primecommercehub.com" className="text-neutral-700 underline font-medium">
-                    contact@primecommercehub.com
+                  <a href="mailto:parveshdhiman1900@gmail.com" className="text-neutral-700 underline font-medium">
+                    parveshdhiman1900@gmail.com
                   </a>
                 </div>
               </div>

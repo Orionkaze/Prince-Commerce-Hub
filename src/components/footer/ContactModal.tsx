@@ -77,8 +77,8 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
         <form onSubmit={handleSubmit} className="space-y-4">
           <p className="text-xs text-neutral-500 pb-1">
             Fill out this quick form or reach out directly at{" "}
-            <a href="mailto:contact@primecommercehub.com" className="text-[#5B32D6] font-semibold underline">
-              contact@primecommercehub.com
+            <a href="mailto:parveshdhiman1900@gmail.com" className="text-[#5B32D6] font-semibold underline">
+              parveshdhiman1900@gmail.com
             </a>.
           </p>
 

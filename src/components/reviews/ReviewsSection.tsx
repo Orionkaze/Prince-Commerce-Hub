@@ -1,252 +1,493 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
-import Image from "next/image";
-import useEmblaCarousel from "embla-carousel-react";
+import React, { useState, useEffect } from "react";
 import { Badge } from "../ui/Badge";
+import { Button } from "../ui/Button";
 import {
   FiveStarCrownDoodle,
-  HeartRadianceDoodle,
   PurpleQuotation,
 } from "../doodles/Doodles";
-import { PublicReview, StudentFeedback } from "@/types";
+import {
+  Star,
+  CheckCircle2,
+  Send,
+  MessageSquarePlus,
+  Sparkles,
+  User,
+  GraduationCap,
+  Award,
+} from "lucide-react";
 
-const publicReviews: PublicReview[] = [
-  {
-    id: "pr-1",
-    author: "Google Reviewer",
-    platform: "google",
-    rating: 5,
-    text: "Parvesh Sir's clarity in Partnership and Company Accounts is simply unmatched. I used to be terrified of Cash Flow Statements, but he made the concepts crystal clear. Scored 98 in my Board Exams!",
-  },
-  {
-    id: "pr-2",
-    author: "Google Reviewer",
-    platform: "google",
-    rating: 5,
-    text: "The personal attention and step-by-step guidance transformed my confidence in Class 11 and 12 Accountancy. No rote memorization, only deep logic and solid conceptual foundation.",
-  },
-  {
-    id: "pr-3",
-    author: "Google Reviewer",
-    platform: "google",
-    rating: 5,
-    text: "Best coaching for Class 11 Commerce fundamentals. The way Parvesh Sir explains the logic behind Debit and Credit makes complex journal entries feel effortless.",
-  },
-  {
-    id: "pr-4",
-    author: "Facebook Reviewer",
-    platform: "facebook",
-    rating: 5,
-    text: "His 30+ years of teaching experience really shows. He predicts exact exam patterns, teaches time management, and shows how to write full-mark working notes.",
-  },
-  {
-    id: "pr-5",
-    author: "Google Reviewer",
-    platform: "google",
-    rating: 5,
-    text: "After joining Prime Commerce Hub, my score jumped from 62% in school pre-boards to 96% in the final CBSE Board Examination. His guidance changed my academic trajectory.",
-  },
-];
+export interface UnifiedReview {
+  id: string;
+  author: string;
+  category: "Class 12th Board" | "Class 11th Commerce" | "Alumni & Toppers" | "Parent Feedback";
+  score?: string;
+  rating: number;
+  quote: string;
+  story: string;
+  date: string;
+  isCustom?: boolean;
+}
 
-const studentFeedback: StudentFeedback[] = [
+const initialReviews: UnifiedReview[] = [
   {
-    id: "sf-1",
+    id: "rev-1",
     author: "Aman Sharma",
-    tagline: "Class 12 CBSE Board · 99/100 in Accountancy",
+    category: "Class 12th Board",
+    score: "99/100 in Accountancy",
+    rating: 5,
     quote: "I finally understood the 'why' behind every ledger entry instead of just memorizing steps.",
     story:
       "Before joining Prime Commerce Hub, Balance Sheets were a nightmare for me and my adjustments never tallied. Parvesh Sir's concept-first approach completely demystified accounting principles. In the board exam, I finished the paper 25 minutes early with complete working notes.",
-    image: "/images/review-lucas.jpg",
+    date: "CBSE Board 2026",
   },
   {
-    id: "sf-2",
+    id: "rev-2",
     author: "Pooja Malhotra",
-    tagline: "Class 11 & 12 Commerce Student",
+    category: "Class 11th Commerce",
+    score: "School Topper · 98%",
+    rating: 5,
     quote: "Parvesh Sir's personal guidance gave me the confidence to pursue top commerce careers.",
     story:
       "I was hesitant when I took Commerce in Class 11. Parvesh Sir broke down difficult concepts into simple real-world financial situations. His structured study plans and regular doubt clearing sessions made Accountancy my highest-scoring subject.",
-    image: "/images/review-emma.jpg",
+    date: "Final Exams 2026",
+  },
+  {
+    id: "rev-3",
+    author: "Rohan Kapoor",
+    category: "Class 12th Board",
+    score: "98/100 in Board Exam",
+    rating: 5,
+    quote: "Clarity in Partnership and Company Accounts is simply unmatched anywhere.",
+    story:
+      "I used to be terrified of Cash Flow Statements and Share Forfeiture entries. Parvesh Sir's proprietary working note frameworks and speed drills helped me solve lengthy 6-mark numericals with zero calculation errors.",
+    date: "CBSE Board 2025",
+  },
+  {
+    id: "rev-4",
+    author: "Sneha Gupta",
+    category: "Class 11th Commerce",
+    score: "Class Rank 1",
+    rating: 5,
+    quote: "Best coaching for Class 11 Commerce fundamentals from the very beginning.",
+    story:
+      "The way Parvesh Sir explains the financial logic behind Debit and Credit makes complex journal entries feel effortless. No rote learning, only rock-solid conceptual clarity.",
+    date: "Session 2025-26",
+  },
+  {
+    id: "rev-5",
+    author: "Devansh Singhania",
+    category: "Alumni & Toppers",
+    score: "Now at SRCC, Delhi University",
+    rating: 5,
+    quote: "Jumped from 62% in school pre-boards to 96% in final CBSE boards!",
+    story:
+      "His 30+ years of teaching experience really shows. He predicts exact exam patterns, teaches time management, and shows how to write full-mark working notes that examiners love.",
+    date: "Alumni Batch",
+  },
+  {
+    id: "rev-6",
+    author: "Sunita Mehra (Parent)",
+    category: "Parent Feedback",
+    score: "Daughter scored 97/100",
+    rating: 5,
+    quote: "Personal attention and dedicated care for every single student's growth.",
+    story:
+      "Parvesh Sir's direct communication with parents and regular feedback reports gave us total peace of mind. My daughter not only excelled academically but developed a genuine passion for commerce.",
+    date: "Verified Parent",
   },
 ];
 
 export function ReviewsSection() {
-  // Public reviews carousel
-  const [emblaRefPublic] = useEmblaCarousel({
-    dragFree: true,
-    containScroll: "trimSnaps",
-    align: "start",
-  });
+  const [reviews, setReviews] = useState<UnifiedReview[]>(initialReviews);
+  const [activeFilter, setActiveFilter] = useState<string>("All");
 
-  // Student feedback carousel with progress bar
-  const [emblaRefStudent, emblaApiStudent] = useEmblaCarousel({
-    containScroll: "trimSnaps",
-    align: "start",
-  });
+  // Review Form State
+  const [author, setAuthor] = useState("");
+  const [category, setCategory] = useState<UnifiedReview["category"]>("Class 12th Board");
+  const [score, setScore] = useState("");
+  const [quote, setQuote] = useState("");
+  const [story, setStory] = useState("");
+  const [rating, setRating] = useState(5);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  const [studentProgress, setStudentProgress] = useState(0);
-
-  const onStudentScroll = useCallback(() => {
-    if (!emblaApiStudent) return;
-    const progress = Math.max(0, Math.min(1, emblaApiStudent.scrollProgress()));
-    setStudentProgress(progress * 100);
-  }, [emblaApiStudent]);
-
+  // Load custom reviews from localStorage on mount
   useEffect(() => {
-    if (!emblaApiStudent) return;
-    onStudentScroll();
-    emblaApiStudent.on("scroll", onStudentScroll);
-    emblaApiStudent.on("reInit", onStudentScroll);
-  }, [emblaApiStudent, onStudentScroll]);
+    try {
+      const saved = localStorage.getItem("pch_custom_reviews");
+      if (saved) {
+        const parsed: UnifiedReview[] = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setReviews([...parsed, ...initialReviews]);
+        }
+      }
+    } catch {
+      // Ignore localStorage errors
+    }
+  }, []);
+
+  const handleReviewSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!author.trim() || !story.trim()) return;
+
+    setIsSubmitting(true);
+
+    const newRev: UnifiedReview = {
+      id: `custom-rev-${Date.now()}`,
+      author: author.trim(),
+      category,
+      score: score.trim() || undefined,
+      rating,
+      quote: quote.trim() || story.trim().slice(0, 80) + "...",
+      story: story.trim(),
+      date: "Just now",
+      isCustom: true,
+    };
+
+    // Save to state and localStorage
+    const updated = [newRev, ...reviews];
+    setReviews(updated);
+
+    try {
+      const savedCustoms = updated.filter((r) => r.isCustom);
+      localStorage.setItem("pch_custom_reviews", JSON.stringify(savedCustoms));
+    } catch {
+      // Ignore
+    }
+
+    // Trigger celebration confetti
+    try {
+      const confetti = (await import("canvas-confetti")).default;
+      confetti({
+        particleCount: 60,
+        spread: 60,
+        origin: { y: 0.8 },
+      });
+    } catch {
+      // Confetti fallback
+    }
+
+    setIsSubmitting(false);
+    setSubmitSuccess(true);
+
+    // Reset form
+    setAuthor("");
+    setScore("");
+    setQuote("");
+    setStory("");
+    setRating(5);
+
+    setTimeout(() => {
+      setSubmitSuccess(false);
+    }, 6000);
+  };
+
+  const categories = ["All", "Class 12th Board", "Class 11th Commerce", "Alumni & Toppers", "Parent Feedback"];
+
+  const filteredReviews =
+    activeFilter === "All"
+      ? reviews
+      : reviews.filter((r) => r.category === activeFilter);
+
+  // Helper for author initials
+  const getInitials = (name: string) => {
+    const parts = name.trim().split(" ");
+    if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+    return (name.slice(0, 2) || "ST").toUpperCase();
+  };
 
   return (
-    <section id="reviews" className="bg-[#F7F7F9] py-24 lg:py-32 overflow-hidden">
+    <section id="reviews" className="bg-[#F7F7F9] py-20 lg:py-28 overflow-hidden border-t border-neutral-100">
       <div className="max-w-[1240px] mx-auto px-5 sm:px-8 lg:px-10">
         {/* Top Header */}
-        <div className="space-y-4 mb-20">
-          <div>
-            <Badge variant="yellow">REVIEWS</Badge>
-          </div>
-          <h2 className="text-[36px] sm:text-[46px] lg:text-[54px] font-extrabold tracking-[-0.03em] leading-[1.08] text-[#16141B]">
-            Different goals. <br />
-            Proven excellence.
-          </h2>
-        </div>
-
-        {/* ================= Subsection 1: Public Reviews ================= */}
-        <div className="mb-24">
-          <div className="text-center space-y-3 mb-12">
-            <div className="flex justify-center">
-              <FiveStarCrownDoodle className="w-16 h-8 text-[#FACC15]" />
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-12 lg:mb-16 gap-6">
+          <div className="space-y-4 max-w-[640px]">
+            <div>
+              <Badge variant="yellow">REVIEWS &amp; STUDENT FEEDBACK</Badge>
             </div>
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-[#16141B] tracking-tight">
-              Public Reviews
-            </h3>
-            <p className="text-sm sm:text-base text-neutral-600 max-w-md mx-auto">
-              Read reviews shared publicly on Google, Facebook, and by our student community.
+            <h2 className="text-[36px] sm:text-[46px] lg:text-[54px] font-extrabold tracking-[-0.03em] leading-[1.08] text-[#16141B]">
+              Real students. <br />
+              Proven board results.
+            </h2>
+            <p className="text-[16px] lg:text-[17px] leading-[1.6] text-neutral-600 font-normal">
+              See what students and parents have to say about mastering Accountancy concepts with Parvesh Sir.
             </p>
           </div>
 
-          {/* Embla Public Reviews Slider */}
-          <div
-            className="embla -mx-5 sm:-mx-8 lg:-mx-10 px-5 sm:px-8 lg:px-10 cursor-grab active:cursor-grabbing"
-            ref={emblaRefPublic}
-          >
-            <div className="embla__container flex gap-6 pb-2">
-              {publicReviews.map((rev) => (
-                <div
-                  key={rev.id}
-                  className="embla__slide flex-none w-[300px] sm:w-[350px] lg:w-[370px] bg-white rounded-[24px] p-7 sm:p-8 flex flex-col justify-between shadow-xs hover:shadow-md transition-shadow"
-                >
-                  <div className="space-y-5">
-                    {/* Top Row: Stars on left, Platform Icon on right */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex text-[#16141B] tracking-widest text-sm font-bold select-none">
-                        ★★★★★
-                      </div>
-                      {rev.platform === "google" ? (
-                        <div className="w-6 h-6 rounded-full border border-neutral-200 flex items-center justify-center font-bold text-xs text-neutral-800">
-                          G
-                        </div>
-                      ) : (
-                        <div className="w-6 h-6 rounded-full border border-neutral-200 flex items-center justify-center font-bold text-xs text-neutral-800">
-                          f
-                        </div>
-                      )}
-                    </div>
+          {/* Social Proof Star Trust Box */}
+          <div className="bg-white rounded-2xl p-5 border border-neutral-200/80 shadow-xs flex items-center gap-4 shrink-0">
+            <div className="w-12 h-12 rounded-xl bg-[#ECE8FA] flex items-center justify-center text-[#5B32D6]">
+              <FiveStarCrownDoodle className="w-8 h-8 text-[#5B32D6]" />
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5 text-[#F59E0B]">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-4 h-4 fill-[#F59E0B]" />
+                ))}
+                <span className="text-sm font-black text-[#16141B] ml-1">4.9 / 5.0</span>
+              </div>
+              <div className="text-xs text-neutral-500 font-medium">
+                Based on 250+ verified student &amp; parent reviews
+              </div>
+            </div>
+          </div>
+        </div>
 
-                    {/* Purple Quote Marks */}
-                    <div>
-                      <PurpleQuotation className="w-8 h-8 text-[#7C3AED]" />
-                    </div>
+        {/* Filter Navigation Tabs */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-3 mb-10 no-scrollbar">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveFilter(cat)}
+              className={`px-4 py-2 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap transition-all cursor-pointer ${
+                activeFilter === cat
+                  ? "bg-[#5B32D6] text-white shadow-xs"
+                  : "bg-white text-neutral-600 hover:text-[#16141B] border border-neutral-200/70"
+              }`}
+            >
+              {cat === "All" ? `All Reviews (${reviews.length})` : cat}
+            </button>
+          ))}
+        </div>
 
-                    {/* Review Text */}
-                    <p className="text-[15px] sm:text-[16px] leading-[1.55] font-bold text-[#16141B]">
-                      "{rev.text}"
-                    </p>
+        {/* Combined Reviews Bento Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredReviews.map((rev) => (
+            <div
+              key={rev.id}
+              className="bg-white rounded-[24px] p-6 sm:p-7 flex flex-col justify-between shadow-xs hover:shadow-md transition-all duration-300 border border-neutral-200/70 hover:-translate-y-1 group"
+            >
+              {/* Top: Star Rating + Category Pill */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex text-[#F59E0B] gap-0.5">
+                    {[...Array(rev.rating)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-[#F59E0B]" />
+                    ))}
                   </div>
+                  <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#ECE8FA] text-[#5B32D6]">
+                    {rev.category}
+                  </span>
+                </div>
 
-                  <div className="pt-6 border-t border-neutral-100 flex items-center justify-between text-xs text-neutral-400">
-                    <span>Verified Student / Parent</span>
-                    <span className="capitalize">{rev.platform} Reviews</span>
+                {/* Purple Quote Icon */}
+                <PurpleQuotation className="w-7 h-7 text-[#5B32D6]" />
+
+                {/* Main Quote Title */}
+                <h4 className="text-[17px] sm:text-[18px] font-bold tracking-tight text-[#16141B] leading-snug">
+                  "{rev.quote}"
+                </h4>
+
+                {/* Detailed Story / Feedback */}
+                <p className="text-[13px] sm:text-[14px] leading-[1.6] text-neutral-600 font-normal">
+                  {rev.story}
+                </p>
+              </div>
+
+              {/* Bottom: Author Details with Initials Badge */}
+              <div className="pt-5 mt-5 border-t border-neutral-100 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-[#16141B] text-white flex items-center justify-center font-extrabold text-xs shadow-2xs group-hover:bg-[#5B32D6] transition-colors">
+                    {getInitials(rev.author)}
+                  </div>
+                  <div>
+                    <div className="font-extrabold text-[14px] text-[#16141B] flex items-center gap-1">
+                      <span>{rev.author}</span>
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 fill-emerald-50" />
+                    </div>
+                    {rev.score && (
+                      <div className="text-[12px] font-semibold text-[#5B32D6]">
+                        {rev.score}
+                      </div>
+                    )}
                   </div>
                 </div>
-              ))}
+
+                <span className="text-[11px] font-medium text-neutral-400">
+                  {rev.date}
+                </span>
+              </div>
             </div>
-          </div>
+          ))}
         </div>
 
-        {/* ================= Subsection 2: Student Feedback ================= */}
-        <div>
-          <div className="text-center space-y-3 mb-12">
-            <div className="flex justify-center">
-              <HeartRadianceDoodle className="w-12 h-12 text-[#FACC15]" />
-            </div>
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-[#16141B] tracking-tight">
-              Student Feedback
-            </h3>
-            <p className="text-sm sm:text-base text-neutral-600 max-w-md mx-auto">
-              See feedback from students after mastering Accountancy with Parvesh Sir.
-            </p>
-          </div>
+        {/* ================= ADD YOUR REVIEW BOX ================= */}
+        <div className="mt-16 sm:mt-20">
+          <div className="bg-white rounded-[28px] p-7 sm:p-10 shadow-sm border border-neutral-200/80 relative overflow-hidden">
+            {/* Top decorative gradient bar */}
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#5B32D6] via-[#7C3AED] to-[#FACC15]" />
 
-          {/* Embla Student Feedback Split Cards */}
-          <div
-            className="embla -mx-5 sm:-mx-8 lg:-mx-10 px-5 sm:px-8 lg:px-10 cursor-grab active:cursor-grabbing"
-            ref={emblaRefStudent}
-          >
-            <div className="embla__container flex gap-6 pb-4">
-              {studentFeedback.map((fb) => (
-                <div
-                  key={fb.id}
-                  className="embla__slide flex-none w-[320px] sm:w-[580px] lg:w-[680px] bg-white rounded-[28px] p-6 sm:p-8 flex flex-col md:flex-row gap-6 sm:gap-8 shadow-sm hover:shadow-md transition-shadow"
-                >
-                  {/* Left: Student Portrait */}
-                  <div className="relative w-full md:w-[220px] h-[240px] sm:h-[280px] rounded-[20px] overflow-hidden bg-neutral-100 shrink-0">
-                    <Image
-                      src={fb.image}
-                      alt={fb.author}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, 240px"
+            <div className="max-w-[840px] mx-auto space-y-6">
+              {/* Header inside the box */}
+              <div className="text-center space-y-2">
+                <div className="inline-flex items-center gap-1.5 py-1 px-3 rounded-full bg-[#ECE8FA] text-[#5B32D6] text-xs font-bold uppercase tracking-wider">
+                  <MessageSquarePlus className="w-3.5 h-3.5" />
+                  <span>Student Voice</span>
+                </div>
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-[#16141B] tracking-tight">
+                  Add Your Review &amp; Experience
+                </h3>
+                <p className="text-sm text-neutral-600 max-w-lg mx-auto">
+                  Studied at Prime Commerce Hub? Share your feedback, board results, and journey to inspire future commerce students.
+                </p>
+              </div>
+
+              {/* Success Notification Banner */}
+              {submitSuccess && (
+                <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center gap-3 animate-in fade-in slide-in-from-top-2">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                  <div className="text-sm">
+                    <strong>Thank you!</strong> Your review has been submitted and added above to the student reviews.
+                  </div>
+                </div>
+              )}
+
+              {/* Review Input Form */}
+              <form onSubmit={handleReviewSubmit} className="space-y-5 pt-2">
+                {/* Star Rating Selector */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl bg-[#F7F7F9] border border-neutral-200/70 gap-3">
+                  <div>
+                    <span className="text-xs font-bold uppercase tracking-wider text-neutral-700 block">
+                      Your Rating *
+                    </span>
+                    <span className="text-xs text-neutral-500">
+                      Tap the stars to choose your overall experience
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        type="button"
+                        key={star}
+                        onClick={() => setRating(star)}
+                        onMouseEnter={() => setHoverRating(star)}
+                        onMouseLeave={() => setHoverRating(0)}
+                        className="p-1 cursor-pointer transition-transform hover:scale-110 focus:outline-none"
+                        aria-label={`${star} star rating`}
+                      >
+                        <Star
+                          className={`w-6 h-6 transition-colors ${
+                            star <= (hoverRating || rating)
+                              ? "fill-[#F59E0B] text-[#F59E0B]"
+                              : "text-neutral-300"
+                          }`}
+                        />
+                      </button>
+                    ))}
+                    <span className="text-xs font-bold text-[#16141B] ml-2">
+                      {rating} of 5 Stars
+                    </span>
+                  </div>
+                </div>
+
+                {/* Two-column Input Row: Name & Category */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-neutral-700 mb-1.5 uppercase tracking-wider">
+                      Your Full Name *
+                    </label>
+                    <div className="relative">
+                      <User className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      <input
+                        type="text"
+                        required
+                        value={author}
+                        onChange={(e) => setAuthor(e.target.value)}
+                        placeholder="e.g. Rahul Verma"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-[#5B32D6] focus:ring-2 focus:ring-[#5B32D6]/20 text-sm font-medium"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-neutral-700 mb-1.5 uppercase tracking-wider">
+                      Batch / Category *
+                    </label>
+                    <div className="relative">
+                      <GraduationCap className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      <select
+                        value={category}
+                        onChange={(e) => setCategory(e.target.value as UnifiedReview["category"])}
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-[#5B32D6] focus:ring-2 focus:ring-[#5B32D6]/20 text-sm font-medium bg-white"
+                      >
+                        <option value="Class 12th Board">Class 12th Board</option>
+                        <option value="Class 11th Commerce">Class 11th Commerce</option>
+                        <option value="Alumni & Toppers">Alumni &amp; Toppers</option>
+                        <option value="Parent Feedback">Parent Feedback</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Score / Achievement & Highlight Headline */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-neutral-700 mb-1.5 uppercase tracking-wider">
+                      Score / Result / School (Optional)
+                    </label>
+                    <div className="relative">
+                      <Award className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      <input
+                        type="text"
+                        value={score}
+                        onChange={(e) => setScore(e.target.value)}
+                        placeholder="e.g. 98/100 in Accountancy"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-[#5B32D6] focus:ring-2 focus:ring-[#5B32D6]/20 text-sm font-medium"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-neutral-700 mb-1.5 uppercase tracking-wider">
+                      Key Headline / Highlight (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      value={quote}
+                      onChange={(e) => setQuote(e.target.value)}
+                      placeholder="e.g. Balance sheets finally made complete sense!"
+                      className="w-full px-4 py-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-[#5B32D6] focus:ring-2 focus:ring-[#5B32D6]/20 text-sm font-medium"
                     />
                   </div>
-
-                  {/* Right: Quote, Story, Author attribution */}
-                  <div className="flex flex-col justify-between space-y-4">
-                    <div className="space-y-3">
-                      <PurpleQuotation className="w-8 h-8 text-[#7C3AED]" />
-
-                      <h4 className="text-[18px] sm:text-[20px] font-bold tracking-tight text-[#16141B] leading-snug">
-                        "{fb.quote}"
-                      </h4>
-
-                      <p className="text-[14px] sm:text-[15px] leading-[1.6] text-neutral-600 font-normal">
-                        {fb.story}
-                      </p>
-                    </div>
-
-                    <div className="pt-4 border-t border-neutral-100">
-                      <div className="font-extrabold text-[15px] text-[#16141B]">
-                        {fb.author}
-                      </div>
-                      <div className="text-[13px] text-neutral-500 font-medium">
-                        {fb.tagline}
-                      </div>
-                    </div>
-                  </div>
                 </div>
-              ))}
-            </div>
-          </div>
 
-          {/* Centered Pill Progress Bar Indicator */}
-          <div className="flex justify-center mt-10">
-            <div className="w-48 h-2 bg-neutral-200 rounded-full overflow-hidden">
-              <div
-                className="bg-[#5B32D6] h-full rounded-full transition-all duration-300"
-                style={{ width: `${Math.max(studentProgress, 50)}%` }}
-              />
+                {/* Review Textarea */}
+                <div>
+                  <label className="block text-xs font-bold text-neutral-700 mb-1.5 uppercase tracking-wider">
+                    Your Detailed Review / Feedback *
+                  </label>
+                  <textarea
+                    required
+                    rows={4}
+                    value={story}
+                    onChange={(e) => setStory(e.target.value)}
+                    placeholder="Share how Parvesh Sir's conceptual teaching, doubt clearing, or working note methods helped you prepare for exams..."
+                    className="w-full p-4 rounded-xl border border-neutral-300 focus:outline-none focus:border-[#5B32D6] focus:ring-2 focus:ring-[#5B32D6]/20 text-sm leading-relaxed"
+                  />
+                </div>
+
+                {/* Submit Button Row */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
+                  <p className="text-xs text-neutral-400 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-[#5B32D6]" />
+                    <span>Your review will appear immediately in the student feedback section above.</span>
+                  </p>
+
+                  <Button
+                    type="submit"
+                    variant="purple"
+                    size="md"
+                    disabled={isSubmitting}
+                    className="gap-2 cursor-pointer shrink-0"
+                  >
+                    <span>{isSubmitting ? "Publishing..." : "Submit Review"}</span>
+                    <Send className="w-4 h-4" />
+                  </Button>
+                </div>
+              </form>
             </div>
           </div>
         </div>

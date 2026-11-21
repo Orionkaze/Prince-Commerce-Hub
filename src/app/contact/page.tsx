@@ -108,10 +108,10 @@ export default function ContactPage() {
                         Official Inquiries
                       </div>
                       <a
-                        href="mailto:contact@primecommercehub.com"
+                        href="mailto:parveshdhiman1900@gmail.com"
                         className="text-base font-bold text-[#16141B] hover:text-[#5B32D6] transition-colors"
                       >
-                        contact@primecommercehub.com
+                        parveshdhiman1900@gmail.com
                       </a>
                       <div className="text-xs text-neutral-500">
                         Admissions, enrollments &amp; counseling

@@ -168,10 +168,10 @@ export function CtaAndFooter({ onOpenContact, hideCtaBanner = false }: CtaAndFoo
             {/* Right: Contact & Quick Links */}
             <div className="lg:col-span-6 flex flex-col space-y-4 lg:pl-12">
               <a
-                href="mailto:contact@primecommercehub.com"
+                href="mailto:parveshdhiman1900@gmail.com"
                 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white hover:text-[#FDE047] transition-colors break-all tracking-tight"
               >
-                contact@primecommercehub.com
+                parveshdhiman1900@gmail.com
               </a>
 
               <Link
