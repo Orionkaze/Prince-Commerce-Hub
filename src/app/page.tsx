@@ -9,7 +9,6 @@ import { InstructorIntro } from "@/components/instructor/InstructorIntro";
 import { StickyCourseCards } from "@/components/courses/StickyCourseCards";
 import { LearningPath } from "@/components/path/LearningPath";
 import { ClassSchedule } from "@/components/schedule/ClassSchedule";
-import { StartingIsSimple } from "@/components/onboarding/StartingIsSimple";
 import { ReviewsSection } from "@/components/reviews/ReviewsSection";
 import { CtaAndFooter } from "@/components/footer/CtaAndFooter";
 import { ContactModal } from "@/components/footer/ContactModal";
@@ -46,13 +45,10 @@ export default function Home() {
         {/* Section 6: Learning Path 5-Tier Ascending Staircase */}
         <LearningPath />
 
-        {/* Section 8: Upcoming Batches Schedule */}
+        {/* Section 7: Upcoming Batches Schedule */}
         <ClassSchedule />
 
-        {/* Section 9: 4-Step Onboarding */}
-        <StartingIsSimple onOpenContact={handleOpenContact} />
-
-        {/* Section 10: Reviews & Student Feedback Carousels */}
+        {/* Section 8: Reviews & Student Feedback Carousels */}
         <ReviewsSection />
 
         {/* Section 11: Final CTA Banner & Obsidian Dark Footer */}
