@@ -30,7 +30,7 @@ const courses: CourseItem[] = [
     image: "/images/accountancy-classroom.jpg",
     topOffset: "top-24",
     levels: "Class 11 Commerce",
-    format: "Classroom & Online",
+    format: "Online",
     highlightIcon: <BookOpen className="w-5 h-5 text-[#5B32D6]" />,
   },
   {
@@ -39,10 +39,10 @@ const courses: CourseItem[] = [
     title: "Class 12 Accountancy",
     subtitle:
       "Comprehensive learning module designed for Class 12 Commerce students, covering Partnership Accounts, Company Accounts, and Financial Analysis for board exam mastery.",
-    image: "/images/course-work.jpg",
+    image: "/images/class-12-accountancy.jpg",
     topOffset: "top-28",
     levels: "Class 12 Commerce",
-    format: "Classroom & Online",
+    format: "Online",
     highlightIcon: <GraduationCap className="w-5 h-5 text-[#5B32D6]" />,
   },
 ];

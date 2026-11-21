@@ -37,68 +37,6 @@ export function CtaAndFooter({ onOpenContact, hideCtaBanner = false }: CtaAndFoo
 
   return (
     <footer className="bg-[#16141B] text-white">
-      {/* ================= Optional Final CTA Split Section ================= */}
-      {!hideCtaBanner && (
-        <div className="border-b border-white/10 py-20 lg:py-28">
-          <div className="max-w-[1240px] mx-auto px-5 sm:px-8 lg:px-10">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-              {/* Left Column */}
-              <div className="lg:col-span-6 space-y-6">
-                <div>
-                  <Badge variant="yellow">LET'S TALK</Badge>
-                </div>
-
-                <h2 className="text-[36px] sm:text-[48px] lg:text-[56px] font-extrabold tracking-[-0.03em] leading-[1.08] text-white">
-                  Not sure where <br className="hidden sm:inline" />
-                  to start? Just ask.
-                </h2>
-
-                <p className="text-[16px] sm:text-[18px] leading-[1.6] text-white/80 max-w-[500px] font-normal">
-                  Tell us about your current class, syllabus, and academic goals. Parvesh Sir will personally guide you to the right batch and structured learning plan.
-                </p>
-
-                <div className="pt-2 flex flex-wrap gap-4">
-                  <Link href="/contact">
-                    <Button variant="white" size="lg">
-                      Contact Us
-                    </Button>
-                  </Link>
-                  <Link href="/courses">
-                    <Button variant="outline-white" size="lg">
-                      Explore Courses
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-
-              {/* Right Column: Parvesh Kumar Photo with Nameplate */}
-              <div className="lg:col-span-6 flex justify-center lg:justify-end">
-                <div className="relative w-full max-w-[500px] h-[340px] sm:h-[400px] rounded-[28px] overflow-hidden bg-neutral-800 shadow-2xl border border-white/10 group">
-                  <Image
-                    src="/images/parvesh-kumar.jpg"
-                    alt="Parvesh Kumar — Founder & Lead Educator, Prime Commerce Hub"
-                    fill
-                    className="object-cover object-top group-hover:scale-105 transition-transform duration-700 brightness-[0.95]"
-                    sizes="(max-width: 768px) 100vw, 500px"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-
-                  {/* Nameplate at bottom left */}
-                  <div className="absolute bottom-6 left-6 z-10">
-                    <div className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
-                      Parvesh Kumar
-                    </div>
-                    <div className="text-xs text-white/70 font-medium">
-                      Founder &amp; Lead Educator · 30+ Years Teaching Excellence
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* ================= Main Footer ================= */}
       <div className="py-16 lg:py-20">
         <div className="max-w-[1240px] mx-auto px-5 sm:px-8 lg:px-10 space-y-16">
