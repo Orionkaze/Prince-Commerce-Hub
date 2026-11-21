@@ -163,22 +163,9 @@ export default function LoginPage() {
                     <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-900 flex items-start gap-3">
                       <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                       <div className="space-y-1 leading-relaxed">
-                        <div className="font-bold">Configuration Notice:</div>
+                        <div className="font-bold">Notice:</div>
                         <div>{errorMessage}</div>
                       </div>
-                    </div>
-                  )}
-
-                  {!isConfigured && !errorMessage && (
-                    <div className="p-4 rounded-2xl bg-[#ECE8FA] border border-[#DDD6FE] text-xs text-neutral-700 space-y-1.5">
-                      <div className="font-bold text-[#5B32D6] flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5" />
-                        <span>Google Sign-In Ready</span>
-                      </div>
-                      <p className="leading-relaxed">
-                        To enable live authentication, paste your Supabase URL &amp; Anon Key into{" "}
-                        <code className="bg-white/80 px-1 py-0.5 rounded text-[11px] font-mono">.env.local</code>.
-                      </p>
                     </div>
                   )}
 
@@ -193,22 +180,6 @@ export default function LoginPage() {
                       <GoogleLogo className="w-5 h-5 shrink-0" />
                       <span>{isSigningIn ? "Connecting to Google..." : "Continue with Google"}</span>
                     </button>
-                  </div>
-
-                  {/* Highlights */}
-                  <div className="space-y-3 pt-2 text-xs text-neutral-600">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                      <span>Instant 1-click access without remembering passwords</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                      <span>Synchronized batch schedules, live Google Meet sessions &amp; notes</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                      <span>Secure enrollment tied to your verified Google account</span>
-                    </div>
                   </div>
                 </div>
               )}
