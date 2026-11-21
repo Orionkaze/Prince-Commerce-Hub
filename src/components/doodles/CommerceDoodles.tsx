@@ -453,3 +453,48 @@ export function Step4EnrollDoodle({ className = "w-32 h-32" }: { className?: str
     </svg>
   );
 }
+
+// 8. Debit or Credit Confusion: Dual tags [Dr] / [Cr] with question mark & ledger voucher
+export function DebitCreditConfusionDoodle({ className = "w-32 h-32" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      {/* Background Journal Voucher Card */}
+      <rect x="24" y="32" width="92" height="76" rx="14" fill="#ECE8FA" stroke="#16141B" strokeWidth="2.5" />
+      {/* Top Header Bar */}
+      <path d="M24 50 H 116" stroke="#16141B" strokeWidth="2" strokeDasharray="3 3" opacity="0.4" />
+      
+      {/* Left Tag: Dr. */}
+      <g transform="translate(32, 54)">
+        <rect width="32" height="36" rx="8" fill="#5B32D6" stroke="#16141B" strokeWidth="2" />
+        <text x="16" y="24" textAnchor="middle" fill="#FFFFFF" fontSize="14" fontWeight="800" fontFamily="sans-serif">
+          Dr.
+        </text>
+      </g>
+
+      {/* Right Tag: Cr. */}
+      <g transform="translate(76, 54)">
+        <rect width="32" height="36" rx="8" fill="#FFFFFF" stroke="#16141B" strokeWidth="2" />
+        <text x="16" y="24" textAnchor="middle" fill="#16141B" fontSize="14" fontWeight="800" fontFamily="sans-serif">
+          Cr.
+        </text>
+      </g>
+
+      {/* Floating Center Question Mark in Yellow Circle */}
+      <circle cx="70" cy="40" r="14" fill="#FDE047" stroke="#16141B" strokeWidth="2" />
+      <text x="70" y="46" textAnchor="middle" fill="#16141B" fontSize="17" fontWeight="900" fontFamily="sans-serif">
+        ?
+      </text>
+
+      {/* Confused/Thinking Curved Arrows between Dr and Cr */}
+      <path
+        d="M58 84 Q 70 94 82 84"
+        stroke="#5B32D6"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+      {/* Sparkles */}
+      <circle cx="22" cy="28" r="3" fill="#FDE047" stroke="#16141B" strokeWidth="1.5" />
+      <circle cx="118" cy="36" r="2.5" fill="#5B32D6" />
+    </svg>
+  );
+}

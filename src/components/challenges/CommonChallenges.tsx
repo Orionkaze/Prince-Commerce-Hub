@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import { Badge } from "../ui/Badge";
 import { PurpleQuotation, PurpleCurvedArrow } from "../doodles/Doodles";
 import {
+  DebitCreditConfusionDoodle,
   AccountingZeroDoodle,
   LedgerBalanceDoodle,
   AdjustmentPuzzleDoodle,
@@ -14,7 +14,6 @@ import {
   TimeManagementDoodle,
 } from "../doodles/CommerceDoodles";
 import { motion } from "framer-motion";
-import { HelpCircle } from "lucide-react";
 
 interface DoodleChallenge {
   type: "lavender" | "card";
@@ -24,6 +23,12 @@ interface DoodleChallenge {
 }
 
 const doodleChallenges: DoodleChallenge[] = [
+  {
+    type: "card",
+    renderDoodle: () => <DebitCreditConfusionDoodle className="w-28 h-28 sm:w-32 sm:h-32" />,
+    title: "Debit or Credit confusion",
+    description: "Hesitating over whether an account should be debited or credited when applying modern accounting rules.",
+  },
   {
     type: "lavender",
     renderDoodle: () => <AccountingZeroDoodle className="w-28 h-28 sm:w-32 sm:h-32" />,
@@ -93,38 +98,16 @@ export function CommonChallenges() {
           </p>
         </div>
 
-        {/* 3x3 Bento Grid */}
+        {/* 3x3 Bento Grid (All 9 cards uniform and cohesive) */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Card 1: Hesitant Speaker Photo Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="relative h-[340px] rounded-[24px] overflow-hidden bg-neutral-100 shadow-xs group"
-          >
-            <Image
-              src="/images/hesitant-speaker.jpg"
-              alt="Commerce student pondering accounting problem"
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-500"
-              sizes="(max-width: 768px) 100vw, 400px"
-            />
-            {/* Floating Pill Badge: Debit or Credit? */}
-            <div className="absolute bottom-6 right-6 bg-white/95 backdrop-blur-xs py-2 px-3.5 rounded-full shadow-lg border border-neutral-200/60 flex items-center gap-1.5 z-10">
-              <HelpCircle className="w-3.5 h-3.5 text-[#5B32D6]" />
-              <span className="text-xs font-bold text-[#16141B]">Debit or Credit?</span>
-            </div>
-          </motion.div>
-
-          {/* Cards 2 - 8 */}
+          {/* Cards 1 - 8: Illustrated Challenge Cards */}
           {doodleChallenges.map((item, idx) => (
             <motion.div
               key={item.title}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: (idx + 1) * 0.05 }}
+              transition={{ duration: 0.5, delay: idx * 0.05 }}
               className={`h-[340px] rounded-[24px] p-8 flex flex-col justify-between transition-transform duration-300 hover:-translate-y-1 ${
                 item.type === "lavender" ? "bg-[#ECE8FA]" : "bg-[#F7F7F9]"
               }`}
