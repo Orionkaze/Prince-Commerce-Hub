@@ -7,7 +7,6 @@ import { CommonChallenges } from "@/components/challenges/CommonChallenges";
 import { WhatYoullImprove } from "@/components/improve/WhatYoullImprove";
 import { InstructorIntro } from "@/components/instructor/InstructorIntro";
 import { StickyCourseCards } from "@/components/courses/StickyCourseCards";
-import { OnlineLessonWalkthrough } from "@/components/lesson/OnlineLessonWalkthrough";
 import { LearningPath } from "@/components/path/LearningPath";
 import { ClassSchedule } from "@/components/schedule/ClassSchedule";
 import { StartingIsSimple } from "@/components/onboarding/StartingIsSimple";
@@ -44,10 +43,7 @@ export default function Home() {
         {/* Section 5: Courses Preview (Sticky Stacking Cards) */}
         <StickyCourseCards />
 
-        {/* Section 6: Accountancy Learning Walkthrough */}
-        <OnlineLessonWalkthrough />
-
-        {/* Section 7: Learning Path 5-Tier Ascending Staircase */}
+        {/* Section 6: Learning Path 5-Tier Ascending Staircase */}
         <LearningPath />
 
         {/* Section 8: Upcoming Batches Schedule */}
