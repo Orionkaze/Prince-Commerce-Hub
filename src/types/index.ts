@@ -47,3 +47,22 @@ export interface QuizQuestion {
     level: CourseLevel;
   }[];
 }
+
+export interface Course {
+  id: string;
+  title: string;
+  category: string;
+  badge?: string;
+  price: number;
+  originalPrice?: number;
+  image: string;
+  mode?: string;
+  description: string;
+  topics?: string[];
+  highlights?: string[];
+}
+
+export interface CartItem {
+  course: Course;
+  addedAt: string;
+}
