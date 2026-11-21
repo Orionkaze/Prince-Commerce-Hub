@@ -498,3 +498,168 @@ export function DebitCreditConfusionDoodle({ className = "w-32 h-32" }: { classN
     </svg>
   );
 }
+
+// 9. Advantage 1: 30+ Years Experience Medallion & Laurel Wreath
+export function AdvantageExperienceDoodle({ className = "w-36 h-36" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      {/* Laurel Wreath Left */}
+      <path
+        d="M44 116 C 30 96, 30 64, 46 44"
+        stroke="#16141B"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+      <ellipse cx="36" cy="56" rx="7" ry="4" transform="rotate(-30 36 56)" fill="#10B981" stroke="#16141B" strokeWidth="1.5" />
+      <ellipse cx="32" cy="74" rx="7" ry="4" transform="rotate(-10 32 74)" fill="#34D399" stroke="#16141B" strokeWidth="1.5" />
+      <ellipse cx="34" cy="94" rx="7" ry="4" transform="rotate(15 34 94)" fill="#10B981" stroke="#16141B" strokeWidth="1.5" />
+      <ellipse cx="44" cy="112" rx="7" ry="4" transform="rotate(40 44 112)" fill="#34D399" stroke="#16141B" strokeWidth="1.5" />
+
+      {/* Laurel Wreath Right */}
+      <path
+        d="M116 116 C 130 96, 130 64, 114 44"
+        stroke="#16141B"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+      <ellipse cx="124" cy="56" rx="7" ry="4" transform="rotate(30 124 56)" fill="#10B981" stroke="#16141B" strokeWidth="1.5" />
+      <ellipse cx="128" cy="74" rx="7" ry="4" transform="rotate(10 128 74)" fill="#34D399" stroke="#16141B" strokeWidth="1.5" />
+      <ellipse cx="126" cy="94" rx="7" ry="4" transform="rotate(-15 126 94)" fill="#10B981" stroke="#16141B" strokeWidth="1.5" />
+      <ellipse cx="116" cy="112" rx="7" ry="4" transform="rotate(-40 116 112)" fill="#34D399" stroke="#16141B" strokeWidth="1.5" />
+
+      {/* Bottom Ribbon */}
+      <path
+        d="M52 118 L 44 142 L 62 134 L 80 140 L 98 134 L 116 142 L 108 118 Z"
+        fill="#5B32D6"
+        stroke="#16141B"
+        strokeWidth="2.5"
+        strokeLinejoin="round"
+      />
+
+      {/* Center Golden Medallion */}
+      <circle cx="80" cy="80" r="38" fill="#FDE047" stroke="#16141B" strokeWidth="2.5" />
+      <circle cx="80" cy="80" r="32" stroke="#16141B" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.6" />
+
+      {/* 30+ Text in Medallion */}
+      <text x="80" y="85" textAnchor="middle" fill="#16141B" fontSize="25" fontWeight="900" fontFamily="sans-serif">
+        30+
+      </text>
+      <text x="80" y="98" textAnchor="middle" fill="#5B32D6" fontSize="9" fontWeight="800" letterSpacing="1" fontFamily="sans-serif">
+        YEARS
+      </text>
+
+      {/* Top 5 Stars Arc */}
+      <polygon points="80,24 82,28 86,28 83,31 84,35 80,33 76,35 77,31 74,28 78,28" fill="#FDE047" stroke="#16141B" strokeWidth="1" />
+      <polygon points="65,28 66,32 70,32 67,35 68,39 65,37 62,39 63,35 60,32 64,32" fill="#FDE047" stroke="#16141B" strokeWidth="1" />
+      <polygon points="95,28 96,32 100,32 97,35 98,39 95,37 92,39 93,35 90,32 94,32" fill="#FDE047" stroke="#16141B" strokeWidth="1" />
+    </svg>
+  );
+}
+
+// 10. Advantage 2: Concept-Based Learning (Illuminated Logic Lightbulb)
+export function AdvantageConceptDoodle({ className = "w-36 h-36" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      {/* Lightbulb Dome */}
+      <path
+        d="M52 74 C 52 48, 62 34, 80 34 C 98 34, 108 48, 108 74 C 108 88, 98 94, 96 104 H 64 C 62 94, 52 88, 52 74 Z"
+        fill="#FDE047"
+        stroke="#16141B"
+        strokeWidth="2.5"
+      />
+      {/* Screw Cap */}
+      <rect x="65" y="104" width="30" height="7" rx="3" fill="#ECE8FA" stroke="#16141B" strokeWidth="2" />
+      <rect x="68" y="111" width="24" height="6" rx="2" fill="#ECE8FA" stroke="#16141B" strokeWidth="2" />
+      <path d="M72 117 C 72 122, 88 122, 88 117 Z" fill="#16141B" stroke="#16141B" strokeWidth="1.5" />
+
+      {/* Internal Logic Filament: Balance Symbol or M-Loop */}
+      <path
+        d="M68 84 L 74 60 L 80 72 L 86 60 L 92 84"
+        stroke="#5B32D6"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx="80" cy="50" r="4" fill="#5B32D6" />
+
+      {/* Radiating Light Beams */}
+      <path d="M80 18 V 26" stroke="#5B32D6" strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M38 42 L 46 48" stroke="#5B32D6" strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M122 42 L 114 48" stroke="#5B32D6" strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M28 74 H 36" stroke="#16141B" strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M132 74 H 124" stroke="#16141B" strokeWidth="2.5" strokeLinecap="round" />
+
+      {/* Sparkles */}
+      <circle cx="34" cy="100" r="3" fill="#FDE047" stroke="#16141B" strokeWidth="1.5" />
+      <circle cx="126" cy="102" r="3" fill="#5B32D6" />
+    </svg>
+  );
+}
+
+// 11. Advantage 3: Student-Focused (Target Bullseye with Warm Heart & Direct Arrow)
+export function AdvantageStudentDoodle({ className = "w-36 h-36" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      {/* Outer Target Ring */}
+      <circle cx="80" cy="80" r="48" fill="#ECE8FA" stroke="#16141B" strokeWidth="2.5" />
+      {/* Middle Target Ring */}
+      <circle cx="80" cy="80" r="34" fill="#FFFFFF" stroke="#16141B" strokeWidth="2" />
+      {/* Inner Bullseye */}
+      <circle cx="80" cy="80" r="20" fill="#5B32D6" stroke="#16141B" strokeWidth="2" />
+
+      {/* Center Heart inside Bullseye */}
+      <path
+        d="M80 87 C 80 87, 72 81, 72 75 C 72 70, 76 68, 80 72 C 84 68, 88 70, 88 75 C 88 81, 80 87, 80 87 Z"
+        fill="#FDE047"
+        stroke="#16141B"
+        strokeWidth="1.5"
+      />
+
+      {/* Direct Arrow Piercing Bullseye */}
+      <path d="M30 30 L 74 74" stroke="#16141B" strokeWidth="3" strokeLinecap="round" />
+      {/* Arrow Feathers */}
+      <path d="M24 36 L 36 24 M 20 44 L 40 24 M 26 50 L 46 30" stroke="#5B32D6" strokeWidth="2.5" strokeLinecap="round" />
+
+      {/* Focus Brackets [ ] */}
+      <path d="M22 66 H 16 V 94 H 22" stroke="#16141B" strokeWidth="2" strokeLinecap="round" />
+      <path d="M138 66 H 144 V 94 H 138" stroke="#16141B" strokeWidth="2" strokeLinecap="round" />
+      {/* Sparkles */}
+      <circle cx="134" cy="40" r="3.5" fill="#FDE047" stroke="#16141B" strokeWidth="1.5" />
+      <circle cx="120" cy="124" r="2.5" fill="#10B981" />
+    </svg>
+  );
+}
+
+// 12. Advantage 4: Structured Syllabus (Organized Study Plan Checklist Binder)
+export function AdvantageSyllabusDoodle({ className = "w-36 h-36" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+      {/* Clipboard / Binder Base */}
+      <rect x="36" y="26" width="88" height="110" rx="14" fill="#FFFFFF" stroke="#16141B" strokeWidth="2.5" />
+      {/* Binder Clip */}
+      <rect x="62" y="18" width="36" height="16" rx="5" fill="#FDE047" stroke="#16141B" strokeWidth="2" />
+      <circle cx="80" cy="26" r="3" fill="#16141B" />
+
+      {/* Checklist Item 1: Concept Foundation */}
+      <circle cx="54" cy="56" r="7" fill="#10B981" stroke="#16141B" strokeWidth="1.5" />
+      <path d="M51 56 L 53 58 L 57 53" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M68 56 H 106" stroke="#16141B" strokeWidth="2.5" strokeLinecap="round" />
+
+      {/* Checklist Item 2: Working Notes Mastery */}
+      <circle cx="54" cy="78" r="7" fill="#5B32D6" stroke="#16141B" strokeWidth="1.5" />
+      <path d="M51 78 L 53 80 L 57 75" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M68 78 H 108" stroke="#16141B" strokeWidth="2.5" strokeLinecap="round" />
+
+      {/* Checklist Item 3: Board Exam Numerical Drills */}
+      <circle cx="54" cy="100" r="7" fill="#FDE047" stroke="#16141B" strokeWidth="1.5" />
+      <path d="M51 100 L 53 102 L 57 97" stroke="#16141B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M68 100 H 98" stroke="#16141B" strokeWidth="2.5" strokeLinecap="round" />
+
+      {/* Ruler / Pencil at Corner */}
+      <g transform="translate(104, 94) rotate(45)">
+        <rect width="10" height="34" rx="2" fill="#5B32D6" stroke="#16141B" strokeWidth="1.5" />
+        <path d="M0 34 L 5 44 L 10 34 Z" fill="#FDE047" stroke="#16141B" strokeWidth="1.5" />
+      </g>
+    </svg>
+  );
+}

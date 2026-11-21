@@ -1,15 +1,68 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
-import Image from "next/image";
 import { Badge } from "../ui/Badge";
 import {
-  SpeechBubbleOutline,
-  HeartRayOutline,
-  AsteriskSparkle,
-} from "../doodles/Doodles";
+  AdvantageExperienceDoodle,
+  AdvantageConceptDoodle,
+  AdvantageStudentDoodle,
+  AdvantageSyllabusDoodle,
+} from "../doodles/CommerceDoodles";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+
+interface AdvantageItem {
+  step: string;
+  badge: string;
+  title: string;
+  description: string;
+  pills: string[];
+  type: "lavender" | "card";
+  renderDoodle: () => React.ReactNode;
+}
+
+const advantages: AdvantageItem[] = [
+  {
+    step: "01",
+    badge: "HERITAGE & EXCELLENCE",
+    title: "30+ years experience",
+    description:
+      "A decade and a half of proven results and academic excellence in accountancy, guiding generations of commerce students to top ranks.",
+    pills: ["30+ Years Trust", "CBSE Specialization", "Proven Pedagogy"],
+    type: "lavender",
+    renderDoodle: () => <AdvantageExperienceDoodle className="w-36 h-36 sm:w-40 sm:h-40" />,
+  },
+  {
+    step: "02",
+    badge: "LOGIC OVER ROTE",
+    title: "Concept-Based Learning",
+    description:
+      "Moving beyond rote memorization to deep conceptual understanding of every accounting standard, financial principle, and adjustment.",
+    pills: ["Zero Rote Cramming", "Modern Accounting Rules", "Conceptual Logic"],
+    type: "card",
+    renderDoodle: () => <AdvantageConceptDoodle className="w-36 h-36 sm:w-40 sm:h-40" />,
+  },
+  {
+    step: "03",
+    badge: "PERSONAL ATTENTION",
+    title: "Student-Focused",
+    description:
+      "Personalized attention and individual guidance tailored to each student's learning pace, clearing doubts before they become bottlenecks.",
+    pills: ["1-on-1 Guidance", "Instant Doubt Resolution", "Individual Pace"],
+    type: "lavender",
+    renderDoodle: () => <AdvantageStudentDoodle className="w-36 h-36 sm:w-40 sm:h-40" />,
+  },
+  {
+    step: "04",
+    badge: "BOARD EXAM BLUEPRINT",
+    title: "Structured Syllabus",
+    description:
+      "Well-organized study plans, comprehensive working notes, and easy explanations for complex 6-mark board exam numerical problems.",
+    pills: ["Working Notes Mastery", "CBSE Marking Scheme", "Chapter-Wise Tests"],
+    type: "card",
+    renderDoodle: () => <AdvantageSyllabusDoodle className="w-36 h-36 sm:w-40 sm:h-40" />,
+  },
+];
 
 export function WhatYoullImprove() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -118,118 +171,58 @@ export function WhatYoullImprove() {
           </div>
         </div>
 
-        {/* Scroll-Driven Horizontal Track */}
+        {/* Scroll-Driven Horizontal Track (Clean Uniform Illustrated Advantage Cards) */}
         <div className="w-full overflow-hidden pl-5 sm:pl-8 lg:pl-[max(2.5rem,calc((100vw-1240px)/2+2.5rem))]">
           <motion.div
             ref={trackRef}
             style={{ x }}
             className="flex gap-6 will-change-transform pr-10"
           >
-            {/* Card 1: 30+ years experience */}
-            <div className="flex-none w-[320px] sm:w-[400px] lg:w-[440px] h-[440px] sm:h-[480px] rounded-[28px] overflow-hidden relative shadow-md group select-none">
-              <Image
-                src="/images/accountancy-classroom.jpg"
-                alt="30+ years experience in Accountancy coaching"
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-700"
-                sizes="(max-width: 768px) 320px, 440px"
-              />
-              {/* Dark Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+            {advantages.map((item) => (
+              <div
+                key={item.title}
+                className={`flex-none w-[320px] sm:w-[380px] lg:w-[420px] h-[440px] sm:h-[480px] rounded-[28px] p-7 sm:p-9 flex flex-col justify-between shadow-xs transition-transform duration-300 hover:-translate-y-2 select-none border border-neutral-200/70 ${
+                  item.type === "lavender" ? "bg-[#ECE8FA]" : "bg-[#F7F7F9]"
+                }`}
+              >
+                {/* Top: Header Badge & Vector Illustration */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Badge variant="yellow">{item.badge}</Badge>
+                    <span className="text-xs font-bold text-[#5B32D6] tracking-wider uppercase">
+                      BENEFIT {item.step}
+                    </span>
+                  </div>
 
-              {/* Top-Right Speech Bubble Icon */}
-              <div className="absolute top-6 right-6">
-                <SpeechBubbleOutline className="w-9 h-9 text-white/90" />
-              </div>
+                  {/* Centered Vector Doodle */}
+                  <div className="w-full h-[160px] sm:h-[180px] flex items-center justify-center pt-2">
+                    {item.renderDoodle()}
+                  </div>
+                </div>
 
-              {/* Bottom Content */}
-              <div className="absolute bottom-8 left-8 right-8 text-white space-y-2">
-                <h3 className="text-[22px] lg:text-[24px] font-bold tracking-[-0.02em] leading-[1.25]">
-                  30+ years experience
-                </h3>
-                <p className="text-[14px] lg:text-[15px] leading-[1.5] text-white/80">
-                  A decade and a half of proven results and academic excellence in accountancy.
-                </p>
-              </div>
-            </div>
+                {/* Bottom: Title, Description & Feature Pills */}
+                <div className="space-y-3 pt-4 border-t border-neutral-200/50">
+                  <h3 className="text-[22px] sm:text-[25px] font-extrabold tracking-[-0.02em] leading-[1.2] text-[#16141B]">
+                    {item.title}
+                  </h3>
+                  <p className="text-[14px] sm:text-[15px] leading-[1.55] text-neutral-600">
+                    {item.description}
+                  </p>
 
-            {/* Card 2: Concept-Based Learning */}
-            <div className="flex-none w-[320px] sm:w-[400px] lg:w-[440px] h-[440px] sm:h-[480px] rounded-[28px] overflow-hidden relative shadow-md group select-none">
-              <Image
-                src="/images/improve-understand-faster.jpg"
-                alt="Concept-Based Learning in Commerce"
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-700"
-                sizes="(max-width: 768px) 320px, 440px"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-
-              {/* Top-Right Heart Outline Icon */}
-              <div className="absolute top-6 right-6">
-                <HeartRayOutline className="w-9 h-9 text-white/90" />
-              </div>
-
-              {/* Bottom Content */}
-              <div className="absolute bottom-8 left-8 right-8 text-white space-y-2">
-                <h3 className="text-[22px] lg:text-[24px] font-bold tracking-[-0.02em] leading-[1.25]">
-                  Concept-Based Learning
-                </h3>
-                <p className="text-[14px] lg:text-[15px] leading-[1.5] text-white/80">
-                  Moving beyond rote memorization to deep conceptual understanding of every topic.
-                </p>
-              </div>
-            </div>
-
-            {/* Card 3: Student-Focused (White Split Card) */}
-            <div className="flex-none w-[320px] sm:w-[400px] lg:w-[440px] h-[440px] sm:h-[480px] rounded-[28px] bg-white border border-neutral-200/90 p-7 flex flex-col justify-between shadow-xs select-none">
-              {/* Top Text */}
-              <div className="space-y-3">
-                <h3 className="text-[22px] lg:text-[24px] font-bold tracking-[-0.02em] leading-[1.25] text-[#16141B]">
-                  Student-Focused
-                </h3>
-                <p className="text-[14px] lg:text-[15px] leading-[1.5] text-neutral-600">
-                  Personalized attention and guidance tailored to each student's learning pace.
-                </p>
-              </div>
-
-              {/* Bottom Rounded Photo with Doodle */}
-              <div className="relative w-full h-[220px] sm:h-[230px] rounded-[20px] overflow-hidden bg-neutral-100">
-                <Image
-                  src="/images/improve-pronounce-clearly.jpg"
-                  alt="Student focused personalized guidance"
-                  fill
-                  className="object-cover hover:scale-105 transition-transform duration-500"
-                  sizes="(max-width: 768px) 320px, 440px"
-                />
-                <div className="absolute top-4 right-4 z-10 pointer-events-none">
-                  <AsteriskSparkle className="w-10 h-10 text-white drop-shadow-md" />
+                  {/* Micro Pills */}
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {item.pills.map((pill) => (
+                      <span
+                        key={pill}
+                        className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-white/80 border border-neutral-200/80 text-neutral-700 shadow-2xs"
+                      >
+                        {pill}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-
-            {/* Card 4: Structured Syllabus (White Split Card) */}
-            <div className="flex-none w-[320px] sm:w-[400px] lg:w-[440px] h-[440px] sm:h-[480px] rounded-[28px] bg-white border border-neutral-200/90 p-7 flex flex-col justify-between shadow-xs select-none">
-              {/* Top Rounded Photo */}
-              <div className="relative w-full h-[220px] sm:h-[230px] rounded-[20px] overflow-hidden bg-neutral-100">
-                <Image
-                  src="/images/improve-what-to-say.jpg"
-                  alt="Structured syllabus and exam preparation"
-                  fill
-                  className="object-cover hover:scale-105 transition-transform duration-500"
-                  sizes="(max-width: 768px) 320px, 440px"
-                />
-              </div>
-
-              {/* Bottom Text */}
-              <div className="space-y-3 pt-4">
-                <h3 className="text-[22px] lg:text-[24px] font-bold tracking-[-0.02em] leading-[1.25] text-[#16141B]">
-                  Structured Syllabus
-                </h3>
-                <p className="text-[14px] lg:text-[15px] leading-[1.5] text-neutral-600">
-                  Well-organized study plans and easy explanations for complex accounting problems.
-                </p>
-              </div>
-            </div>
+            ))}
           </motion.div>
         </div>
 
