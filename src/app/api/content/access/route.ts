@@ -2,6 +2,7 @@
 import { getAuthenticatedUser, verifyStudentAccess } from "@/lib/auth/roles";
 import { createClient } from "@/lib/supabase/server";
 import { createPresignedPlaybackUrl } from "@/lib/storage/r2";
+import { NextRequest, NextResponse } from "next/server";
 
 
 export async function GET(req: NextRequest) {
