@@ -1,39 +1,40 @@
 "use client";
 
-import React, { useState } from "react";
-import Image from "next/image";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Navbar } from "@/components/navbar/Navbar";
 import { CtaAndFooter } from "@/components/footer/CtaAndFooter";
 import { ContactModal } from "@/components/footer/ContactModal";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { createClient } from "@/lib/supabase/client";
 import {
   FileText,
   Download,
   BookOpen,
-  CheckCircle2,
   Filter,
-  FileCheck,
-  Calculator,
-  Layers,
+  CheckCircle2,
   ArrowDownToLine,
+  Loader2,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface ResourceItem {
   id: string;
   title: string;
-  category: "Class 11" | "Class 12" | "Notes" | "PDF Materials" | "Practice";
+  category: string;
   categoryLabel: string;
   description: string;
   fileFormat: string;
+  fileUrl?: string | null;
 }
 
 export default function ResourcesPage() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState<string>("All");
   const [downloadNotified, setDownloadNotified] = useState<string | null>(null);
+  const [resources, setResources] = useState<ResourceItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const categories = [
     "All",
@@ -44,62 +45,40 @@ export default function ResourcesPage() {
     "Practice Materials",
   ];
 
-  const resources: ResourceItem[] = [
-    {
-      id: "res-1",
-      title: "Class 11: Rules of Debit & Credit Quick Reference Chart",
-      category: "Class 11",
-      categoryLabel: "Class 11 Resources",
-      description:
-        "A clear, structured visual reference chart categorizing traditional rules (Personal, Real, Nominal) alongside modern classification (Assets, Liabilities, Capital, Revenue, Expenses).",
-      fileFormat: "PDF Summary",
-    },
-    {
-      id: "res-2",
-      title: "Class 12: Partnership Accounts — Goodwill Valuation & Revaluation Notes",
-      category: "Class 12",
-      categoryLabel: "Class 12 Resources",
-      description:
-        "Comprehensive formula sheet and adjustment templates for Average Profits, Super Profits, Capitalization methods, and revaluation account journal sequences.",
-      fileFormat: "PDF Notes",
-    },
-    {
-      id: "res-3",
-      title: "Cash Flow Statement (AS-3 Revised) Format & Working Notes Template",
-      category: "Notes",
-      categoryLabel: "Accountancy Notes",
-      description:
-        "Step-by-step master format for Operating, Investing, and Financing activities, including provision for tax and proposed dividend treatment guidelines.",
-      fileFormat: "Format Sheet",
-    },
-    {
-      id: "res-4",
-      title: "Company Accounts: Issue of Shares & Pro-Rata Table Guide",
-      category: "PDF Materials",
-      categoryLabel: "PDF Study Materials",
-      description:
-        "Essential multi-step pro-rata calculation tables and forfeiture/reissue journal entries structured to prevent common numerical errors.",
-      fileFormat: "PDF Guide",
-    },
-    {
-      id: "res-5",
-      title: "Class 11: Bank Reconciliation Statement (BRS) Logic Matrix",
-      category: "Class 11",
-      categoryLabel: "Class 11 Resources",
-      description:
-        "Logical plus/minus chart for favorable vs. overdraft balances in Passbook and Cash Book, built to resolve reconciliation doubts quickly.",
-      fileFormat: "Study Matrix",
-    },
-    {
-      id: "res-6",
-      title: "Board Exam Presentation & Time Management Checklist",
-      category: "Practice",
-      categoryLabel: "Practice Materials",
-      description:
-        "Official guidelines for margin drawing, ledger formatting, narration writing, and marks-per-minute pacing in board examination conditions.",
-      fileFormat: "Checklist PDF",
-    },
-  ];
+  useEffect(() => {
+    async function loadResources() {
+      setIsLoading(true);
+      try {
+        const supabase = createClient();
+        const { data, error } = await supabase
+          .from("resources")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (data && !error && data.length > 0) {
+          const mapped: ResourceItem[] = data.map((item: any) => ({
+            id: item.id,
+            title: item.title,
+            category: item.category || "General",
+            categoryLabel: item.category_label || item.category || "General",
+            description: item.description || "",
+            fileFormat: item.file_format || "PDF",
+            fileUrl: item.file_url || null,
+          }));
+          setResources(mapped);
+        } else {
+          setResources([]);
+        }
+      } catch (err) {
+        console.error("Error fetching resources from database:", err);
+        setResources([]);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadResources();
+  }, []);
 
   const filteredResources =
     selectedFilter === "All"
@@ -110,7 +89,7 @@ export default function ResourcesPage() {
             r.category.toLowerCase() === selectedFilter.toLowerCase()
         );
 
-  const handleDownload = (id: string, title: string) => {
+  const handleDownload = (id: string) => {
     setDownloadNotified(id);
     setTimeout(() => {
       setDownloadNotified(null);
@@ -167,81 +146,79 @@ export default function ResourcesPage() {
               ))}
             </div>
 
-            {/* Resources Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-              {filteredResources.map((item, idx) => (
-                <motion.div
-                  key={item.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: idx * 0.05 }}
-                  className="bg-white rounded-[28px] p-7 sm:p-8 border border-neutral-200/80 shadow-xs hover:shadow-lg transition-all flex flex-col justify-between space-y-6 group"
-                >
-                  <div className="space-y-4">
-                    {/* Top Row: Icon & Category */}
-                    <div className="flex items-center justify-between">
-                      <div className="w-12 h-12 rounded-2xl bg-[#ECE8FA] text-[#5B32D6] flex items-center justify-center group-hover:scale-105 transition-transform">
-                        <FileText className="w-6 h-6" />
-                      </div>
-                      <span className="px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-neutral-100 text-neutral-700">
-                        {item.categoryLabel}
-                      </span>
-                    </div>
-
-                    <h3 className="text-lg sm:text-xl font-bold text-[#16141B] tracking-tight leading-snug">
-                      {item.title}
-                    </h3>
-
-                    <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
-                      {item.description}
-                    </p>
-                  </div>
-
-                  {/* Card Bottom / Download Action */}
-                  <div className="pt-4 border-t border-neutral-100 flex items-center justify-between">
-                    <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider">
-                      {item.fileFormat}
-                    </span>
-
-                    <button
-                      type="button"
-                      onClick={() => handleDownload(item.id, item.title)}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold transition-all bg-[#ECE8FA] text-[#5B32D6] hover:bg-[#5B32D6] hover:text-white cursor-pointer"
-                    >
-                      {downloadNotified === item.id ? (
-                        <>
-                          <CheckCircle2 className="w-3.5 h-3.5" />
-                          <span>Ready Soon!</span>
-                        </>
-                      ) : (
-                        <>
-                          <ArrowDownToLine className="w-3.5 h-3.5" />
-                          <span>Get Resource</span>
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Future Uploads Notice Box */}
-            <div className="p-8 rounded-[28px] bg-white border border-neutral-200/90 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-              <div className="space-y-1">
-                <h4 className="text-lg font-bold text-[#16141B]">
-                  Looking for chapter-specific revision notes?
-                </h4>
-                <p className="text-xs sm:text-sm text-neutral-600">
-                  New chapter worksheets, question banks, and answer keys are uploaded regularly for registered students.
+            {/* Resources Grid or Loading / Empty */}
+            {isLoading ? (
+              <div className="flex flex-col items-center justify-center py-20 space-y-4">
+                <Loader2 className="w-8 h-8 animate-spin text-[#5B32D6]" />
+                <p className="text-sm font-semibold text-neutral-500">Loading resources...</p>
+              </div>
+            ) : filteredResources.length === 0 ? (
+              <div className="bg-white rounded-[32px] p-12 text-center border border-dashed border-neutral-300 max-w-lg mx-auto space-y-4 shadow-xs">
+                <div className="w-14 h-14 rounded-full bg-[#ECE8FA] text-[#5B32D6] flex items-center justify-center mx-auto">
+                  <BookOpen className="w-7 h-7" />
+                </div>
+                <h3 className="text-xl font-extrabold text-[#16141B]">No Resources Available</h3>
+                <p className="text-xs sm:text-sm text-neutral-500 leading-relaxed">
+                  There are currently no free study materials found in this category. Resources added via the database will appear here.
                 </p>
               </div>
-              <Link href="/contact" className="shrink-0">
-                <Button variant="purple" size="md">
-                  Request Study Material
-                </Button>
-              </Link>
-            </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                {filteredResources.map((item, idx) => (
+                  <motion.div
+                    key={item.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: idx * 0.05 }}
+                    className="bg-white rounded-[28px] p-7 sm:p-8 border border-neutral-200/80 shadow-xs hover:shadow-lg transition-all flex flex-col justify-between space-y-6 group"
+                  >
+                    <div className="space-y-4">
+                      {/* Top Row: Icon & Category */}
+                      <div className="flex items-center justify-between">
+                        <div className="w-12 h-12 rounded-2xl bg-[#ECE8FA] text-[#5B32D6] flex items-center justify-center group-hover:scale-105 transition-transform">
+                          <FileText className="w-6 h-6" />
+                        </div>
+                        <span className="px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-neutral-100 text-neutral-700">
+                          {item.categoryLabel}
+                        </span>
+                      </div>
+
+                      <h3 className="text-lg sm:text-xl font-bold text-[#16141B] tracking-tight leading-snug">
+                        {item.title}
+                      </h3>
+
+                      <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
+                        {item.description}
+                      </p>
+                    </div>
+
+                    <div className="pt-4 border-t border-neutral-100 flex items-center justify-between">
+                      <span className="text-xs font-semibold text-neutral-400">
+                        {item.fileFormat}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => handleDownload(item.id)}
+                        className="px-4 py-2 rounded-full bg-[#5B32D6] hover:bg-[#4A23C2] text-white text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+                      >
+                        {downloadNotified === item.id ? (
+                          <>
+                            <CheckCircle2 className="w-3.5 h-3.5" />
+                            <span>Downloading...</span>
+                          </>
+                        ) : (
+                          <>
+                            <ArrowDownToLine className="w-3.5 h-3.5" />
+                            <span>Download Free</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
           </div>
         </section>
 
