@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Navbar } from "@/components/navbar/Navbar";
@@ -11,26 +10,19 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
-import { CourseRecord, LectureRecord } from "@/types/lms";
-import { initialCourses } from "@/lib/lms/content";
+import { LectureRecord } from "@/types/lms";
 import { openRazorpayCheckout } from "@/lib/payments/checkout";
 import { LecturePlayerModal } from "@/components/player/LecturePlayerModal";
-import { Course } from "@/types";
 import { createClient } from "@/lib/supabase/client";
 import {
   BookOpen,
-  GraduationCap,
   CheckCircle2,
-  Calendar,
-  Layers,
   ArrowRight,
   ShoppingBag,
   Check,
   Play,
   Lock,
-  Video,
   CreditCard,
-  Loader2,
   Loader2,
 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -38,56 +30,70 @@ import { motion } from "framer-motion";
 export default function CoursesPage() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const { addToCart, isInCart, openCart } = useCart();
-  const { user, isAdmin } = useAuth();
+  const { user } = useAuth();
 
-  const [courses, setCourses] = useState<CourseRecord[]>(initialCourses);
+  const [courses, setCourses] = useState<any[]>([]);
   const [paidLectures, setPaidLectures] = useState<LectureRecord[]>([]);
   const [enrolledCourseIds, setEnrolledCourseIds] = useState<string[]>([]);
   const [purchasedLectureIds, setPurchasedLectureIds] = useState<string[]>([]);
   const [activePlayerLecture, setActivePlayerLecture] = useState<LectureRecord | null>(null);
   const [isPurchasing, setIsPurchasing] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch dynamic courses, paid lectures, and student purchases
-  const loadContentAndPurchases = async () => {
-    try {
-      // 1. Fetch dynamic courses & lectures
-      const contentRes = await fetch("/api/content/manage");
-      if (contentRes.ok) {
-        const data = await contentRes.json();
-        if (data.courses && data.courses.length > 0) {
-          // Merge with initial courses to prevent losing standard courses
-          const existingIds = new Set(data.courses.map((c: any) => c.id));
-          const mergedCourses = [
-            ...data.courses.filter((c: any) => c.is_published || isAdmin),
-            ...initialCourses.filter((c) => !existingIds.has(c.id)),
-          ];
-          setCourses(mergedCourses);
-        }
-        if (data.lectures) {
-          const paid = data.lectures.filter(
-            (l: LectureRecord) => l.access_type === "paid" && (l.is_published || isAdmin)
-          );
-          setPaidLectures(paid);
-        }
-      }
-
-      // 2. Fetch student purchases if logged in
-      if (user) {
-        const purchasesRes = await fetch("/api/student/purchases");
-        if (purchasesRes.ok) {
-          const pData = await purchasesRes.json();
-          setEnrolledCourseIds(pData.enrolledCourseIds || []);
-          setPurchasedLectureIds(pData.purchasedLectureIds || []);
-        }
-      }
-    } catch (err) {
-      console.warn("Using offline course cache:", err);
-    }
-  };
-
+  // Load courses and lectures from Supabase (strictly from API/database, no hardcoded mock data)
   useEffect(() => {
-    loadContentAndPurchases();
-  }, [user, isAdmin]);
+    async function loadContent() {
+      setIsLoading(true);
+      try {
+        const supabase = createClient();
+
+        // 1. Fetch courses
+        const { data: coursesData, error: coursesError } = await supabase
+          .from("courses")
+          .select("*")
+          .order("created_at", { ascending: true });
+
+        if (coursesData && !coursesError) {
+          setCourses(coursesData);
+        } else {
+          setCourses([]);
+        }
+
+        // 2. Fetch paid lectures if table exists
+        try {
+          const { data: lecturesData } = await supabase
+            .from("lectures")
+            .select("*")
+            .eq("access_type", "paid")
+            .eq("is_published", true)
+            .order("created_at", { ascending: true });
+
+          if (lecturesData) {
+            setPaidLectures(lecturesData);
+          }
+        } catch {
+          // table might not be seeded yet
+        }
+
+        // 3. Fetch student purchases if user is logged in
+        if (user) {
+          const purchasesRes = await fetch("/api/student/purchases");
+          if (purchasesRes.ok) {
+            const pData = await purchasesRes.json();
+            setEnrolledCourseIds(pData.enrolledCourseIds || []);
+            setPurchasedLectureIds(pData.purchasedLectureIds || []);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch courses from API:", err);
+        setCourses([]);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadContent();
+  }, [user]);
 
   // Handle 1-Click Razorpay Purchase for complete course or lecture
   const handleDirectPurchase = async (params: {
@@ -104,7 +110,6 @@ export default function CoursesPage() {
     setIsPurchasing(params.courseId || params.lectureId || "item");
 
     try {
-      // 1. Create order on backend
       const res = await fetch("/api/payments/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -121,7 +126,6 @@ export default function CoursesPage() {
 
       const orderData = await res.json();
 
-      // 2. Open Razorpay Checkout modal
       await openRazorpayCheckout({
         orderId: orderData.orderId,
         amount: orderData.amount,
@@ -133,7 +137,6 @@ export default function CoursesPage() {
           email: user.email || "",
         },
         onSuccess: async (rzpRes) => {
-          // 3. Verify on server
           const verifyRes = await fetch("/api/payments/verify", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -149,7 +152,12 @@ export default function CoursesPage() {
           });
 
           if (verifyRes.ok) {
-            await loadContentAndPurchases();
+            if (params.courseId) {
+              setEnrolledCourseIds((prev) => [...prev, params.courseId!]);
+            }
+            if (params.lectureId) {
+              setPurchasedLectureIds((prev) => [...prev, params.lectureId!]);
+            }
             alert("Enrollment successful! Access has been unlocked on your account.");
           } else {
             alert("Payment recorded. Verification in progress.");
@@ -165,47 +173,6 @@ export default function CoursesPage() {
       setIsPurchasing(null);
     }
   };
-  const [coursesList, setCoursesList] = useState<Course[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    async function loadCourses() {
-      setIsLoading(true);
-      try {
-        const supabase = createClient();
-        const { data, error } = await supabase
-          .from("courses")
-          .select("*")
-          .order("created_at", { ascending: true });
-
-        if (data && !error && data.length > 0) {
-          const mapped: Course[] = data.map((item: any) => ({
-            id: item.id,
-            category: item.category || "Commerce",
-            badge: item.badge || undefined,
-            title: item.title,
-            price: Number(item.price || 0),
-            originalPrice: item.original_price ? Number(item.original_price) : undefined,
-            description: item.description || "",
-            image: item.image || "/images/accountancy-classroom.jpg",
-            mode: item.mode || "Classroom Batches & Live Interactive Sessions",
-            topics: Array.isArray(item.topics) ? item.topics : [],
-            highlights: Array.isArray(item.highlights) ? item.highlights : [],
-          }));
-          setCoursesList(mapped);
-        } else {
-          setCoursesList([]);
-        }
-      } catch (err) {
-        console.error("Error fetching courses from database:", err);
-        setCoursesList([]);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    loadCourses();
-  }, []);
 
   return (
     <div className="min-h-screen bg-white text-[#16141B] flex flex-col font-sans selection:bg-[#FDE047] selection:text-[#16141B]">
@@ -235,42 +202,12 @@ export default function CoursesPage() {
         {/* Complete Courses Section */}
         <section className="py-20 lg:py-28 bg-[#F7F7F9]">
           <div className="max-w-[1240px] mx-auto px-5 sm:px-8 lg:px-10 space-y-16">
-            {courses.map((course, idx) => {
-              const inCart = isInCart(course.id);
-              const isEnrolled = enrolledCourseIds.includes(course.id);
-
-              return (
-                <motion.div
-                  key={course.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: idx * 0.1 }}
-                  className="bg-white rounded-[32px] overflow-hidden border border-neutral-200/80 shadow-md hover:shadow-xl transition-shadow grid grid-cols-1 lg:grid-cols-12"
-                >
-                  {/* Left Visual Column */}
-                  <div className="lg:col-span-5 relative min-h-[300px] lg:min-h-full bg-neutral-900 overflow-hidden">
-                    <Image
-                      src={course.thumbnail_key || "/images/accountancy-classroom.jpg"}
-                      alt={course.title}
-                      fill
-                      className="object-cover object-center brightness-[0.88] hover:scale-105 transition-transform duration-700"
-                      sizes="(max-width: 1024px) 100vw, 500px"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                    <div className="absolute bottom-6 left-6 right-6 text-white space-y-1">
-                      <span className="text-xs font-extrabold uppercase tracking-widest text-[#FDE047]">
-                        {course.category}
-                      </span>
-                      <div className="text-lg font-bold">{course.mode || "Online Interactive & Self-Paced"}</div>
-                    </div>
-                  </div>
             {isLoading ? (
               <div className="flex flex-col items-center justify-center py-20 space-y-4">
                 <Loader2 className="w-8 h-8 animate-spin text-[#5B32D6]" />
-                <p className="text-sm font-semibold text-neutral-500">Loading courses...</p>
+                <p className="text-sm font-semibold text-neutral-500">Loading courses from API...</p>
               </div>
-            ) : coursesList.length === 0 ? (
+            ) : courses.length === 0 ? (
               <div className="bg-white rounded-[32px] p-12 text-center border border-dashed border-neutral-300 max-w-lg mx-auto space-y-4 shadow-xs">
                 <div className="w-14 h-14 rounded-full bg-[#ECE8FA] text-[#5B32D6] flex items-center justify-center mx-auto">
                   <BookOpen className="w-7 h-7" />
@@ -281,8 +218,10 @@ export default function CoursesPage() {
                 </p>
               </div>
             ) : (
-              coursesList.map((course, idx) => {
+              courses.map((course, idx) => {
                 const inCart = isInCart(course.id);
+                const isEnrolled = enrolledCourseIds.includes(course.id);
+
                 return (
                   <motion.div
                     key={course.id}
@@ -295,7 +234,7 @@ export default function CoursesPage() {
                     {/* Left Visual Column */}
                     <div className="lg:col-span-5 relative min-h-[300px] lg:min-h-full bg-neutral-900 overflow-hidden">
                       <Image
-                        src={course.image}
+                        src={course.image || course.thumbnail_key || "/images/accountancy-classroom.jpg"}
                         alt={course.title}
                         fill
                         className="object-cover object-center brightness-[0.88] hover:scale-105 transition-transform duration-700"
@@ -306,37 +245,10 @@ export default function CoursesPage() {
                         <span className="text-xs font-extrabold uppercase tracking-widest text-[#FDE047]">
                           {course.category}
                         </span>
-                        <div className="text-lg font-bold">{course.mode}</div>
+                        <div className="text-lg font-bold">{course.mode || "Classroom Batches & Live Interactive Sessions"}</div>
                       </div>
                     </div>
 
-                  {/* Right Content Column */}
-                  <div className="lg:col-span-7 p-8 sm:p-10 lg:p-12 flex flex-col justify-between space-y-8">
-                    <div className="space-y-6">
-                      <div className="flex flex-wrap items-center justify-between gap-3">
-                        <div className="flex items-center gap-2">
-                          <Badge variant="yellow">{course.badge || "BOARD EXCELLENCE"}</Badge>
-                          <span className="text-xs font-bold text-neutral-500 uppercase tracking-wider">
-                            {course.category}
-                          </span>
-                        </div>
-                        {/* Price Badge */}
-                        <div className="text-right">
-                          <div className="flex items-baseline gap-2">
-                            <span className="text-2xl sm:text-3xl font-extrabold text-[#16141B]">
-                              ₹{course.price.toLocaleString("en-IN")}
-                            </span>
-                            {course.original_price && (
-                              <span className="text-sm text-neutral-400 line-through">
-                                ₹{course.original_price.toLocaleString("en-IN")}
-                              </span>
-                            )}
-                          </div>
-                          <span className="text-[11px] text-emerald-600 font-bold">
-                            Complete Package with All Lectures
-                          </span>
-                        </div>
-                      </div>
                     {/* Right Content Column */}
                     <div className="lg:col-span-7 p-8 sm:p-10 lg:p-12 flex flex-col justify-between space-y-8">
                       <div className="space-y-6">
@@ -351,11 +263,11 @@ export default function CoursesPage() {
                           <div className="text-right">
                             <div className="flex items-baseline gap-2">
                               <span className="text-2xl sm:text-3xl font-extrabold text-[#16141B]">
-                                ₹{course.price.toLocaleString("en-IN")}
+                                ₹{Number(course.price || 0).toLocaleString("en-IN")}
                               </span>
-                              {course.originalPrice && (
+                              {course.original_price && (
                                 <span className="text-sm text-neutral-400 line-through">
-                                  ₹{course.originalPrice.toLocaleString("en-IN")}
+                                  ₹{Number(course.original_price).toLocaleString("en-IN")}
                                 </span>
                               )}
                             </div>
@@ -371,22 +283,6 @@ export default function CoursesPage() {
                           {course.description}
                         </p>
 
-                      {/* Key Highlights */}
-                      {course.highlights && course.highlights.length > 0 && (
-                        <div className="space-y-2.5 pt-2">
-                          <div className="text-xs font-bold uppercase tracking-wider text-neutral-400">
-                            Course Highlights &amp; Methodology
-                          </div>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                            {course.highlights.map((h, i) => (
-                              <div key={i} className="flex items-start gap-2 text-[13px] text-neutral-700">
-                                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                                <span>{h}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
                         {/* Key Highlights */}
                         {course.highlights && course.highlights.length > 0 && (
                           <div className="space-y-2.5 pt-2">
@@ -394,7 +290,7 @@ export default function CoursesPage() {
                               Course Highlights &amp; Methodology
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                              {course.highlights.map((h, i) => (
+                              {course.highlights.map((h: string, i: number) => (
                                 <div key={i} className="flex items-start gap-2 text-[13px] text-neutral-700">
                                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                                   <span>{h}</span>
@@ -404,26 +300,6 @@ export default function CoursesPage() {
                           </div>
                         )}
 
-                      {/* Syllabus Overview */}
-                      {course.topics && course.topics.length > 0 && (
-                        <div className="space-y-2.5 pt-2">
-                          <div className="text-xs font-bold uppercase tracking-wider text-neutral-400">
-                            Core Syllabus Modules
-                          </div>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            {course.topics.slice(0, 6).map((topic, i) => (
-                              <div
-                                key={i}
-                                className="p-2.5 rounded-xl bg-[#F7F7F9] text-xs font-semibold text-[#16141B] flex items-center gap-2"
-                              >
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#5B32D6]" />
-                                <span className="truncate">{topic}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
                         {/* Syllabus Overview */}
                         {course.topics && course.topics.length > 0 && (
                           <div className="space-y-2.5 pt-2">
@@ -431,7 +307,7 @@ export default function CoursesPage() {
                               Core Syllabus Modules
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                              {course.topics.slice(0, 6).map((topic, i) => (
+                              {course.topics.slice(0, 6).map((topic: string, i: number) => (
                                 <div
                                   key={i}
                                   className="p-2.5 rounded-xl bg-[#F7F7F9] text-xs font-semibold text-[#16141B] flex items-center gap-2"
@@ -445,101 +321,64 @@ export default function CoursesPage() {
                         )}
                       </div>
 
-                    {/* CTA Footer with Buy Now, Cart & Access */}
-                    <div className="pt-6 border-t border-neutral-100 flex flex-wrap items-center justify-between gap-4">
-                      <div className="text-xs text-neutral-500 font-medium">
-                        Taught directly by <strong>{course.teacher_name || "Parvesh Kumar"}</strong> (15+ Years Exp)
-                      </div>
-                      <div className="flex items-center gap-3">
-                        {isEnrolled ? (
-                          <div className="px-5 py-2.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                            <span>Enrolled (Access Active)</span>
-                          </div>
-                        ) : (
-                          <>
-                            {inCart ? (
-                              <button
-                                type="button"
-                                onClick={openCart}
-                                className="px-5 py-2.5 rounded-full bg-emerald-600 text-white text-xs font-bold flex items-center gap-2 hover:bg-emerald-700 transition-colors shadow-xs cursor-pointer"
-                              >
-                                <Check className="w-4 h-4" />
-                                <span>In Cart</span>
-                              </button>
-                            ) : (
-                              <button
-                                type="button"
-                                onClick={() => addToCart(course as any)}
-                                className="px-4 py-2.5 rounded-full bg-neutral-100 text-neutral-800 text-xs font-bold flex items-center gap-2 hover:bg-neutral-200 transition-colors cursor-pointer"
-                              >
-                                <ShoppingBag className="w-4 h-4" />
-                                <span>Add to Cart</span>
-                              </button>
-                            )}
-
-                            <Button
-                              variant="purple"
-                              size="sm"
-                              className="gap-2 cursor-pointer"
-                              disabled={isPurchasing === course.id}
-                              onClick={() =>
-                                handleDirectPurchase({
-                                  courseId: course.id,
-                                  itemTitle: course.title,
-                                  price: course.price,
-                                })
-                              }
-                            >
-                              {isPurchasing === course.id ? (
-                                <Loader2 className="w-4 h-4 animate-spin" />
-                              ) : (
-                                <CreditCard className="w-4 h-4" />
-                              )}
-                              <span>Buy Now</span>
-                            </Button>
-                          </>
-                        )}
-                        <Link href="/counseling">
-                          <Button variant="dark" size="sm" className="gap-1.5">
-                            <span>Inquire</span>
-                            <ArrowRight className="w-3.5 h-3.5" />
-                          </Button>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-                      {/* CTA Footer with Cart & Inquire Actions */}
+                      {/* CTA Footer with Buy Now, Cart & Access */}
                       <div className="pt-6 border-t border-neutral-100 flex flex-wrap items-center justify-between gap-4">
                         <div className="text-xs text-neutral-500 font-medium">
-                          Taught directly by <strong>Parvesh Kumar</strong> (15+ Years Exp)
+                          Taught directly by <strong>{course.teacher_name || "Parvesh Kumar"}</strong> (15+ Years Exp)
                         </div>
                         <div className="flex items-center gap-3">
-                          {inCart ? (
-                            <button
-                              type="button"
-                              onClick={openCart}
-                              className="px-5 py-2.5 rounded-full bg-emerald-600 text-white text-xs font-bold flex items-center gap-2 hover:bg-emerald-700 transition-colors shadow-xs cursor-pointer"
-                            >
-                              <Check className="w-4 h-4" />
-                              <span>In Cart (View)</span>
-                            </button>
+                          {isEnrolled ? (
+                            <div className="px-5 py-2.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold flex items-center gap-2">
+                              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                              <span>Enrolled (Access Active)</span>
+                            </div>
                           ) : (
-                            <button
-                              type="button"
-                              onClick={() => addToCart(course)}
-                              className="px-5 py-2.5 rounded-full bg-[#5B32D6] text-white text-xs font-bold flex items-center gap-2 hover:bg-[#4A23C2] transition-colors shadow-xs cursor-pointer"
-                            >
-                              <ShoppingBag className="w-4 h-4" />
-                              <span>Add to Cart</span>
-                            </button>
+                            <>
+                              {inCart ? (
+                                <button
+                                  type="button"
+                                  onClick={openCart}
+                                  className="px-5 py-2.5 rounded-full bg-emerald-600 text-white text-xs font-bold flex items-center gap-2 hover:bg-emerald-700 transition-colors shadow-xs cursor-pointer"
+                                >
+                                  <Check className="w-4 h-4" />
+                                  <span>In Cart</span>
+                                </button>
+                              ) : (
+                                <button
+                                  type="button"
+                                  onClick={() => addToCart(course)}
+                                  className="px-4 py-2.5 rounded-full bg-neutral-100 text-neutral-800 text-xs font-bold flex items-center gap-2 hover:bg-neutral-200 transition-colors cursor-pointer"
+                                >
+                                  <ShoppingBag className="w-4 h-4" />
+                                  <span>Add to Cart</span>
+                                </button>
+                              )}
+
+                              <Button
+                                variant="purple"
+                                size="sm"
+                                className="gap-2 cursor-pointer"
+                                disabled={isPurchasing === course.id}
+                                onClick={() =>
+                                  handleDirectPurchase({
+                                    courseId: course.id,
+                                    itemTitle: course.title,
+                                    price: Number(course.price || 0),
+                                  })
+                                }
+                              >
+                                {isPurchasing === course.id ? (
+                                  <Loader2 className="w-4 h-4 animate-spin" />
+                                ) : (
+                                  <CreditCard className="w-4 h-4" />
+                                )}
+                                <span>Buy Now</span>
+                              </Button>
+                            </>
                           )}
                           <Link href="/counseling">
                             <Button variant="dark" size="sm" className="gap-1.5">
-                              <span>Counseling</span>
+                              <span>Inquire</span>
                               <ArrowRight className="w-3.5 h-3.5" />
                             </Button>
                           </Link>
