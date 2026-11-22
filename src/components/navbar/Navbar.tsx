@@ -25,17 +25,17 @@ export function Navbar({ onOpenContact }: NavbarProps) {
   const mainNavLinks = [
     { name: "Home", href: "/" },
     { name: "Courses", href: "/courses" },
+    { name: "Counseling", href: "/counseling" },
     { name: "Webinars", href: "/webinars" },
     { name: "Free Resources", href: "/resources" },
-
   ];
 
   const allMobileLinks = [
     { name: "Home", href: "/" },
     { name: "Courses", href: "/courses" },
+    { name: "Counseling", href: "/counseling" },
     { name: "Webinars", href: "/webinars" },
     { name: "Free Resources", href: "/resources" },
-
     { name: "Contact Us", href: "/contact" },
     { name: "Student Login", href: "/login" },
   ];
@@ -146,13 +146,6 @@ export function Navbar({ onOpenContact }: NavbarProps) {
                       className="block px-3 py-2 rounded-xl text-neutral-700 hover:bg-[#ECE8FA] hover:text-[#5B32D6] font-medium"
                     >
                       My Enrolled Batches
-                    </Link>
-                    <Link
-                      href="/track-order"
-                      onClick={() => setUserDropdownOpen(false)}
-                      className="block px-3 py-2 rounded-xl text-neutral-700 hover:bg-[#ECE8FA] hover:text-[#5B32D6] font-medium"
-                    >
-                      Track Batch Materials
                     </Link>
                     <button
                       type="button"

@@ -237,7 +237,7 @@ export default function CoursesPage() {
                             <span>Add to Cart</span>
                           </button>
                         )}
-                        <Link href="/contact">
+                        <Link href="/counseling">
                           <Button variant="dark" size="sm" className="gap-1.5">
                             <span>Counseling</span>
                             <ArrowRight className="w-3.5 h-3.5" />
