@@ -366,35 +366,7 @@ export function ReviewsSection() {
                   </div>
                 </div>
 
-                {/* Score / Achievement & Highlight Headline */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-neutral-700 mb-1.5 uppercase tracking-wider">
-                      Score / Result / School (Optional)
-                    </label>
-                    <div className="relative">
-                      <Award className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-                      <input
-                        type="text"
-                        value={score}
-                        onChange={(e) => setScore(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-[#5B32D6] focus:ring-2 focus:ring-[#5B32D6]/20 text-sm font-medium"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-neutral-700 mb-1.5 uppercase tracking-wider">
-                      Key Headline / Highlight (Optional)
-                    </label>
-                    <input
-                      type="text"
-                      value={quote}
-                      onChange={(e) => setQuote(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-[#5B32D6] focus:ring-2 focus:ring-[#5B32D6]/20 text-sm font-medium"
-                    />
-                  </div>
-                </div>
+                
 
                 {/* Review Textarea */}
                 <div>
