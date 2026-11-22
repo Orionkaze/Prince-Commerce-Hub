@@ -27,7 +27,7 @@ export function Navbar({ onOpenContact }: NavbarProps) {
     { name: "Courses", href: "/courses" },
     { name: "Webinars", href: "/webinars" },
     { name: "Free Resources", href: "/resources" },
-    { name: "Track Order", href: "/track-order" },
+
   ];
 
   const allMobileLinks = [
@@ -35,7 +35,7 @@ export function Navbar({ onOpenContact }: NavbarProps) {
     { name: "Courses", href: "/courses" },
     { name: "Webinars", href: "/webinars" },
     { name: "Free Resources", href: "/resources" },
-    { name: "Track Order", href: "/track-order" },
+
     { name: "Contact Us", href: "/contact" },
     { name: "Student Login", href: "/login" },
   ];
@@ -79,11 +79,10 @@ export function Navbar({ onOpenContact }: NavbarProps) {
                 <Link
                   key={link.name}
                   href={link.href}
-                  className={`text-[13px] xl:text-[14px] font-medium whitespace-nowrap transition-colors py-1 hover:text-[#5B32D6] ${
-                    active
+                  className={`text-[13px] xl:text-[14px] font-medium whitespace-nowrap transition-colors py-1 hover:text-[#5B32D6] ${active
                       ? "text-[#16141B] font-semibold relative after:absolute after:-bottom-1 after:left-0 after:right-0 after:h-[2px] after:bg-[#5B32D6] after:rounded-full"
                       : "text-neutral-700"
-                  }`}
+                    }`}
                 >
                   {link.name}
                 </Link>
@@ -172,11 +171,10 @@ export function Navbar({ onOpenContact }: NavbarProps) {
             ) : (
               <Link
                 href="/login"
-                className={`hidden sm:flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap ${
-                  isActive("/login")
+                className={`hidden sm:flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap ${isActive("/login")
                     ? "text-[#5B32D6] bg-[#ECE8FA]"
                     : "text-neutral-700 hover:text-[#5B32D6] hover:bg-neutral-100"
-                }`}
+                  }`}
               >
                 <User className="w-3.5 h-3.5" />
                 <span>Login</span>
@@ -221,9 +219,8 @@ export function Navbar({ onOpenContact }: NavbarProps) {
                       key={link.name}
                       href={link.href}
                       onClick={() => setMobileMenuOpen(false)}
-                      className={`text-base font-semibold py-2 flex items-center justify-between border-b border-neutral-100 ${
-                        active ? "text-[#5B32D6]" : "text-neutral-800 hover:text-[#5B32D6]"
-                      }`}
+                      className={`text-base font-semibold py-2 flex items-center justify-between border-b border-neutral-100 ${active ? "text-[#5B32D6]" : "text-neutral-800 hover:text-[#5B32D6]"
+                        }`}
                     >
                       <span>{link.name}</span>
                       {active && <span className="w-2 h-2 rounded-full bg-[#5B32D6]" />}

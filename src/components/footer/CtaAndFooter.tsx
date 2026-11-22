@@ -30,7 +30,7 @@ export function CtaAndFooter({ onOpenContact, hideCtaBanner = false }: CtaAndFoo
     { name: "Webinars", href: "/webinars" },
     { name: "Free Resources", href: "/resources" },
     { name: "Contact Us", href: "/contact" },
-    { name: "Track Order", href: "/track-order" },
+
     { name: "Login", href: "/login" },
   ];
 
