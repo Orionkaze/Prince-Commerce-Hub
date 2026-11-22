@@ -13,26 +13,16 @@ interface ScheduleGroup {
 
 const scheduleData: ScheduleGroup[] = [
   {
-    groupName: "Class 11 Accountancy (Foundation & Conceptual Clarity)",
+    groupName: "Class 11 Accountancy (Crash Course)",
     items: [
       {
         id: "c11-1",
         courseName: "Class 11 Accountancy",
         level: "Class 11",
-        days: "Mon · Wed · Fri",
+        days: "Monday – Saturday",
         startDate: "Admissions Open",
-        time: "4:30 PM – 6:00 PM",
-        price: "Inquire",
-        status: "Open",
-      },
-      {
-        id: "c11-2",
-        courseName: "Class 11 Accountancy",
-        level: "Class 11",
-        days: "Tue · Thu · Sat",
-        startDate: "Admissions Open",
-        time: "6:00 PM – 7:30 PM",
-        price: "Inquire",
+        time: "8:00 PM – 9:00 PM",
+        price: "₹99",
         status: "Open",
       },
     ],

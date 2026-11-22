@@ -27,7 +27,7 @@ const courses: CourseItem[] = [
     title: "Class 11 Accountancy",
     subtitle:
       "Comprehensive foundational learning module for Class 11 Commerce students, focusing on core concepts, journal entries, ledgers, and financial accounting principles.",
-    image: "/images/accountancy-classroom.jpg",
+    image: "/images/class-11-accountancy.jpg",
     topOffset: "top-24",
     levels: "Class 11 Commerce",
     format: "Online",
