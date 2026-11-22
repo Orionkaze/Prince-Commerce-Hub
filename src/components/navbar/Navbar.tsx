@@ -5,11 +5,23 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "../ui/Button";
-import { Menu, X, User, ShoppingBag, LogOut } from "lucide-react";
+import {
+  Menu,
+  X,
+  User,
+  ShoppingBag,
+  LogOut,
+  UploadCloud,
+  Layers,
+  BookOpen,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import { CartDrawer } from "@/components/cart/CartDrawer";
+import { UploadContentModal } from "@/components/admin/UploadContentModal";
+import { ContentManagerModal } from "@/components/admin/ContentManagerModal";
+import { MyPurchasesModal } from "@/components/student/MyPurchasesModal";
 
 interface NavbarProps {
   onOpenContact?: () => void;
@@ -18,8 +30,12 @@ interface NavbarProps {
 export function Navbar({ onOpenContact }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [isUploadOpen, setIsUploadOpen] = useState(false);
+  const [isContentManagerOpen, setIsContentManagerOpen] = useState(false);
+  const [isPurchasesOpen, setIsPurchasesOpen] = useState(false);
+
   const pathname = usePathname();
-  const { user, signOut } = useAuth();
+  const { user, signOut, isAdmin } = useAuth();
   const { itemCount, openCart } = useCart();
 
   const mainNavLinks = [
@@ -91,8 +107,20 @@ export function Navbar({ onOpenContact }: NavbarProps) {
             })}
           </nav>
 
-          {/* Right: Cart, Login/Profile & Contact CTA */}
+          {/* Right: Upload Button (Admin), Cart, Login/Profile & Contact CTA */}
           <div className="flex items-center gap-2.5 sm:gap-4 shrink-0">
+            {/* TEACHER ONLY: + Upload Content Button */}
+            {isAdmin && (
+              <button
+                type="button"
+                onClick={() => setIsUploadOpen(true)}
+                className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[#5B32D6] text-white text-xs font-bold hover:bg-[#4E2EC2] shadow-xs transition-colors cursor-pointer"
+              >
+                <UploadCloud className="w-3.5 h-3.5 text-[#FDE047]" />
+                <span>+ Upload Content</span>
+              </button>
+            )}
+
             {/* Cart Button */}
             <button
               type="button"
@@ -132,7 +160,7 @@ export function Navbar({ onOpenContact }: NavbarProps) {
 
                 {/* User Dropdown */}
                 {userDropdownOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl shadow-xl border border-neutral-100 p-2 z-50 text-xs space-y-1">
+                  <div className="absolute right-0 top-full mt-2 w-60 bg-white rounded-2xl shadow-xl border border-neutral-100 p-2 z-50 text-xs space-y-1">
                     <div className="px-3 py-2 border-b border-neutral-100">
                       <div className="font-bold text-[#16141B] truncate">
                         {user.user_metadata?.full_name || "Student"}
@@ -140,14 +168,54 @@ export function Navbar({ onOpenContact }: NavbarProps) {
                       <div className="text-[11px] text-neutral-500 truncate">
                         {user.email}
                       </div>
+                      {isAdmin && (
+                        <div className="mt-1 inline-flex items-center px-2 py-0.5 rounded-md bg-[#ECE8FA] text-[#5B32D6] font-bold text-[10px]">
+                          Admin / Teacher
+                        </div>
+                      )}
                     </div>
-                    <Link
-                      href="/courses"
-                      onClick={() => setUserDropdownOpen(false)}
-                      className="block px-3 py-2 rounded-xl text-neutral-700 hover:bg-[#ECE8FA] hover:text-[#5B32D6] font-medium"
+
+                    {/* Teacher Quick CMS Controls */}
+                    {isAdmin && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setUserDropdownOpen(false);
+                            setIsUploadOpen(true);
+                          }}
+                          className="w-full text-left px-3 py-2 rounded-xl text-[#5B32D6] bg-[#ECE8FA]/50 hover:bg-[#ECE8FA] font-bold flex items-center gap-2 transition-colors cursor-pointer"
+                        >
+                          <UploadCloud className="w-3.5 h-3.5 text-[#5B32D6]" />
+                          <span>+ Upload Content</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setUserDropdownOpen(false);
+                            setIsContentManagerOpen(true);
+                          }}
+                          className="w-full text-left px-3 py-2 rounded-xl text-neutral-700 hover:bg-[#ECE8FA] hover:text-[#5B32D6] font-medium flex items-center gap-2 transition-colors cursor-pointer"
+                        >
+                          <Layers className="w-3.5 h-3.5" />
+                          <span>Manage Content &amp; Pricing</span>
+                        </button>
+                      </>
+                    )}
+
+                    {/* Student Purchases */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setUserDropdownOpen(false);
+                        setIsPurchasesOpen(true);
+                      }}
+                      className="w-full text-left px-3 py-2 rounded-xl text-neutral-700 hover:bg-[#ECE8FA] hover:text-[#5B32D6] font-medium flex items-center gap-2 transition-colors cursor-pointer"
                     >
-                      My Enrolled Batches
-                    </Link>
+                      <BookOpen className="w-3.5 h-3.5" />
+                      <span>My Enrolled Batches</span>
+                    </button>
+
                     <Link
                       href="/track-order"
                       onClick={() => setUserDropdownOpen(false)}
@@ -155,13 +223,14 @@ export function Navbar({ onOpenContact }: NavbarProps) {
                     >
                       Track Batch Materials
                     </Link>
+
                     <button
                       type="button"
                       onClick={() => {
                         setUserDropdownOpen(false);
                         signOut();
                       }}
-                      className="w-full text-left px-3 py-2 rounded-xl text-red-600 hover:bg-red-50 font-semibold flex items-center gap-2"
+                      className="w-full text-left px-3 py-2 rounded-xl text-red-600 hover:bg-red-50 font-semibold flex items-center gap-2 transition-colors cursor-pointer"
                     >
                       <LogOut className="w-3.5 h-3.5" />
                       <span>Sign Out</span>
@@ -214,6 +283,20 @@ export function Navbar({ onOpenContact }: NavbarProps) {
               className="lg:hidden bg-white border-b border-neutral-100 px-6 py-6 shadow-xl max-h-[85vh] overflow-y-auto"
             >
               <nav className="flex flex-col gap-3">
+                {isAdmin && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setIsUploadOpen(true);
+                    }}
+                    className="w-full text-left py-2.5 px-3 rounded-xl bg-[#5B32D6] text-white text-sm font-bold flex items-center gap-2"
+                  >
+                    <UploadCloud className="w-4 h-4 text-[#FDE047]" />
+                    <span>+ Upload Content (Teacher)</span>
+                  </button>
+                )}
+
                 {allMobileLinks.map((link) => {
                   const active = isActive(link.href);
                   return (
@@ -230,6 +313,20 @@ export function Navbar({ onOpenContact }: NavbarProps) {
                     </Link>
                   );
                 })}
+
+                {user && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setIsPurchasesOpen(true);
+                    }}
+                    className="text-left text-base font-semibold py-2 border-b border-neutral-100 text-neutral-800 flex items-center gap-2"
+                  >
+                    <BookOpen className="w-4 h-4 text-[#5B32D6]" />
+                    <span>My Enrolled Batches</span>
+                  </button>
+                )}
 
                 <div className="pt-4 flex flex-col gap-3">
                   <Link
@@ -250,6 +347,25 @@ export function Navbar({ onOpenContact }: NavbarProps) {
 
       {/* Global Slide-Over Cart Drawer */}
       <CartDrawer />
+
+      {/* Teacher Content Upload Modal */}
+      <UploadContentModal
+        isOpen={isUploadOpen}
+        onClose={() => setIsUploadOpen(false)}
+      />
+
+      {/* Teacher CMS Manager Modal */}
+      <ContentManagerModal
+        isOpen={isContentManagerOpen}
+        onClose={() => setIsContentManagerOpen(false)}
+        onOpenUpload={() => setIsUploadOpen(true)}
+      />
+
+      {/* Student Purchases Modal */}
+      <MyPurchasesModal
+        isOpen={isPurchasesOpen}
+        onClose={() => setIsPurchasesOpen(false)}
+      />
     </>
   );
 }
