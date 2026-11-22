@@ -351,12 +351,7 @@ export default function CoursesPage() {
                             </Button>
                           </>
                         )}
-<<<<<<< HEAD
-
-                        <Link href="/contact">
-=======
                         <Link href="/counseling">
->>>>>>> 97cfa27f69643146cbb61df1be8aac6210056892
                           <Button variant="dark" size="sm" className="gap-1.5">
                             <span>Inquire</span>
                             <ArrowRight className="w-3.5 h-3.5" />

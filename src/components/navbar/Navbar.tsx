@@ -211,23 +211,17 @@ export function Navbar({ onOpenContact }: NavbarProps) {
                       }}
                       className="w-full text-left px-3 py-2 rounded-xl text-neutral-700 hover:bg-[#ECE8FA] hover:text-[#5B32D6] font-medium flex items-center gap-2 transition-colors cursor-pointer"
                     >
-<<<<<<< HEAD
-                      <BookOpen className="w-3.5 h-3.5" />
-                      <span>My Enrolled Batches</span>
-                    </button>
+<BookOpen className="w-3.5 h-3.5" />
+<span>My Enrolled Batches</span>
+</button>
 
-                    <Link
-                      href="/track-order"
-                      onClick={() => setUserDropdownOpen(false)}
-                      className="block px-3 py-2 rounded-xl text-neutral-700 hover:bg-[#ECE8FA] hover:text-[#5B32D6] font-medium"
-                    >
-                      Track Batch Materials
-                    </Link>
-
-=======
-                      My Enrolled Batches
-                    </Link>
->>>>>>> 97cfa27f69643146cbb61df1be8aac6210056892
+<Link
+  href="/track-order"
+  onClick={() => setUserDropdownOpen(false)}
+  className="block px-3 py-2 rounded-xl text-neutral-700 hover:bg-[#ECE8FA] hover:text-[#5B32D6] font-medium"
+>
+  Track Batch Materials
+</Link>
                     <button
                       type="button"
                       onClick={() => {

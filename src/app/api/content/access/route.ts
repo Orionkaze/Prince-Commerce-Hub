@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+export const revalidate = 0;
 import { getAuthenticatedUser, verifyStudentAccess } from "@/lib/auth/roles";
 import { createClient } from "@/lib/supabase/server";
 import { createPresignedPlaybackUrl } from "@/lib/storage/r2";
@@ -6,7 +6,7 @@ import { createPresignedPlaybackUrl } from "@/lib/storage/r2";
 
 export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
+    const { searchParams } = req.nextUrl;
     const type = searchParams.get("type"); // "lecture" | "resource"
     const id = searchParams.get("id");
 
