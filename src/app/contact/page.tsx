@@ -148,7 +148,7 @@ export default function ContactPage() {
                         Prime Commerce Hub
                       </div>
                       <div className="text-xs text-neutral-500">
-                        New Delhi, India
+                        Punjab, India
                       </div>
                     </div>
                   </div>
@@ -162,10 +162,10 @@ export default function ContactPage() {
                         Counseling Hours
                       </div>
                       <div className="text-base font-bold text-[#16141B]">
-                        10:00 AM – 7:30 PM IST
+                        10:00 AM – 6:30 PM IST
                       </div>
                       <div className="text-xs text-neutral-500">
-                        Monday through Saturday
+                        Monday to Saturday
                       </div>
                     </div>
                   </div>
