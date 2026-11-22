@@ -340,7 +340,7 @@ export function ReviewsSection() {
                         required
                         value={author}
                         onChange={(e) => setAuthor(e.target.value)}
-                        placeholder="e.g. Rahul Verma"
+                        
                         className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-[#5B32D6] focus:ring-2 focus:ring-[#5B32D6]/20 text-sm font-medium"
                       />
                     </div>
@@ -378,7 +378,6 @@ export function ReviewsSection() {
                         type="text"
                         value={score}
                         onChange={(e) => setScore(e.target.value)}
-                        placeholder="e.g. 98/100 in Accountancy"
                         className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-[#5B32D6] focus:ring-2 focus:ring-[#5B32D6]/20 text-sm font-medium"
                       />
                     </div>
@@ -392,7 +391,6 @@ export function ReviewsSection() {
                       type="text"
                       value={quote}
                       onChange={(e) => setQuote(e.target.value)}
-                      placeholder="e.g. Balance sheets finally made complete sense!"
                       className="w-full px-4 py-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:border-[#5B32D6] focus:ring-2 focus:ring-[#5B32D6]/20 text-sm font-medium"
                     />
                   </div>
@@ -408,7 +406,7 @@ export function ReviewsSection() {
                     rows={4}
                     value={story}
                     onChange={(e) => setStory(e.target.value)}
-                    placeholder="Share how Parvesh Sir's conceptual teaching, doubt clearing, or working note methods helped you prepare for exams..."
+                    
                     className="w-full p-4 rounded-xl border border-neutral-300 focus:outline-none focus:border-[#5B32D6] focus:ring-2 focus:ring-[#5B32D6]/20 text-sm leading-relaxed"
                   />
                 </div>

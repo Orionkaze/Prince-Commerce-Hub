@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Navbar } from "@/components/navbar/Navbar";
 import { CtaAndFooter } from "@/components/footer/CtaAndFooter";
 import { TickerBar } from "@/components/counseling/TickerBar";
@@ -27,6 +28,7 @@ export interface ProgramItem {
   duration: string;
   agenda: string;
   validity: string;
+  image?: string;
 }
 
 const COACHING_PROGRAMS: ProgramItem[] = [
@@ -34,23 +36,25 @@ const COACHING_PROGRAMS: ProgramItem[] = [
     id: "11th-acc",
     title: "11th acc",
     sessions: 1,
-    price: 89,
-    originalPrice: 99,
-    subtitle: "1:1 meeting regarding doubtts",
+    price: 200,
+    originalPrice: 299,
+    subtitle: "1:1 meeting regarding doubts",
     duration: "30 min",
     agenda: "doubt solving",
     validity: "Valid for 7 days",
+    image: "/images/counseling-11th.jpg",
   },
   {
     id: "12th-acc",
     title: "12th acc",
     sessions: 1,
-    price: 89,
-    originalPrice: 99,
-    subtitle: "1:1 meeting regarding doubtts",
+    price: 200,
+    originalPrice: 299,
+    subtitle: "1:1 meeting regarding doubts",
     duration: "30 min",
     agenda: "doubt solving",
     validity: "Valid for 7 days",
+    image: "/images/counseling-12th.jpg",
   },
 ];
 
@@ -207,10 +211,20 @@ export default function CounselingPage() {
                   className="bg-white rounded-3xl p-5 border border-neutral-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group"
                 >
                   <div className="space-y-4">
-                    {/* Gradient Image with Dark Pill */}
-                    <div className="relative">
-                      <GradientThumbnail className="h-52" />
-                      <span className="absolute bottom-3.5 left-3.5 bg-[#0F1B33] text-white text-[10px] font-extrabold uppercase px-3 py-1 rounded-full tracking-wider shadow-md">
+                    {/* Thumbnail Image with Dark Pill */}
+                    <div className="relative h-52 rounded-2xl overflow-hidden bg-neutral-900">
+                      {prog.image ? (
+                        <Image
+                          src={prog.image}
+                          alt={prog.title}
+                          fill
+                          className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                          sizes="(max-width: 768px) 100vw, 400px"
+                        />
+                      ) : (
+                        <GradientThumbnail className="h-52" />
+                      )}
+                      <span className="absolute bottom-3.5 left-3.5 bg-[#0F1B33]/90 backdrop-blur-xs text-white text-[10px] font-extrabold uppercase px-3 py-1 rounded-full tracking-wider shadow-md z-10">
                         {prog.sessions} SESSION
                       </span>
                     </div>
@@ -300,10 +314,22 @@ export default function CounselingPage() {
               </div>
             </div>
 
-            {/* Right Column: Large Rounded Gradient Image */}
+            {/* Right Column: Large Rounded Thumbnail Image */}
             <div className="lg:col-span-6">
               <div className="p-3 bg-white rounded-3xl border border-neutral-200/80 shadow-md">
-                <GradientThumbnail className="h-72 sm:h-96" iconSize="lg" />
+                {activeProgram.image ? (
+                  <div className="relative h-72 sm:h-96 rounded-2xl overflow-hidden bg-neutral-900">
+                    <Image
+                      src={activeProgram.image}
+                      alt={activeProgram.title}
+                      fill
+                      className="object-cover object-center"
+                      sizes="(max-width: 1024px) 100vw, 600px"
+                    />
+                  </div>
+                ) : (
+                  <GradientThumbnail className="h-72 sm:h-96" iconSize="lg" />
+                )}
               </div>
             </div>
           </div>
