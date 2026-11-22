@@ -128,7 +128,7 @@ export default function ContactPage() {
                         Phone &amp; WhatsApp
                       </div>
                       <div className="text-base font-bold text-[#16141B]">
-                        +91 98XXX XXXXX
+                        9416115406
                       </div>
                       <div className="text-xs text-neutral-500">
                         Official student helpline (Available Mon–Sat)
