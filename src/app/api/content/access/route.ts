@@ -1,4 +1,4 @@
-export const revalidate = 0;
+
 import { getAuthenticatedUser, verifyStudentAccess } from "@/lib/auth/roles";
 import { createClient } from "@/lib/supabase/server";
 import { createPresignedPlaybackUrl } from "@/lib/storage/r2";
