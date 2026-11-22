@@ -215,7 +215,7 @@ export default function CoursesPage() {
                     {/* CTA Footer with Cart & Inquire Actions */}
                     <div className="pt-6 border-t border-neutral-100 flex flex-wrap items-center justify-between gap-4">
                       <div className="text-xs text-neutral-500 font-medium">
-                        Taught directly by <strong>Parvesh Kumar</strong> (30+ Years Exp)
+                        Taught directly by <strong>Parvesh Kumar</strong> (15+ Years Exp)
                       </div>
                       <div className="flex items-center gap-3">
                         {inCart ? (
@@ -249,25 +249,6 @@ export default function CoursesPage() {
                 </motion.div>
               );
             })}
-          </div>
-        </section>
-
-        {/* Counseling Section */}
-        <section className="py-16 bg-white border-t border-neutral-100">
-          <div className="max-w-[1240px] mx-auto px-5 sm:px-8 lg:px-10 text-center space-y-4">
-            <h3 className="text-2xl font-extrabold text-[#16141B]">
-              Need Help Choosing the Right Batch?
-            </h3>
-            <p className="text-neutral-600 max-w-xl mx-auto text-sm leading-relaxed">
-              Whether you are transitioning from Class 10 into Commerce or preparing for Class 12 Pre-Boards, our counselors and Parvesh Sir provide personalized course orientation.
-            </p>
-            <div className="pt-2">
-              <Link href="/contact">
-                <Button variant="purple" size="md">
-                  Request Course Counseling
-                </Button>
-              </Link>
-            </div>
           </div>
         </section>
 

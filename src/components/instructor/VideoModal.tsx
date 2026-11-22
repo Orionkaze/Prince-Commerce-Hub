@@ -43,7 +43,7 @@ export function VideoModal({ isOpen, onClose }: VideoModalProps) {
           <div className="p-4 rounded-xl bg-[#F7F7F9] space-y-1">
             <div className="flex items-center gap-1.5 text-xs font-bold text-[#5B32D6] uppercase tracking-wide">
               <Award className="w-4 h-4" />
-              <span>30+ Years Experience</span>
+              <span>15+ Years Experience</span>
             </div>
             <div className="text-sm font-semibold text-[#16141B]">Proven Academic Excellence</div>
             <div className="text-xs text-neutral-500">Mentoring students to consistent 95%+ and 100/100 scores in Board Exams.</div>

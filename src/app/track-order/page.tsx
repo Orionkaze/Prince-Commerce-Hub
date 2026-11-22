@@ -125,17 +125,17 @@ export default function TrackOrderPage() {
                     </div>
                   </div>
                   <span className="px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#FEF3C7] text-[#92400E]">
-                    Processing Record
+                    Not Found
                   </span>
                 </div>
 
                 <div className="p-6 rounded-2xl bg-[#F7F7F9] space-y-3 text-sm text-neutral-700">
                   <div className="flex items-start gap-3">
-                    <Clock className="w-5 h-5 text-[#5B32D6] shrink-0 mt-0.5" />
+                    <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                     <div>
-                      <div className="font-bold text-[#16141B]">Status: Order Verified in Registry</div>
+                      <div className="font-bold text-[#16141B]">Status: No Active Dispatch Record Found</div>
                       <div className="text-xs text-neutral-500 pt-0.5">
-                        Your study material package is being processed at the central dispatch desk. Tracking updates refresh automatically every 12 hours.
+                        No dispatch record was found for "{searchedId}". If you enrolled recently, please allow up to 24 hours for enrollment verification or check the Order Reference sent to your email.
                       </div>
                     </div>
                   </div>

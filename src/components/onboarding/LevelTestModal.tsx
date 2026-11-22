@@ -152,7 +152,7 @@ export function LevelTestModal({
             <div className="font-bold text-neutral-900">What to expect in this program:</div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>Concept-based learning led directly by Parvesh Kumar (30+ years exp)</span>
+              <span>Concept-based learning led directly by Parvesh Kumar (15+ years exp)</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />

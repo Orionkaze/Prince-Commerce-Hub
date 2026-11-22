@@ -30,74 +30,7 @@ export interface UnifiedReview {
   isCustom?: boolean;
 }
 
-const initialReviews: UnifiedReview[] = [
-  {
-    id: "rev-1",
-    author: "Aman Sharma",
-    category: "Class 12th Board",
-    score: "99/100 in Accountancy",
-    rating: 5,
-    quote: "I finally understood the 'why' behind every ledger entry instead of just memorizing steps.",
-    story:
-      "Before joining Prime Commerce Hub, Balance Sheets were a nightmare for me and my adjustments never tallied. Parvesh Sir's concept-first approach completely demystified accounting principles. In the board exam, I finished the paper 25 minutes early with complete working notes.",
-    date: "CBSE Board 2026",
-  },
-  {
-    id: "rev-2",
-    author: "Pooja Malhotra",
-    category: "Class 11th Commerce",
-    score: "School Topper · 98%",
-    rating: 5,
-    quote: "Parvesh Sir's personal guidance gave me the confidence to pursue top commerce careers.",
-    story:
-      "I was hesitant when I took Commerce in Class 11. Parvesh Sir broke down difficult concepts into simple real-world financial situations. His structured study plans and regular doubt clearing sessions made Accountancy my highest-scoring subject.",
-    date: "Final Exams 2026",
-  },
-  {
-    id: "rev-3",
-    author: "Rohan Kapoor",
-    category: "Class 12th Board",
-    score: "98/100 in Board Exam",
-    rating: 5,
-    quote: "Clarity in Partnership and Company Accounts is simply unmatched anywhere.",
-    story:
-      "I used to be terrified of Cash Flow Statements and Share Forfeiture entries. Parvesh Sir's proprietary working note frameworks and speed drills helped me solve lengthy 6-mark numericals with zero calculation errors.",
-    date: "CBSE Board 2025",
-  },
-  {
-    id: "rev-4",
-    author: "Sneha Gupta",
-    category: "Class 11th Commerce",
-    score: "Class Rank 1",
-    rating: 5,
-    quote: "Best coaching for Class 11 Commerce fundamentals from the very beginning.",
-    story:
-      "The way Parvesh Sir explains the financial logic behind Debit and Credit makes complex journal entries feel effortless. No rote learning, only rock-solid conceptual clarity.",
-    date: "Session 2025-26",
-  },
-  {
-    id: "rev-5",
-    author: "Devansh Singhania",
-    category: "Alumni & Toppers",
-    score: "Now at SRCC, Delhi University",
-    rating: 5,
-    quote: "Jumped from 62% in school pre-boards to 96% in final CBSE boards!",
-    story:
-      "His 30+ years of teaching experience really shows. He predicts exact exam patterns, teaches time management, and shows how to write full-mark working notes that examiners love.",
-    date: "Alumni Batch",
-  },
-  {
-    id: "rev-6",
-    author: "Sunita Mehra (Parent)",
-    category: "Parent Feedback",
-    score: "Daughter scored 97/100",
-    rating: 5,
-    quote: "Personal attention and dedicated care for every single student's growth.",
-    story:
-      "Parvesh Sir's direct communication with parents and regular feedback reports gave us total peace of mind. My daughter not only excelled academically but developed a genuine passion for commerce.",
-    date: "Verified Parent",
-  },
-];
+const initialReviews: UnifiedReview[] = [];
 
 export function ReviewsSection() {
   const [reviews, setReviews] = useState<UnifiedReview[]>(initialReviews);
@@ -223,14 +156,11 @@ export function ReviewsSection() {
               <FiveStarCrownDoodle className="w-8 h-8 text-[#5B32D6]" />
             </div>
             <div>
-              <div className="flex items-center gap-1.5 text-[#F59E0B]">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 fill-[#F59E0B]" />
-                ))}
-                <span className="text-sm font-black text-[#16141B] ml-1">4.9 / 5.0</span>
+              <div className="text-sm font-bold text-[#16141B]">
+                Student &amp; Parent Feedback
               </div>
               <div className="text-xs text-neutral-500 font-medium">
-                Based on 250+ verified student &amp; parent reviews
+                Verified reviews from enrolled Accountancy batches
               </div>
             </div>
           </div>
@@ -253,66 +183,80 @@ export function ReviewsSection() {
           ))}
         </div>
 
-        {/* Combined Reviews Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredReviews.map((rev) => (
-            <div
-              key={rev.id}
-              className="bg-white rounded-[24px] p-6 sm:p-7 flex flex-col justify-between shadow-xs hover:shadow-md transition-all duration-300 border border-neutral-200/70 hover:-translate-y-1 group"
-            >
-              {/* Top: Star Rating + Category Pill */}
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex text-[#F59E0B] gap-0.5">
-                    {[...Array(rev.rating)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-[#F59E0B]" />
-                    ))}
+        {/* Combined Reviews Bento Grid / Empty State */}
+        {filteredReviews.length === 0 ? (
+          <div className="bg-white rounded-[28px] p-8 sm:p-12 text-center border border-neutral-200/80 shadow-xs max-w-xl mx-auto space-y-4">
+            <div className="w-14 h-14 rounded-2xl bg-[#ECE8FA] text-[#5B32D6] flex items-center justify-center mx-auto">
+              <MessageSquarePlus className="w-7 h-7" />
+            </div>
+            <h3 className="text-xl font-bold text-[#16141B]">
+              No Student Reviews Published Yet
+            </h3>
+            <p className="text-sm text-neutral-600 leading-relaxed">
+              Have you taken classes with Parvesh Sir? Use the form below to share your learning experience, exam results, and feedback.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredReviews.map((rev) => (
+              <div
+                key={rev.id}
+                className="bg-white rounded-[24px] p-6 sm:p-7 flex flex-col justify-between shadow-xs hover:shadow-md transition-all duration-300 border border-neutral-200/70 hover:-translate-y-1 group"
+              >
+                {/* Top: Star Rating + Category Pill */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex text-[#F59E0B] gap-0.5">
+                      {[...Array(rev.rating)].map((_, i) => (
+                        <Star key={i} className="w-4 h-4 fill-[#F59E0B]" />
+                      ))}
+                    </div>
+                    <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#ECE8FA] text-[#5B32D6]">
+                      {rev.category}
+                    </span>
                   </div>
-                  <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#ECE8FA] text-[#5B32D6]">
-                    {rev.category}
+
+                  {/* Purple Quote Icon */}
+                  <PurpleQuotation className="w-7 h-7 text-[#5B32D6]" />
+
+                  {/* Main Quote Title */}
+                  <h4 className="text-[17px] sm:text-[18px] font-bold tracking-tight text-[#16141B] leading-snug">
+                    "{rev.quote}"
+                  </h4>
+
+                  {/* Detailed Story / Feedback */}
+                  <p className="text-[13px] sm:text-[14px] leading-[1.6] text-neutral-600 font-normal">
+                    {rev.story}
+                  </p>
+                </div>
+
+                {/* Bottom: Author Details with Initials Badge */}
+                <div className="pt-5 mt-5 border-t border-neutral-100 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-[#16141B] text-white flex items-center justify-center font-extrabold text-xs shadow-2xs group-hover:bg-[#5B32D6] transition-colors">
+                      {getInitials(rev.author)}
+                    </div>
+                    <div>
+                      <div className="font-extrabold text-[14px] text-[#16141B] flex items-center gap-1">
+                        <span>{rev.author}</span>
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 fill-emerald-50" />
+                      </div>
+                      {rev.score && (
+                        <div className="text-[12px] font-semibold text-[#5B32D6]">
+                          {rev.score}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <span className="text-[11px] font-medium text-neutral-400">
+                    {rev.date}
                   </span>
                 </div>
-
-                {/* Purple Quote Icon */}
-                <PurpleQuotation className="w-7 h-7 text-[#5B32D6]" />
-
-                {/* Main Quote Title */}
-                <h4 className="text-[17px] sm:text-[18px] font-bold tracking-tight text-[#16141B] leading-snug">
-                  "{rev.quote}"
-                </h4>
-
-                {/* Detailed Story / Feedback */}
-                <p className="text-[13px] sm:text-[14px] leading-[1.6] text-neutral-600 font-normal">
-                  {rev.story}
-                </p>
               </div>
-
-              {/* Bottom: Author Details with Initials Badge */}
-              <div className="pt-5 mt-5 border-t border-neutral-100 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[#16141B] text-white flex items-center justify-center font-extrabold text-xs shadow-2xs group-hover:bg-[#5B32D6] transition-colors">
-                    {getInitials(rev.author)}
-                  </div>
-                  <div>
-                    <div className="font-extrabold text-[14px] text-[#16141B] flex items-center gap-1">
-                      <span>{rev.author}</span>
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 fill-emerald-50" />
-                    </div>
-                    {rev.score && (
-                      <div className="text-[12px] font-semibold text-[#5B32D6]">
-                        {rev.score}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <span className="text-[11px] font-medium text-neutral-400">
-                  {rev.date}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* ================= ADD YOUR REVIEW BOX ================= */}
         <div className="mt-16 sm:mt-20">

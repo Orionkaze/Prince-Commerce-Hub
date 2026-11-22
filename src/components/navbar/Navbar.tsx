@@ -27,7 +27,6 @@ export function Navbar({ onOpenContact }: NavbarProps) {
     { name: "Courses", href: "/courses" },
     { name: "Webinars", href: "/webinars" },
     { name: "Free Resources", href: "/resources" },
-    { name: "About Us", href: "/about" },
     { name: "Track Order", href: "/track-order" },
   ];
 
@@ -36,7 +35,6 @@ export function Navbar({ onOpenContact }: NavbarProps) {
     { name: "Courses", href: "/courses" },
     { name: "Webinars", href: "/webinars" },
     { name: "Free Resources", href: "/resources" },
-    { name: "About Us", href: "/about" },
     { name: "Track Order", href: "/track-order" },
     { name: "Contact Us", href: "/contact" },
     { name: "Student Login", href: "/login" },

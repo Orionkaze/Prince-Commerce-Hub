@@ -48,7 +48,7 @@ const scheduleData: ScheduleGroup[] = [
         startDate: "Admissions Open",
         time: "6:00 PM – 7:30 PM",
         price: "Inquire",
-        status: "2 Slots Left",
+        status: "Open",
       },
       {
         id: "c12-2",

@@ -5,7 +5,6 @@ import { Navbar } from "@/components/navbar/Navbar";
 import { HeroSection } from "@/components/hero/HeroSection";
 import { CommonChallenges } from "@/components/challenges/CommonChallenges";
 import { WhatYoullImprove } from "@/components/improve/WhatYoullImprove";
-import { InstructorIntro } from "@/components/instructor/InstructorIntro";
 import { StickyCourseCards } from "@/components/courses/StickyCourseCards";
 import { LearningPath } from "@/components/path/LearningPath";
 import { ClassSchedule } from "@/components/schedule/ClassSchedule";
@@ -36,10 +35,7 @@ export default function Home() {
         {/* Section 3: Why Choose Us (The Prime Advantage) */}
         <WhatYoullImprove />
 
-        {/* Section 4: About Us Preview & Video Showcase */}
-        <InstructorIntro />
-
-        {/* Section 5: Courses Preview (Sticky Stacking Cards) */}
+        {/* Section 4: Courses Preview (Sticky Stacking Cards) */}
         <StickyCourseCards />
 
         {/* Section 6: Learning Path 5-Tier Ascending Staircase */}

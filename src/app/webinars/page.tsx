@@ -12,7 +12,6 @@ import {
   Calendar,
   Clock,
   Video,
-  Play,
   CheckCircle2,
   BellRing,
   ArrowRight,
@@ -46,27 +45,6 @@ export default function WebinarsPage() {
       status: "Announcing Soon",
       mode: "Live Interactive Webinar",
       image: "/images/improve-understand-faster.jpg",
-    },
-  ];
-
-  const recordedSessions = [
-    {
-      id: "rec-1",
-      title: "Foundational Logic of Accounting Equation & Golden Rules",
-      category: "Class 11 & 12 Concept Session",
-      duration: "Recorded Class Session",
-      description:
-        "Parvesh Sir explains the economic rationale behind modern dual-entry bookkeeping and how balance sheets always stay in equilibrium.",
-      image: "/images/intro-video-thumbnail.jpg",
-    },
-    {
-      id: "rec-2",
-      title: "Pro-Rata Allotment & Share Forfeiture Demystified",
-      category: "Class 12 Company Accounts",
-      duration: "Recorded Class Session",
-      description:
-        "A breakdown of comprehensive share capital adjustments, working note tables, and error-free journal entry sequences.",
-      image: "/images/course-work.jpg",
     },
   ];
 
@@ -188,62 +166,30 @@ export default function WebinarsPage() {
             <div className="space-y-3">
               <Badge variant="yellow">ARCHIVE &amp; SESSIONS</Badge>
               <h2 className="text-[32px] sm:text-[42px] font-extrabold text-[#16141B] tracking-tight">
-                Recorded Webinars &amp; Sessions
+                Recorded Webinars &amp; Class Archives
               </h2>
               <p className="text-sm sm:text-base text-neutral-600 max-w-xl">
-                Watch past conceptual explanations and study methodology sessions conducted by Parvesh Sir.
+                Class recordings, doubt-clearing archives, and concept sessions conducted by Parvesh Sir are shared directly with enrolled students through the Student Portal and Google Classroom.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {recordedSessions.map((session, idx) => (
-                <div
-                  key={session.id}
-                  className="bg-[#F7F7F9] rounded-[28px] overflow-hidden border border-neutral-200/80 p-6 sm:p-8 flex flex-col justify-between space-y-6"
-                >
-                  <div className="relative aspect-[16/9] w-full rounded-2xl overflow-hidden bg-neutral-900 group cursor-pointer">
-                    <Image
-                      src={session.image}
-                      alt={session.title}
-                      fill
-                      className="object-cover brightness-90 group-hover:scale-105 transition-transform duration-500"
-                      sizes="(max-width: 768px) 100vw, 600px"
-                    />
-                    <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                      <div className="w-14 h-14 rounded-full bg-white/95 text-[#16141B] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                        <Play className="w-6 h-6 fill-current stroke-none ml-0.5" />
-                      </div>
-                    </div>
-                    <div className="absolute bottom-3 left-3 bg-black/70 px-2.5 py-1 rounded text-[11px] text-white font-medium">
-                      {session.duration}
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <span className="text-xs font-extrabold uppercase text-[#5B32D6]">
-                      {session.category}
-                    </span>
-                    <h3 className="text-lg sm:text-xl font-bold text-[#16141B]">
-                      {session.title}
-                    </h3>
-                    <p className="text-sm text-neutral-600 leading-relaxed">
-                      {session.description}
-                    </p>
-                  </div>
-
-                  <div className="pt-4 border-t border-neutral-200/60 flex items-center justify-between">
-                    <span className="text-xs text-neutral-400 font-medium">
-                      Available to registered students
-                    </span>
-                    <Link href="/contact">
-                      <Button variant="purple" size="sm" className="gap-1.5">
-                        <MonitorPlay className="w-3.5 h-3.5" />
-                        <span>Watch Now</span>
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-              ))}
+            <div className="p-8 sm:p-12 rounded-[28px] bg-[#F7F7F9] border border-neutral-200/80 text-center space-y-4 max-w-2xl mx-auto">
+              <div className="w-14 h-14 rounded-2xl bg-[#ECE8FA] text-[#5B32D6] flex items-center justify-center mx-auto">
+                <MonitorPlay className="w-7 h-7" />
+              </div>
+              <h3 className="text-xl font-bold text-[#16141B]">
+                Session Recordings Accessible Upon Enrollment
+              </h3>
+              <p className="text-sm text-neutral-600 leading-relaxed max-w-lg mx-auto">
+                Enrolled students receive instant cloud access to HD session recordings after each live batch class. For public webinars, registration announcements will appear above.
+              </p>
+              <div className="pt-2">
+                <Link href="/courses">
+                  <Button variant="purple" size="md">
+                    Explore Batch Programs
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </section>

@@ -29,7 +29,6 @@ export function CtaAndFooter({ onOpenContact, hideCtaBanner = false }: CtaAndFoo
     { name: "Courses", href: "/courses" },
     { name: "Webinars", href: "/webinars" },
     { name: "Free Resources", href: "/resources" },
-    { name: "About Us", href: "/about" },
     { name: "Contact Us", href: "/contact" },
     { name: "Track Order", href: "/track-order" },
     { name: "Login", href: "/login" },

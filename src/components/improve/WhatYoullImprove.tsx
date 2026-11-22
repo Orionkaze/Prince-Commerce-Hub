@@ -30,7 +30,7 @@ const advantages: AdvantageItem[] = [
   {
     step: "01",
     badge: "HERITAGE & TRUST",
-    title: "30+ years experience",
+    title: "15+ years experience",
     description:
       "A decade and a half of proven results and academic excellence in accountancy.",
     points: [
@@ -43,7 +43,7 @@ const advantages: AdvantageItem[] = [
         detail: "Deep expertise in question patterns, examiner traps, and marking schemes.",
       },
     ],
-    pills: ["30+ Years Trust", "Board Rankers"],
+    pills: ["15+ Years Trust", "Board Rankers"],
     type: "lavender",
     renderDoodle: () => <AdvantageExperienceDoodle className="w-24 h-24 sm:w-28 sm:h-28" />,
   },

@@ -63,7 +63,7 @@ export function InstructorIntro() {
               </div>
               <div>
                 <div className="text-xs font-bold uppercase tracking-wider text-neutral-400">Experience</div>
-                <div className="text-[15px] font-extrabold text-[#5B32D6]">30+ years TEACHING EXCELLENCE</div>
+                <div className="text-[15px] font-extrabold text-[#5B32D6]">15+ years TEACHING EXCELLENCE</div>
               </div>
             </div>
           </div>

@@ -499,7 +499,7 @@ export function DebitCreditConfusionDoodle({ className = "w-32 h-32" }: { classN
   );
 }
 
-// 9. Advantage 1: 30+ Years Experience Medallion & Laurel Wreath
+// 9. Advantage 1: 15+ Years Experience Medallion & Laurel Wreath
 export function AdvantageExperienceDoodle({ className = "w-36 h-36" }: { className?: string }) {
   return (
     <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
@@ -540,9 +540,9 @@ export function AdvantageExperienceDoodle({ className = "w-36 h-36" }: { classNa
       <circle cx="80" cy="80" r="38" fill="#FDE047" stroke="#16141B" strokeWidth="2.5" />
       <circle cx="80" cy="80" r="32" stroke="#16141B" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.6" />
 
-      {/* 30+ Text in Medallion */}
+      {/* 15+ Text in Medallion */}
       <text x="80" y="85" textAnchor="middle" fill="#16141B" fontSize="25" fontWeight="900" fontFamily="sans-serif">
-        30+
+        15+
       </text>
       <text x="80" y="98" textAnchor="middle" fill="#5B32D6" fontSize="9" fontWeight="800" letterSpacing="1" fontFamily="sans-serif">
         YEARS
