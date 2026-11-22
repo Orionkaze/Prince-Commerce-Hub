@@ -27,10 +27,11 @@ export function CtaAndFooter({ onOpenContact, hideCtaBanner = false }: CtaAndFoo
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "Courses", href: "/courses" },
+    { name: "Counseling", href: "/counseling" },
     { name: "Webinars", href: "/webinars" },
     { name: "Free Resources", href: "/resources" },
     { name: "Contact Us", href: "/contact" },
-    { name: "Track Order", href: "/track-order" },
+
     { name: "Login", href: "/login" },
   ];
 
