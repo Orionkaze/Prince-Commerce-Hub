@@ -47,7 +47,7 @@ function wrapEmailTemplate(contentHtml: string, previewText: string): string {
     </div>
     <div class="footer">
       <p>Prime Commerce Hub — Expert Accountancy Coaching for Class 11th &amp; 12th Commerce</p>
-      <p>Founder &amp; Lead Educator: Parvesh Kumar (15+ Years Exp)</p>
+      <p>Founder &amp; Lead Educator: Parvesh Kumar (30+ Years Exp)</p>
       <p>Questions? Contact us at <a href="mailto:parveshdhiman1900@gmail.com" style="color: #5b32d6;">parveshdhiman1900@gmail.com</a></p>
     </div>
   </div>

@@ -30,20 +30,20 @@ const advantages: AdvantageItem[] = [
   {
     step: "01",
     badge: "HERITAGE & TRUST",
-    title: "15+ years experience",
+    title: "30+ years experience",
     description:
-      "A decade and a half of proven results and academic excellence in accountancy.",
+      "Over three decades of proven results and academic excellence in accountancy.",
     points: [
       {
-        title: "10,000+ Students Mentored",
+        title: "30,000+ Students Mentored",
         detail: "Proven track record of guiding students to 95%+ and 100/100 board scores.",
       },
       {
-        title: "CBSE & ISC Specialization",
+        title: "CBSE Specialization",
         detail: "Deep expertise in question patterns, examiner traps, and marking schemes.",
       },
     ],
-    pills: ["15+ Years Trust", "Board Rankers"],
+    pills: ["30+ Years Trust", "Board Rankers"],
     type: "lavender",
     renderDoodle: () => <AdvantageExperienceDoodle className="w-24 h-24 sm:w-28 sm:h-28" />,
   },

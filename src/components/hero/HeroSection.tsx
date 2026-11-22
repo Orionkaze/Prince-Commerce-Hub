@@ -8,7 +8,6 @@ import { Button } from "../ui/Button";
 import {
   HeroSparkle,
   HeroCurlyArrow,
-  HeroHandwrittenNote,
 } from "../doodles/Doodles";
 import { CheckCircle2, GraduationCap } from "lucide-react";
 import { motion } from "framer-motion";
@@ -95,11 +94,6 @@ export function HeroSection() {
             transition={{ duration: 0.7, delay: 0.15, ease: "easeOut" }}
             className="lg:col-span-5 relative flex justify-center lg:justify-end"
           >
-            {/* Top right floating note: Learn / Explore / grow */}
-            <div className="absolute -top-10 right-6 z-20 hidden sm:block">
-              <HeroHandwrittenNote />
-            </div>
-
             {/* Polaroid Scrapbook Container */}
             <div className="relative w-full max-w-[390px] sm:max-w-[430px] my-6">
               {/* Backing Yellow Highlighter Paper 1 (Rotated +3deg) */}
@@ -163,15 +157,15 @@ export function HeroSection() {
                     Founder &amp; Lead Educator
                   </div>
                   <div className="text-[13px] text-neutral-400">
-                    15+ Years Teaching Excellence
+                    30+ Years Teaching Excellence
                   </div>
                 </div>
 
-                {/* Overlapping Floating Pill Badge: 15+ Years Exp */}
+                {/* Overlapping Floating Pill Badge: 30+ Years Exp */}
                 <div className="absolute -bottom-3 right-6 bg-white py-2 px-3.5 rounded-full shadow-lg border border-neutral-200/80 flex items-center gap-2 z-20">
                   <GraduationCap className="w-4 h-4 text-[#5B32D6]" />
                   <span className="text-xs font-bold text-[#16141B] tracking-tight">
-                    15+ Years Exp
+                    30+ Years Exp
                   </span>
                 </div>
               </motion.div>

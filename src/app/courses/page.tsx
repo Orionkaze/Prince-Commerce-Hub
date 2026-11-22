@@ -324,7 +324,7 @@ export default function CoursesPage() {
                       {/* CTA Footer with Buy Now, Cart & Access */}
                       <div className="pt-6 border-t border-neutral-100 flex flex-wrap items-center justify-between gap-4">
                         <div className="text-xs text-neutral-500 font-medium">
-                          Taught directly by <strong>{course.teacher_name || "Parvesh Kumar"}</strong> (15+ Years Exp)
+                          Taught directly by <strong>{course.teacher_name || "Parvesh Kumar"}</strong> (30+ Years Exp)
                         </div>
                         <div className="flex items-center gap-3">
                           {isEnrolled ? (

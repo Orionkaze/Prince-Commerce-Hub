@@ -164,7 +164,7 @@ export function LecturePlayerModal({
                 Instructor
               </div>
               <div className="font-extrabold text-base text-[#16141B]">
-                {lecture.teacher_name} (15+ Years Exp)
+                {lecture.teacher_name} (30+ Years Exp)
               </div>
             </div>
             {downloadUrl && !accessDenied && (

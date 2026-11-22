@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     template: "%s | Prime Commerce Hub",
   },
   description:
-    "Prime Commerce Hub provides expert Accountancy coaching for Class 11th and 12th Commerce students, focusing on conceptual clarity, structured learning and personalized guidance. Founded by Parvesh Kumar (15+ years teaching experience).",
+    "Prime Commerce Hub provides expert Accountancy coaching for Class 11th and 12th Commerce students, focusing on conceptual clarity, structured learning and personalized guidance. Founded by Parvesh Kumar (30+ years teaching experience).",
   keywords: [
     "Prime Commerce Hub",
     "Parvesh Kumar",

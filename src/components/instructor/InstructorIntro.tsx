@@ -29,7 +29,7 @@ export function InstructorIntro() {
         {/* Indented bold intro paragraphs */}
         <div className="md:ml-[15%] max-w-[780px] my-10 sm:my-12 space-y-5">
           <p className="text-[19px] sm:text-[21px] lg:text-[23px] font-bold leading-[1.4] text-[#16141B] tracking-[-0.015em]">
-            Founded by Parvesh Kumar, Prime Commerce Hub is dedicated to providing top-tier accountancy coaching. With over 15 years of experience, we focus on building a rock-solid foundation for Class 11th and 12th students.
+            Founded by Parvesh Kumar, Prime Commerce Hub is dedicated to providing top-tier accountancy coaching. With over 30 years of experience, we focus on building a rock-solid foundation for Class 11th and 12th students.
           </p>
           <p className="text-[15px] sm:text-[17px] leading-[1.65] text-neutral-600 font-normal">
             Our teaching methodology emphasizes conceptual clarity and personal guidance, ensuring every student not only excels in exams but also develops a deep understanding of financial principles.
@@ -63,7 +63,7 @@ export function InstructorIntro() {
               </div>
               <div>
                 <div className="text-xs font-bold uppercase tracking-wider text-neutral-400">Experience</div>
-                <div className="text-[15px] font-extrabold text-[#5B32D6]">15+ years TEACHING EXCELLENCE</div>
+                <div className="text-[15px] font-extrabold text-[#5B32D6]">30+ years TEACHING EXCELLENCE</div>
               </div>
             </div>
           </div>
