@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
     if (error || !course) {
       // Fallback for default canonical batches
       if (courseId === "class-11") {
-        price = 1200;
+        price = 99;
         itemTitle = "Class 11 Accountancy (Crash Course)";
       } else if (courseId === "class-12") {
         price = 1300;

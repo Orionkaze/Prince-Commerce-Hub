@@ -38,7 +38,8 @@ const DEFAULT_COURSES: CourseRecord[] = [
     teacher_name: "Parvesh Kumar",
     subject: "Accountancy",
     thumbnail_key: "/images/class-11-accountancy.jpg",
-    price: 1200,
+    price: 99,
+    original_price: 1200,
     is_published: true,
     mode: "Accountancy Crash Course",
     topics: [
@@ -433,7 +434,12 @@ export default function CoursesPage() {
                           </div>
                           {/* Price Badge */}
                           <div className="text-right">
-                            <div className="flex items-baseline gap-2">
+                            <div className="flex items-baseline justify-end gap-2">
+                              {course.original_price && course.original_price > course.price && (
+                                <span className="text-base sm:text-lg text-neutral-400 font-semibold line-through">
+                                  ₹{Number(course.original_price).toLocaleString("en-IN")}
+                                </span>
+                              )}
                               <span className="text-2xl sm:text-3xl font-extrabold text-[#16141B]">
                                 ₹{Number(course.price || 0).toLocaleString("en-IN")}
                               </span>
