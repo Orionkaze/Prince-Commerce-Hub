@@ -69,7 +69,8 @@ const DEFAULT_COURSES: CourseRecord[] = [
     teacher_name: "Parvesh Kumar",
     subject: "Accountancy",
     thumbnail_key: "/images/class-12-accountancy.jpg",
-    price: 1300,
+    price: 99,
+    original_price: 1300,
     is_published: true,
     mode: "Accountancy Crash Course",
     topics: [
@@ -429,19 +430,17 @@ export default function CoursesPage() {
                           <div className="flex items-center gap-2">
                             <Badge variant="yellow">{classLabel}</Badge>
                             <span className="text-xs font-bold text-neutral-500 uppercase tracking-wider">
-                              {course.category || (isClass11 ? "Class 11 Commerce" : "Class 12 Commerce")}
+                              {isClass11 ? "Class 11 CBSE" : "Class 12 CBSE"}
                             </span>
                           </div>
                           {/* Price Badge */}
                           <div className="text-right">
-                            <div className="flex items-baseline justify-end gap-2">
-                              {course.original_price && course.original_price > course.price && (
-                                <span className="text-base sm:text-lg text-neutral-400 font-semibold line-through">
-                                  ₹{Number(course.original_price).toLocaleString("en-IN")}
-                                </span>
-                              )}
+                            <div className="flex items-baseline gap-2.5 justify-end">
                               <span className="text-2xl sm:text-3xl font-extrabold text-[#16141B]">
-                                ₹{Number(course.price || 0).toLocaleString("en-IN")}
+                                ₹{Number(course.price || 99).toLocaleString("en-IN")}
+                              </span>
+                              <span className="text-sm sm:text-base text-neutral-400 line-through font-medium">
+                                ₹{Number(course.original_price || (isClass11 ? 1200 : 1300)).toLocaleString("en-IN")}
                               </span>
                             </div>
                             <span className="text-[11px] text-emerald-600 font-bold">
@@ -533,7 +532,7 @@ export default function CoursesPage() {
                                       title: course.title,
                                       category: course.category || (isClass11 ? "Class 11 Commerce" : "Class 12 Commerce"),
                                       badge: classLabel,
-                                      price: Number(course.price || 0),
+                                      price: Number(course.price || 99),
                                       image: imageSrc,
                                       description: course.description,
                                       topics: course.topics,

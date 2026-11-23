@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
       verifiedAmount = 99;
       verifiedTitle = "Class 11 Accountancy (Crash Course)";
     } else if (courseId === "class-12") {
-      verifiedAmount = 1300;
+      verifiedAmount = 99;
       verifiedTitle = "Class 12 Accountancy (Crash Course)";
     }
 
