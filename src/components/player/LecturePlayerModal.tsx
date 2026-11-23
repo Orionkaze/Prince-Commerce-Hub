@@ -121,20 +121,18 @@ export function LecturePlayerModal({
                 {errorMessage || "This premium lecture requires an active purchase or enrollment in the course."}
               </p>
               <div className="pt-2 flex items-center justify-center gap-3">
-                {onInitiatePurchase && (
-                  <Button
-                    variant="purple"
-                    size="md"
-                    onClick={() => {
-                      onClose();
-                      onInitiatePurchase(lecture);
-                    }}
-                  >
-                    Unlock for ₹{lecture.price}
-                  </Button>
-                )}
+                <Button
+                  variant="purple"
+                  size="md"
+                  onClick={() => {
+                    onClose();
+                    window.location.href = `/courses/${lecture.course_id || "class-11"}`;
+                  }}
+                >
+                  Enroll in Complete Batch
+                </Button>
                 <Button variant="white" size="md" onClick={onClose}>
-                  Browse Courses
+                  Browse Batches
                 </Button>
               </div>
             </div>

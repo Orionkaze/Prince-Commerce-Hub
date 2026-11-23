@@ -28,11 +28,16 @@ interface NavbarProps {
 }
 
 export function Navbar({ onOpenContact }: NavbarProps) {
+  const [mounted, setMounted] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [isContentManagerOpen, setIsContentManagerOpen] = useState(false);
   const [isPurchasesOpen, setIsPurchasesOpen] = useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const pathname = usePathname();
   const { user, signOut, isAdmin } = useAuth();
@@ -49,11 +54,13 @@ export function Navbar({ onOpenContact }: NavbarProps) {
   const allMobileLinks = [
     { name: "Home", href: "/" },
     { name: "Courses", href: "/courses" },
+    ...(user ? [{ name: "Student Dashboard", href: "/dashboard" }, { name: "My Courses", href: "/my-courses" }] : []),
+    ...(isAdmin ? [{ name: "Admin Portal", href: "/admin" }] : []),
     { name: "Counseling", href: "/counseling" },
     { name: "Webinars", href: "/webinars" },
     { name: "Free Resources", href: "/resources" },
     { name: "Contact Us", href: "/contact" },
-    { name: "Student Login", href: "/login" },
+    ...(!user ? [{ name: "Student Login", href: "/login" }] : []),
   ];
 
   const isActive = (href: string) => {
@@ -113,6 +120,7 @@ export function Navbar({ onOpenContact }: NavbarProps) {
               <button
                 type="button"
                 onClick={() => setIsUploadOpen(true)}
+                suppressHydrationWarning
                 className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[#5B32D6] text-white text-xs font-bold hover:bg-[#4E2EC2] shadow-xs transition-colors cursor-pointer"
               >
                 <UploadCloud className="w-3.5 h-3.5 text-[#FDE047]" />
@@ -124,11 +132,12 @@ export function Navbar({ onOpenContact }: NavbarProps) {
             <button
               type="button"
               onClick={openCart}
+              suppressHydrationWarning
               className="relative w-10 h-10 rounded-full bg-neutral-100 hover:bg-[#ECE8FA] hover:text-[#5B32D6] text-neutral-800 flex items-center justify-center transition-colors cursor-pointer select-none"
               aria-label="View Course Cart"
             >
               <ShoppingBag className="w-4 h-4" />
-              {itemCount > 0 && (
+              {mounted && itemCount > 0 && (
                 <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[#5B32D6] text-white text-[10px] font-extrabold flex items-center justify-center shadow-xs">
                   {itemCount}
                 </span>
@@ -141,6 +150,7 @@ export function Navbar({ onOpenContact }: NavbarProps) {
                 <button
                   type="button"
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                  suppressHydrationWarning
                   className="flex items-center gap-2 p-1.5 rounded-full hover:bg-neutral-100 transition-colors cursor-pointer border border-neutral-200"
                   aria-label="User profile menu"
                 >
@@ -177,43 +187,65 @@ export function Navbar({ onOpenContact }: NavbarProps) {
                     {/* Teacher Quick CMS Controls */}
                     {isAdmin && (
                       <>
+                        <Link
+                          href="/admin"
+                          onClick={() => setUserDropdownOpen(false)}
+                          className="w-full text-left px-3 py-2 rounded-xl text-[#5B32D6] bg-[#ECE8FA]/60 hover:bg-[#ECE8FA] font-bold flex items-center gap-2 transition-colors cursor-pointer"
+                        >
+                          <Layers className="w-3.5 h-3.5 text-[#5B32D6]" />
+                          <span>Admin Dashboard</span>
+                        </Link>
                         <button
                           type="button"
                           onClick={() => {
                             setUserDropdownOpen(false);
                             setIsUploadOpen(true);
                           }}
-                          className="w-full text-left px-3 py-2 rounded-xl text-[#5B32D6] bg-[#ECE8FA]/50 hover:bg-[#ECE8FA] font-bold flex items-center gap-2 transition-colors cursor-pointer"
+                          className="w-full text-left px-3 py-2 rounded-xl text-[#16141B] hover:bg-[#ECE8FA] hover:text-[#5B32D6] font-bold flex items-center gap-2 transition-colors cursor-pointer"
                         >
                           <UploadCloud className="w-3.5 h-3.5 text-[#5B32D6]" />
-                          <span>+ Upload Content</span>
+                          <span>+ Upload Batch Lecture</span>
                         </button>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setUserDropdownOpen(false);
-                            setIsContentManagerOpen(true);
-                          }}
+                        <Link
+                          href="/admin/courses"
+                          onClick={() => setUserDropdownOpen(false)}
                           className="w-full text-left px-3 py-2 rounded-xl text-neutral-700 hover:bg-[#ECE8FA] hover:text-[#5B32D6] font-medium flex items-center gap-2 transition-colors cursor-pointer"
                         >
-                          <Layers className="w-3.5 h-3.5" />
-                          <span>Manage Content &amp; Pricing</span>
-                        </button>
+                          <BookOpen className="w-3.5 h-3.5 text-neutral-500" />
+                          <span>Manage Batches &amp; Curricula</span>
+                        </Link>
                       </>
                     )}
 
-                    {/* Student Purchases */}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setUserDropdownOpen(false);
-                        setIsPurchasesOpen(true);
-                      }}
+                    {/* Student Dashboard */}
+                    <Link
+                      href="/dashboard"
+                      onClick={() => setUserDropdownOpen(false)}
+                      className="w-full text-left px-3 py-2 rounded-xl text-neutral-800 hover:bg-[#ECE8FA] hover:text-[#5B32D6] font-bold flex items-center gap-2 transition-colors cursor-pointer"
+                    >
+                      <BookOpen className="w-3.5 h-3.5 text-[#5B32D6]" />
+                      <span>Student Dashboard</span>
+                    </Link>
+
+                    {/* My Enrolled Courses */}
+                    <Link
+                      href="/my-courses"
+                      onClick={() => setUserDropdownOpen(false)}
                       className="w-full text-left px-3 py-2 rounded-xl text-neutral-700 hover:bg-[#ECE8FA] hover:text-[#5B32D6] font-medium flex items-center gap-2 transition-colors cursor-pointer"
                     >
-<BookOpen className="w-3.5 h-3.5" />
-<span>My Enrolled Batches</span>
-</button>
+                      <BookOpen className="w-3.5 h-3.5" />
+                      <span>My Enrolled Courses</span>
+                    </Link>
+
+                    {/* Student Profile */}
+                    <Link
+                      href="/profile"
+                      onClick={() => setUserDropdownOpen(false)}
+                      className="w-full text-left px-3 py-2 rounded-xl text-neutral-700 hover:bg-[#ECE8FA] hover:text-[#5B32D6] font-medium flex items-center gap-2 transition-colors cursor-pointer"
+                    >
+                      <User className="w-3.5 h-3.5" />
+                      <span>My Profile</span>
+                    </Link>
 
 <Link
   href="/track-order"
@@ -260,6 +292,7 @@ export function Navbar({ onOpenContact }: NavbarProps) {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              suppressHydrationWarning
               className="lg:hidden w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-800 cursor-pointer shrink-0"
               aria-label="Toggle menu"
             >

@@ -11,6 +11,8 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   display: "swap",
 });
 
+export const instant = false;
+
 export const metadata: Metadata = {
   title: {
     default: "Prime Commerce Hub | Accountancy Coaching for Class 11 & 12",

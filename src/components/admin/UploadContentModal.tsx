@@ -17,6 +17,7 @@ import {
   DollarSign,
   ArrowRight,
   Loader2,
+  ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -33,14 +34,12 @@ export function UploadContentModal({ isOpen, onClose, onSuccess }: UploadContent
   const [title, setTitle] = useState("");
   const [teacherName, setTeacherName] = useState("Parvesh Kumar");
   const [subject, setSubject] = useState("Accountancy");
-  const [courseChoice, setCourseChoice] = useState<string>("class-12");
-  const [newCourseTitle, setNewCourseTitle] = useState("");
+  const [courseChoice, setCourseChoice] = useState<string>("class-11");
   const [chapterName, setChapterName] = useState("");
   const [lectureNumber, setLectureNumber] = useState("");
   const [description, setDescription] = useState("");
   const [contentType, setContentType] = useState<ContentType>("Recorded Lecture");
   const [accessType, setAccessType] = useState<AccessType>("paid");
-  const [price, setPrice] = useState<number>(499);
   const [isPublished, setIsPublished] = useState<boolean>(true);
 
   // File Upload State
@@ -161,14 +160,13 @@ export function UploadContentModal({ isOpen, onClose, onSuccess }: UploadContent
           title: title.trim(),
           teacherName: teacherName.trim(),
           subject,
-          courseId: courseChoice === "new" ? null : courseChoice,
-          newCourseTitle: courseChoice === "new" ? newCourseTitle.trim() : null,
+          courseId: courseChoice,
           chapterName: chapterName.trim() || undefined,
           lectureNumber: lectureNumber.trim() || undefined,
           description: description.trim(),
           contentType,
           accessType,
-          price: accessType === "free" ? 0 : Number(price),
+          price: 0,
           isPublished,
           videoKey: contentType === "Recorded Lecture" ? uploadedFileKey : null,
           fileKey: contentType !== "Recorded Lecture" ? uploadedFileKey : null,
@@ -318,62 +316,44 @@ export function UploadContentModal({ isOpen, onClose, onSuccess }: UploadContent
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <label className="block text-xs font-bold text-neutral-700 uppercase tracking-wider mb-1.5">
-                  Course Assignment
+                  Target Batch *
                 </label>
                 <select
                   value={courseChoice}
                   onChange={(e) => setCourseChoice(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-[#5B32D6]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-[#5B32D6] font-bold text-xs"
                 >
+                  <option value="class-11">Class 11 Accountancy (Comprehensive Foundation)</option>
                   <option value="class-12">Class 12 Accountancy (Board Excellence)</option>
-                  <option value="class-11">Class 11 Accountancy (Foundation)</option>
-                  <option value="new">+ Create New Course</option>
-                  <option value="standalone">Standalone Lecture / Resource</option>
                 </select>
               </div>
 
-              {courseChoice === "new" ? (
-                <div className="sm:col-span-2">
-                  <label className="block text-xs font-bold text-neutral-700 uppercase tracking-wider mb-1.5">
-                    New Course Name *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={newCourseTitle}
-                    onChange={(e) => setNewCourseTitle(e.target.value)}
-                    placeholder="e.g. Class 12 Cash Flow Mastery"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-[#5B32D6]"
-                  />
-                </div>
-              ) : (
-                <>
-                  <div>
-                    <label className="block text-xs font-bold text-neutral-700 uppercase tracking-wider mb-1.5">
-                      Chapter Name
-                    </label>
-                    <input
-                      type="text"
-                      value={chapterName}
-                      onChange={(e) => setChapterName(e.target.value)}
-                      placeholder="e.g. Partnership Fundamentals"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-[#5B32D6]"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-neutral-700 uppercase tracking-wider mb-1.5">
-                      Lecture #
-                    </label>
-                    <input
-                      type="text"
-                      value={lectureNumber}
-                      onChange={(e) => setLectureNumber(e.target.value)}
-                      placeholder="e.g. 04"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-[#5B32D6]"
-                    />
-                  </div>
-                </>
-              )}
+              <div>
+                <label className="block text-xs font-bold text-neutral-700 uppercase tracking-wider mb-1.5">
+                  Chapter / Module Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={chapterName}
+                  onChange={(e) => setChapterName(e.target.value)}
+                  placeholder="e.g. Rules of Debit & Credit"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-[#5B32D6]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-neutral-700 uppercase tracking-wider mb-1.5">
+                  Lecture Number
+                </label>
+                <input
+                  type="text"
+                  value={lectureNumber}
+                  onChange={(e) => setLectureNumber(e.target.value)}
+                  placeholder="e.g. 01"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-[#5B32D6]"
+                />
+              </div>
             </div>
 
             <div>
@@ -479,15 +459,15 @@ export function UploadContentModal({ isOpen, onClose, onSuccess }: UploadContent
             </div>
           </div>
 
-          {/* Section 3: Access & Pricing */}
+          {/* Section 3: Access Permissions */}
           <div className="space-y-4 pt-2 border-t border-neutral-100">
             <h3 className="font-extrabold text-base text-[#16141B] flex items-center gap-2">
-              <DollarSign className="w-4 h-4 text-[#5B32D6]" />
-              <span>3. Access &amp; Pricing</span>
+              <ShieldCheck className="w-4 h-4 text-[#5B32D6]" />
+              <span>3. Access Permissions</span>
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Option 1: Free */}
+              {/* Option 1: Free Preview */}
               <div
                 onClick={() => setAccessType("free")}
                 className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${
@@ -499,16 +479,16 @@ export function UploadContentModal({ isOpen, onClose, onSuccess }: UploadContent
                 <div className="flex items-center justify-between mb-1.5">
                   <span className="font-extrabold text-[#16141B] flex items-center gap-1.5">
                     <Globe className="w-4 h-4 text-emerald-600" />
-                    <span>Free Resource</span>
+                    <span>Free Preview Lecture</span>
                   </span>
                   {accessType === "free" && <CheckCircle2 className="w-4 h-4 text-[#5B32D6]" />}
                 </div>
                 <p className="text-xs text-neutral-500">
-                  Automatically organized under <strong>Free Resources</strong> tab. Open to all students without payment.
+                  Open to all prospective students without enrollment as a sample preview class.
                 </p>
               </div>
 
-              {/* Option 2: Paid */}
+              {/* Option 2: Paid / Batch Enrolled Content */}
               <div
                 onClick={() => setAccessType("paid")}
                 className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${
@@ -520,38 +500,23 @@ export function UploadContentModal({ isOpen, onClose, onSuccess }: UploadContent
                 <div className="flex items-center justify-between mb-1.5">
                   <span className="font-extrabold text-[#16141B] flex items-center gap-1.5">
                     <Lock className="w-4 h-4 text-[#5B32D6]" />
-                    <span>Paid / Premium Content</span>
+                    <span>Batch Enrolled Access</span>
                   </span>
                   {accessType === "paid" && <CheckCircle2 className="w-4 h-4 text-[#5B32D6]" />}
                 </div>
                 <p className="text-xs text-neutral-500">
-                  Organized under <strong>Courses</strong>. Requires purchase or complete course enrollment to unlock.
+                  Included in the complete batch curriculum. Unlocked automatically when the student enrolls in this batch.
                 </p>
               </div>
             </div>
 
-            {/* Price Input (if paid) */}
-            {accessType === "paid" && (
-              <div className="p-4 rounded-2xl bg-neutral-50 border border-neutral-200 flex items-center justify-between gap-4">
-                <div>
-                  <div className="font-bold text-[#16141B]">Individual Selling Price (INR)</div>
-                  <div className="text-xs text-neutral-500">
-                    Students can purchase this single lecture or access it if they enrolled in the full course.
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 shrink-0">
-                  <span className="font-bold text-base text-neutral-700">₹</span>
-                  <input
-                    type="number"
-                    min="0"
-                    step="50"
-                    value={price}
-                    onChange={(e) => setPrice(Number(e.target.value))}
-                    className="w-28 px-3 py-2 rounded-xl border border-neutral-300 text-right font-extrabold text-base focus:outline-none focus:ring-2 focus:ring-[#5B32D6]"
-                  />
-                </div>
+            {/* Batch Enrollment Notice */}
+            <div className="p-4 rounded-2xl bg-[#F7F7F9] border border-gray-200/80 text-xs text-gray-600 flex items-center gap-3">
+              <ShieldCheck className="w-4 h-4 text-[#5B32D6] shrink-0" />
+              <div>
+                <strong>Batch-Based Curriculum:</strong> Students purchase the entire batch (Class 11 or Class 12 Accountancy) to access this lecture. Individual lecture sales are disabled.
               </div>
-            )}
+            </div>
           </div>
 
           {/* Section 4: Publishing Status */}

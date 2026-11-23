@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth/roles";
 import { buildR2ObjectKey, createPresignedUploadUrl } from "@/lib/storage/r2";
 
+
 export async function POST(req: NextRequest) {
   try {
     // 1. Verify user is admin
@@ -11,7 +12,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { filename, contentType, fileCategory, subject } = body;
+    const { filename, contentType, fileCategory, subject, courseId, moduleId, lectureId } = body;
 
     if (!filename || !contentType) {
       return NextResponse.json(
@@ -44,8 +45,10 @@ export async function POST(req: NextRequest) {
 
     const objectKey = buildR2ObjectKey({
       contentType: cat,
-      subject: subject || "accountancy",
       filename,
+      courseId,
+      moduleId,
+      lectureId,
     });
 
     const presigned = await createPresignedUploadUrl({

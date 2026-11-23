@@ -274,41 +274,10 @@ export function ContentManagerModal({
                     </div>
 
                     <div className="flex items-center gap-3 shrink-0">
-                      {/* Price Control */}
-                      {lec.access_type === "paid" && (
-                        <div className="flex items-center gap-1.5 bg-neutral-50 px-3 py-1.5 rounded-xl border border-neutral-200 text-xs font-bold">
-                          {editingPriceId === lec.id ? (
-                            <>
-                              <span>₹</span>
-                              <input
-                                type="number"
-                                className="w-16 bg-white border border-neutral-300 rounded px-1 text-right text-xs"
-                                value={newPrice}
-                                onChange={(e) => setNewPrice(Number(e.target.value))}
-                              />
-                              <button
-                                onClick={() => handleSavePrice("lecture", lec.id)}
-                                className="text-emerald-600 hover:text-emerald-700 p-0.5"
-                              >
-                                <Check className="w-3.5 h-3.5" />
-                              </button>
-                            </>
-                          ) : (
-                            <>
-                              <span>₹{lec.price}</span>
-                              <button
-                                onClick={() => {
-                                  setEditingPriceId(lec.id);
-                                  setNewPrice(lec.price);
-                                }}
-                                className="text-neutral-400 hover:text-[#5B32D6] p-0.5"
-                              >
-                                <Edit3 className="w-3 h-3" />
-                              </button>
-                            </>
-                          )}
-                        </div>
-                      )}
+                      {/* Access Badge */}
+                      <span className="text-[11px] font-bold text-gray-500 bg-gray-50 px-2.5 py-1 rounded-lg border border-gray-200">
+                        {lec.access_type === "free" ? "Free Preview" : "Batch Access"}
+                      </span>
 
                       {/* Toggle Publish */}
                       <button

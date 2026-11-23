@@ -5,6 +5,7 @@ import { createPresignedPlaybackUrl } from "@/lib/storage/r2";
 import { NextRequest, NextResponse } from "next/server";
 
 
+
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = req.nextUrl;
@@ -52,7 +53,7 @@ export async function GET(req: NextRequest) {
         return NextResponse.json(
           {
             allowed: false,
-            message: "Content is locked. Please purchase this lecture or complete course.",
+            message: "Content is locked. Please enroll in this complete batch to access all lectures and study materials.",
           },
           { status: 403 }
         );
@@ -112,6 +113,9 @@ export async function GET(req: NextRequest) {
       filename,
     });
   } catch (error: any) {
+    if (error?.digest?.startsWith("NEXT_")) {
+      throw error;
+    }
     console.error("Access verification error:", error);
     return NextResponse.json(
       { error: error?.message || "Failed to generate content access link" },

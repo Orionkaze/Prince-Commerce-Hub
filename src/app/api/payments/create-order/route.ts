@@ -3,6 +3,9 @@ import { getAuthenticatedUser } from "@/lib/auth/roles";
 import { createClient } from "@/lib/supabase/server";
 import { createRazorpayOrder } from "@/lib/payments/razorpay";
 
+
+
+
 export async function POST(req: NextRequest) {
   try {
     const user = await getAuthenticatedUser();
@@ -14,11 +17,11 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { courseId, lectureId } = body;
+    const { courseId } = body;
 
-    if (!courseId && !lectureId) {
+    if (!courseId) {
       return NextResponse.json(
-        { error: "Either courseId or lectureId must be provided." },
+        { error: "A valid course batch ID (e.g. class-11 or class-12) is required. Individual lecture purchases are not permitted." },
         { status: 400 }
       );
     }
@@ -27,41 +30,26 @@ export async function POST(req: NextRequest) {
     let price = 0;
     let itemTitle = "";
 
-    if (courseId) {
-      const { data: course, error } = await supabase
-        .from("courses")
-        .select("title, price")
-        .eq("id", courseId)
-        .single();
+    const { data: course, error } = await supabase
+      .from("courses")
+      .select("title, price")
+      .eq("id", courseId)
+      .maybeSingle();
 
-      if (error || !course) {
-        // Fallback for default seed courses
-        if (courseId === "class-11") {
-          price = 12500;
-          itemTitle = "Class 11 Accountancy";
-        } else if (courseId === "class-12") {
-          price = 14500;
-          itemTitle = "Class 12 Accountancy";
-        } else {
-          return NextResponse.json({ error: "Course not found." }, { status: 404 });
-        }
+    if (error || !course) {
+      // Fallback for default canonical batches
+      if (courseId === "class-11") {
+        price = 1200;
+        itemTitle = "Class 11 Accountancy (Crash Course)";
+      } else if (courseId === "class-12") {
+        price = 1300;
+        itemTitle = "Class 12 Accountancy (Crash Course)";
       } else {
-        price = Number(course.price);
-        itemTitle = course.title;
+        return NextResponse.json({ error: "Batch not found." }, { status: 404 });
       }
-    } else if (lectureId) {
-      const { data: lecture, error } = await supabase
-        .from("lectures")
-        .select("title, price")
-        .eq("id", lectureId)
-        .single();
-
-      if (error || !lecture) {
-        return NextResponse.json({ error: "Lecture not found." }, { status: 404 });
-      }
-
-      price = Number(lecture.price);
-      itemTitle = lecture.title;
+    } else {
+      price = Number(course.price);
+      itemTitle = course.title;
     }
 
     if (price <= 0) {
@@ -80,7 +68,7 @@ export async function POST(req: NextRequest) {
         userId: user.id,
         userEmail: user.email || "",
         courseId: courseId || "",
-        lectureId: lectureId || "",
+        lectureId: "",
         itemTitle,
       },
     });

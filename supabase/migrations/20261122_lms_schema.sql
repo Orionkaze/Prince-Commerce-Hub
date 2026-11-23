@@ -367,65 +367,66 @@ insert into public.courses (id, title, category, badge, price, original_price, d
 values
   (
     'class-11',
-    'Class 11 Accountancy (Comprehensive Foundation)',
+    'Class 11 Accountancy (Crash Course)',
     'Class 11 Commerce',
-    'FOUNDATION MODULE',
-    12500,
-    15000,
-    'Designed to help students build an unbreakable foundation in financial accounting. Covers basic accounting principles, debit/credit logic, journal entries, ledger posting, trial balance, and financial statements.',
-    '/images/accountancy-classroom.jpg',
-    'Online Batches & Interactive Sessions',
+    'CLASS 11 COMMERCE',
+    1200,
+    null,
+    'A comprehensive foundation in financial accounting, designed to help Class 11 Commerce students understand accounting concepts and develop strong numerical problem-solving skills. Covers accounting principles, accounting equations, journal entries, ledger posting, subsidiary books, cash book, bank reconciliation, depreciation, trial balance, rectification of errors and preparation of financial statements.',
+    '/images/class-11-accountancy.jpg',
+    'Accountancy Crash Course',
     array[
-      'Introduction to Accounting & Basic Terms',
-      'Theory Base of Accounting & Accounting Standards',
-      'Rules of Debit and Credit & Accounting Equation',
-      'Journal, Ledger, Cash Book & Subsidiary Books',
-      'Bank Reconciliation Statement (BRS)',
-      'Trial Balance & Rectification of Errors',
-      'Depreciation, Provisions and Reserves',
-      'Financial Statements with Adjustments'
+      'Introduction and Theory Base of Accounting',
+      'Accounting Equation, Journal and Ledger',
+      'Cash Book and Subsidiary Books',
+      'Bank Reconciliation Statement',
+      'Depreciation, Provisions, Reserves and Trial Balance',
+      'Financial Statements and Incomplete Records'
     ],
     array[
-      'Concept-first methodology eliminating rote learning',
-      'NCERT and standard reference book coverage',
-      'Step-by-step numerical calculations & ledger formats',
-      'Regular chapter-end tests & personalized doubt sessions'
+      'Clear understanding of accounting concepts and terminology.',
+      'Step-by-step journal entries, ledger posting and subsidiary books.',
+      'Bank reconciliation, depreciation and rectification of errors.',
+      'Preparation of financial statements and practical accounting numericals.'
     ]
   ),
   (
     'class-12',
-    'Class 12 Accountancy (Board Excellence)',
+    'Class 12 Accountancy (Crash Course)',
     'Class 12 Commerce',
-    'BOARD EXCELLENCE',
-    14500,
-    18000,
-    'Comprehensive, result-oriented learning module for Class 12 Commerce students aiming for top percentiles and 100/100 in Board Examinations. Thorough coverage of Partnership, Company Accounts, and Financial Analysis.',
+    'CLASS 12 COMMERCE',
+    1300,
+    null,
+    'An exam-focused Accountancy crash course for Class 12 Commerce students, covering partnership firms, company accounts and financial statement analysis. Develop strong numerical problem-solving skills through partnership adjustments, goodwill valuation, admission, retirement and dissolution of partners, share capital, debentures, accounting ratios and cash flow statements.',
     '/images/class-12-accountancy.jpg',
-    'Online Batches & Interactive Sessions',
+    'Accountancy Crash Course',
     array[
-      'Accounting for Partnership Firms — Fundamentals',
-      'Goodwill: Nature and Valuation',
-      'Change in Profit Sharing Ratio & Revaluation',
-      'Admission, Retirement & Death of a Partner',
-      'Dissolution of Partnership Firm',
-      'Accounting for Share Capital (Issue & Forfeiture)',
-      'Issue and Redemption of Debentures',
-      'Financial Statement Analysis & Ratio Analysis',
-      'Cash Flow Statement (As per AS-3)'
+      'Partnership Fundamentals and Goodwill',
+      'Change in Profit Sharing Ratio and Admission of a Partner',
+      'Retirement, Death and Dissolution of a Partnership Firm',
+      'Accounting for Share Capital',
+      'Issue and Accounting for Debentures',
+      'Financial Statement Analysis, Accounting Ratios and Cash Flow Statement'
     ],
     array[
-      'Comprehensive coverage of CBSE & State Board syllabus',
-      'In-depth focus on 6-mark & 8-mark numerical adjustments',
-      'Speed, accuracy, and presentation formatting drills',
-      'Previous 15 years board questions & chapter-wise papers'
+      'Comprehensive coverage of partnership accounting and company accounts.',
+      'Goodwill valuation and partnership adjustments.',
+      'Share capital, issue and forfeiture of shares, and debentures.',
+      'Financial statement analysis, accounting ratios and cash flow statements.'
     ]
   )
 on conflict (id) do update
 set
   title = excluded.title,
+  category = excluded.category,
+  badge = excluded.badge,
+  description = excluded.description,
   price = excluded.price,
   original_price = excluded.original_price,
-  thumbnail_key = excluded.thumbnail_key;
+  thumbnail_key = excluded.thumbnail_key,
+  mode = excluded.mode,
+  topics = excluded.topics,
+  highlights = excluded.highlights;
 
 -- Seed initial Free Resources
 insert into public.resources (id, title, description, file_key, file_type, file_format, category_label, access_type, is_published)

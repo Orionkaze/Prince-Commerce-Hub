@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAuthenticatedUser, getUserRole } from "@/lib/auth/roles";
 
 
+
 export async function GET(req: NextRequest) {
   try {
     const user = await getAuthenticatedUser();
@@ -25,6 +26,9 @@ export async function GET(req: NextRequest) {
       isAdmin: role === "admin",
     });
   } catch (error: any) {
+    if (error?.digest?.startsWith("NEXT_") || error?.digest === "HANGING_PROMISE_REJECTION") {
+      throw error;
+    }
     return NextResponse.json(
       { error: error?.message || "Internal server error" },
       { status: 500 }

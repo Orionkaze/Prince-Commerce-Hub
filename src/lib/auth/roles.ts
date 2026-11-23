@@ -4,6 +4,7 @@ import { UserRole } from "@/types/lms";
 // Designated administrator emails
 export const ADMIN_EMAILS = [
   "parveshdhiman1900@gmail.com",
+  "akshit2046@gmail.com",
   (process.env.ADMIN_EMAIL || "").toLowerCase(),
 ].filter(Boolean);
 
@@ -32,21 +33,34 @@ export async function getUserRole(userId: string, email?: string): Promise<UserR
   }
 
   const supabase = await createClient();
-  const { data, error } = await supabase
+
+  // 1. Check user_roles table
+  const { data: roleData } = await supabase
     .from("user_roles")
     .select("role")
     .eq("user_id", userId)
-    .single();
+    .maybeSingle();
 
-  if (error || !data) {
-    // If not found in DB but matches designated admin
-    if (email && ADMIN_EMAILS.includes(email.toLowerCase())) {
-      return "admin";
-    }
-    return "student";
+  if (roleData?.role === "admin") {
+    return "admin";
   }
 
-  return (data.role as UserRole) || "student";
+  // 2. Check profiles table fallback
+  const { data: profileData } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", userId)
+    .maybeSingle();
+
+  if (profileData?.role === "admin") {
+    return "admin";
+  }
+
+  if (email && ADMIN_EMAILS.includes(email.toLowerCase())) {
+    return "admin";
+  }
+
+  return "student";
 }
 
 /**
@@ -94,51 +108,85 @@ export async function verifyStudentAccess(params: {
 
   const supabase = await createClient();
 
-  // 1. Direct course purchase check
+  // 1. Check Course Access
   if (params.courseId) {
-    const { data: coursePurchase } = await supabase
-      .from("purchases")
-      .select("id")
-      .eq("student_id", params.userId)
-      .eq("course_id", params.courseId)
-      .eq("payment_status", "completed")
-      .limit(1)
-      .maybeSingle();
+    // A. Check enrollments table first
+    try {
+      const { data: enrollment } = await supabase
+        .from("enrollments")
+        .select("id, status")
+        .eq("student_id", params.userId)
+        .eq("course_id", params.courseId)
+        .order("enrolled_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
 
-    if (coursePurchase) return true;
-  }
+      if (enrollment) {
+        // If explicitly revoked or inactive, immediately deny access
+        if (enrollment.status === "revoked" || enrollment.status === "cancelled" || enrollment.status === "expired") {
+          return false;
+        }
+        if (enrollment.status === "active") {
+          return true;
+        }
+      }
+    } catch {
+      // Table might not exist yet
+    }
 
-  // 2. Direct lecture purchase check
-  if (params.lectureId) {
-    const { data: lecturePurchase } = await supabase
-      .from("purchases")
-      .select("id")
-      .eq("student_id", params.userId)
-      .eq("lecture_id", params.lectureId)
-      .eq("payment_status", "completed")
-      .limit(1)
-      .maybeSingle();
-
-    if (lecturePurchase) return true;
-
-    // 3. Access Inheritance: Check if parent course was purchased
-    const { data: lecture } = await supabase
-      .from("lectures")
-      .select("course_id")
-      .eq("id", params.lectureId)
-      .maybeSingle();
-
-    if (lecture?.course_id) {
-      const { data: parentCoursePurchase } = await supabase
+    // B. Check purchases table only if no explicit enrollment status
+    try {
+      const { data: coursePurchase } = await supabase
         .from("purchases")
         .select("id")
         .eq("student_id", params.userId)
-        .eq("course_id", lecture.course_id)
+        .eq("course_id", params.courseId)
         .eq("payment_status", "completed")
         .limit(1)
         .maybeSingle();
 
-      if (parentCoursePurchase) return true;
+      if (coursePurchase) return true;
+    } catch {
+      // Table might not exist yet
+    }
+  }
+
+  // 2. Check Lecture Access
+  if (params.lectureId) {
+    // Check if lecture is preview / free
+    const { data: lecture } = await supabase
+      .from("lectures")
+      .select("id, course_id, access_type, is_preview")
+      .eq("id", params.lectureId)
+      .maybeSingle();
+
+    if (lecture?.is_preview || lecture?.access_type === "free") {
+      return true;
+    }
+
+    // Check individual lecture purchase
+    try {
+      const { data: lecturePurchase } = await supabase
+        .from("purchases")
+        .select("id")
+        .eq("student_id", params.userId)
+        .eq("lecture_id", params.lectureId)
+        .eq("payment_status", "completed")
+        .limit(1)
+        .maybeSingle();
+
+      if (lecturePurchase) return true;
+    } catch {
+      // ignore
+    }
+
+    // Access Inheritance: Check if parent course is unlocked for student
+    if (lecture?.course_id) {
+      return verifyStudentAccess({
+        userId: params.userId,
+        userEmail: params.userEmail,
+        courseId: lecture.course_id,
+      });
     }
   }
 

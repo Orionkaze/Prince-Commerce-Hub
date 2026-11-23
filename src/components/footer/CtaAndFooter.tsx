@@ -91,10 +91,12 @@ export function CtaAndFooter({ onOpenContact, hideCtaBanner = false }: CtaAndFoo
                     value={newsletterEmail}
                     onChange={(e) => setNewsletterEmail(e.target.value)}
                     placeholder="you@example.com"
+                    suppressHydrationWarning
                     className="w-full bg-transparent px-4 text-sm text-white placeholder-white/40 focus:outline-none"
                   />
                   <button
                     type="submit"
+                    suppressHydrationWarning
                     className="px-5 py-2.5 rounded-full bg-white text-[#16141B] text-xs font-bold hover:bg-neutral-200 transition-colors shrink-0 cursor-pointer"
                   >
                     {subscribed ? "Subscribed!" : "Subscribe"}
