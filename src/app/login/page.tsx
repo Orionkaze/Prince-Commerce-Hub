@@ -48,6 +48,23 @@ export default function LoginPage() {
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  // Read error param from URL on client mount
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const err = params.get("error");
+      if (err) {
+        if (err === "auth-code-error") {
+          setErrorMessage(
+            "The authorization code was expired, already used, or could not be verified. Please try signing in again. If you are using private browsing or have strict cookie blocking enabled, please allow cookies for this site."
+          );
+        } else {
+          setErrorMessage(decodeURIComponent(err));
+        }
+      }
+    }
+  }, []);
+
   const handleGoogleSignIn = async () => {
     setIsSigningIn(true);
     setErrorMessage(null);
