@@ -87,6 +87,11 @@ export function UploadContentModal({ isOpen, onClose, onSuccess }: UploadContent
     });
 
     if (!res.ok) {
+      if (res.status === 413) {
+        throw new Error(
+          "Direct Cloudflare R2 upload was blocked by CORS, and the file exceeds Vercel's 4.5 MB serverless limit. Please add the CORS rule in your Cloudflare R2 bucket settings."
+        );
+      }
       const err = await res.json().catch(() => ({}));
       throw new Error(err.error || "Server proxy upload failed");
     }
