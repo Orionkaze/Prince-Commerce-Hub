@@ -141,11 +141,9 @@ export default function LoginPage() {
                   </div>
 
                   <div className="flex flex-col gap-3 pt-2">
-                    <Link href="/courses">
-                      <Button variant="purple" size="md" className="w-full justify-center">
-                        Browse Enrolled Batches
-                      </Button>
-                    </Link>
+                    <Button href="/courses" variant="purple" size="md" className="w-full justify-center">
+                      Browse Enrolled Batches
+                    </Button>
                     <button
                       type="button"
                       onClick={() => signOut()}

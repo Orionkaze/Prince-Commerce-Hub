@@ -251,11 +251,9 @@ export function Navbar({ onOpenContact }: NavbarProps) {
 
             {/* Contact Button */}
             <div className="hidden sm:block shrink-0">
-              <Link href="/contact">
-                <Button variant="purple" size="md" className="whitespace-nowrap">
-                  Contact Us
-                </Button>
-              </Link>
+              <Button href="/contact" variant="purple" size="md" className="whitespace-nowrap">
+                Contact Us
+              </Button>
             </div>
 
             {/* Mobile menu toggle button */}
@@ -325,15 +323,15 @@ export function Navbar({ onOpenContact }: NavbarProps) {
                 )}
 
                 <div className="pt-4 flex flex-col gap-3">
-                  <Link
+                  <Button
                     href="/contact"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="w-full"
+                    variant="purple"
+                    size="md"
+                    className="w-full justify-center"
                   >
-                    <Button variant="purple" size="md" className="w-full justify-center">
-                      Contact Us
-                    </Button>
-                  </Link>
+                    Contact Us
+                  </Button>
                 </div>
               </nav>
             </motion.div>

@@ -70,12 +70,10 @@ export function InstructorIntro() {
 
           {/* Button linking to complete About Us page */}
           <div className="pt-2">
-            <Link href="/about">
-              <Button variant="purple" size="md" className="gap-2">
-                <span>Learn More About Us &amp; Teaching Philosophy</span>
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-            </Link>
+            <Button href="/about" variant="purple" size="md" className="gap-2">
+              <span>Learn More About Us &amp; Teaching Philosophy</span>
+              <ArrowRight className="w-4 h-4" />
+            </Button>
           </div>
         </div>
 

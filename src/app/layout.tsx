@@ -52,8 +52,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${plusJakartaSans.variable} font-sans scroll-smooth`}>
-      <body className="min-h-screen bg-white text-[#16141B] font-sans antialiased selection:bg-[#FDE047] selection:text-[#16141B]">
+    <html lang="en" suppressHydrationWarning className={`${plusJakartaSans.variable} font-sans scroll-smooth`}>
+      <body suppressHydrationWarning className="min-h-screen bg-white text-[#16141B] font-sans antialiased selection:bg-[#FDE047] selection:text-[#16141B]">
         <AuthProvider>
           <CartProvider>{children}</CartProvider>
         </AuthProvider>

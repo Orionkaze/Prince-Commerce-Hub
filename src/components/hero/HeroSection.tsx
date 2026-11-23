@@ -64,16 +64,12 @@ export function HeroSection() {
 
             {/* CTA Buttons */}
             <div className="flex flex-wrap items-center gap-4 pt-4">
-              <Link href="/courses">
-                <Button variant="white" size="lg">
-                  Explore Courses
-                </Button>
-              </Link>
-              <Link href="/contact">
-                <Button variant="outline-white" size="lg">
-                  Contact Us
-                </Button>
-              </Link>
+              <Button href="/courses" variant="white" size="lg">
+                Explore Courses
+              </Button>
+              <Button href="/contact" variant="outline-white" size="lg">
+                Contact Us
+              </Button>
             </div>
 
             {/* Sparkle and Curly Arrow Doodles */}

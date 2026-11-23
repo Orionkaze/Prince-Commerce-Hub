@@ -144,11 +144,9 @@ export function CartDrawer() {
                       Explore our Class 11 and Class 12 Accountancy batches to build conceptual clarity and score top marks.
                     </p>
                     <div className="pt-2">
-                      <Link href="/courses" onClick={closeCart}>
-                        <Button variant="purple" size="md">
-                          Browse Courses
-                        </Button>
-                      </Link>
+                      <Button href="/courses" onClick={closeCart} variant="purple" size="md">
+                        Browse Courses
+                      </Button>
                     </div>
                   </div>
                 ) : (

@@ -376,12 +376,10 @@ export default function CoursesPage() {
                               </Button>
                             </>
                           )}
-                          <Link href="/counseling">
-                            <Button variant="dark" size="sm" className="gap-1.5">
-                              <span>Inquire</span>
-                              <ArrowRight className="w-3.5 h-3.5" />
-                            </Button>
-                          </Link>
+                          <Button href="/counseling" variant="dark" size="sm" className="gap-1.5">
+                            <span>Inquire</span>
+                            <ArrowRight className="w-3.5 h-3.5" />
+                          </Button>
                         </div>
                       </div>
                     </div>

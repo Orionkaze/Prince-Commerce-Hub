@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -11,6 +12,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
   onClick?: () => void;
   href?: string;
+  as?: "button" | "span" | "div";
 }
 
 export function Button({
@@ -21,6 +23,7 @@ export function Button({
   className = "",
   onClick,
   href,
+  as = "button",
   ...props
 }: ButtonProps) {
   // Size styles
@@ -64,10 +67,25 @@ export function Button({
   const baseClasses = `group inline-flex items-center justify-between rounded-full transition-all duration-200 cursor-pointer select-none active:scale-[0.98] ${sizeClasses} ${variantClasses} ${className}`;
 
   if (href) {
+    if (href.startsWith("/") || href.startsWith("#")) {
+      return (
+        <Link href={href} className={baseClasses} onClick={onClick}>
+          {content}
+        </Link>
+      );
+    }
     return (
-      <a href={href} className={baseClasses} onClick={onClick}>
+      <a href={href} className={baseClasses} onClick={onClick} target="_blank" rel="noopener noreferrer">
         {content}
       </a>
+    );
+  }
+
+  if (as === "span") {
+    return (
+      <span className={baseClasses} onClick={onClick}>
+        {content}
+      </span>
     );
   }
 

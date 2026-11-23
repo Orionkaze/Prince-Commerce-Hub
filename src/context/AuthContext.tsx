@@ -35,7 +35,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [role, setRole] = useState<UserRole | "guest">("guest");
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [isConfigured, setIsConfigured] = useState(false);
+  const [isConfigured] = useState<boolean>(() =>
+    Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
+  );
 
   const supabase = createClient();
 
@@ -76,7 +78,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const hasUrl = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
     const hasKey = Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
-    setIsConfigured(hasUrl && hasKey);
 
     if (!hasUrl || !hasKey) {
       setIsLoading(false);

@@ -99,12 +99,10 @@ function CardStackItem({
         {/* Bottom Bar: Action and Floating Info Card */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pt-8">
           <div className="flex items-center gap-4">
-            <Link href="/courses">
-              <Button variant="white" size="md" className="gap-2">
-                <span>Explore Full Course</span>
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-            </Link>
+            <Button href="/courses" variant="white" size="md" className="gap-2">
+              <span>Explore Full Course</span>
+              <ArrowRight className="w-4 h-4" />
+            </Button>
           </div>
 
           {/* Floating White Course Info Card */}
@@ -162,12 +160,10 @@ export function StickyCourseCards() {
 
           {/* Explore All Courses Button */}
           <div>
-            <Link href="/courses">
-              <Button variant="purple" size="md" className="gap-2">
-                <span>Explore All Courses</span>
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-            </Link>
+            <Button href="/courses" variant="purple" size="md" className="gap-2">
+              <span>Explore All Courses</span>
+              <ArrowRight className="w-4 h-4" />
+            </Button>
           </div>
         </div>
 
