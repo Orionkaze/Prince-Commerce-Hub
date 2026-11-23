@@ -88,6 +88,7 @@ export interface LectureRecord {
   video_key?: string | null;
   video_object_key?: string | null;
   thumbnail_key?: string | null;
+  thumbnail_object_key?: string | null;
   duration?: string | null;
   position?: number;
   is_preview?: boolean;

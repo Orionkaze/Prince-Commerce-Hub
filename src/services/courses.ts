@@ -553,6 +553,8 @@ export async function createLecture(data: {
   description?: string;
   video_object_key?: string;
   video_key?: string;
+  thumbnail_key?: string;
+  thumbnail_object_key?: string;
   duration?: string;
   is_preview?: boolean;
   price?: number;
@@ -565,6 +567,7 @@ export async function createLecture(data: {
 
   const isPreview = Boolean(data.is_preview);
   const videoKey = data.video_key || data.video_object_key || null;
+  const thumbnailKey = data.thumbnail_key || data.thumbnail_object_key || null;
 
   // Resolve chapter title
   let chapterTitle = data.chapter || "";
@@ -584,13 +587,14 @@ export async function createLecture(data: {
     }
   }
 
-  // Live Supabase schema uses: course_id, title, chapter, description, teacher_name, subject, video_key, duration, access_type, price, is_published
+  // Live Supabase schema uses: course_id, title, chapter, description, teacher_name, subject, video_key, thumbnail_key, duration, access_type, price, is_published
   const payload: any = {
     course_id: data.course_id,
     title: data.title,
     chapter: chapterTitle || "General",
     description: data.description || "",
     video_key: videoKey,
+    thumbnail_key: thumbnailKey,
     duration: data.duration || "45 mins",
     access_type: isPreview ? "free" : "paid",
     price: 0,

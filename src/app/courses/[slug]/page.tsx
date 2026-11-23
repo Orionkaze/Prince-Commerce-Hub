@@ -8,6 +8,7 @@ import { CtaAndFooter } from "@/components/footer/CtaAndFooter";
 import { ContactModal } from "@/components/footer/ContactModal";
 import { useAuth } from "@/context/AuthContext";
 import { CourseRecord, LectureRecord } from "@/types/lms";
+import { formatDuration, getThumbnailUrl } from "@/lib/utils/formatDuration";
 import { openRazorpayCheckout } from "@/lib/payments/checkout";
 import {
   BookOpen,
@@ -353,7 +354,10 @@ function CourseDetailsContent({
                 </div>
               ) : (
                 <div className="bg-white rounded-3xl border border-gray-200 overflow-hidden shadow-sm divide-y divide-gray-100">
-                  {course.lectures.map((lecture, lIdx) => {
+                  {course.lectures.map((lecture: LectureRecord, lIdx: number) => {
+                    const rawThumb = lecture.thumbnail_object_key || lecture.thumbnail_key;
+                    const thumbUrl = getThumbnailUrl(rawThumb);
+                    const displayDuration = formatDuration(lecture.duration);
                     const isPreview = Boolean(
                       lecture.is_preview || lecture.access_type === "free"
                     );
@@ -361,40 +365,90 @@ function CourseDetailsContent({
                     return (
                       <div
                         key={lecture.id}
-                        className="p-4 sm:px-6 flex items-center justify-between hover:bg-gray-50/60 transition gap-4"
+                        className="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between hover:bg-gray-50/70 transition gap-4 group"
                       >
-                        <div className="flex items-center gap-3 min-w-0">
-                          <div className="w-8 h-8 rounded-xl bg-purple-50 text-[#5B32D6] font-black text-xs flex items-center justify-center shrink-0">
+                        <div className="flex items-start gap-3.5 min-w-0 flex-1">
+                          {/* Number Badge */}
+                          <div className="w-5 text-center text-xs font-black text-gray-400 shrink-0 pt-2 hidden sm:block">
                             {lIdx + 1}
                           </div>
-                          <div className="min-w-0">
-                            <div className="flex items-center gap-2">
-                              <h4 className="font-bold text-xs sm:text-sm text-[#16141B] truncate">
-                                {lecture.title}
-                              </h4>
-                              {isPreview && (
-                                <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 shrink-0">
-                                  Free Preview
+
+                          {/* YouTube 16:9 Thumbnail */}
+                          <div
+                            onClick={() => isPreview && handlePreviewLecture(lecture)}
+                            className={`relative w-32 sm:w-40 aspect-video rounded-xl overflow-hidden bg-neutral-900 shrink-0 border border-neutral-200 shadow-xs ${
+                              isPreview ? "cursor-pointer group/thumb" : ""
+                            }`}
+                          >
+                            {thumbUrl ? (
+                              <img
+                                src={thumbUrl}
+                                alt={lecture.title}
+                                className="w-full h-full object-cover group-hover/thumb:scale-105 transition-transform duration-300"
+                              />
+                            ) : (
+                              <div className="w-full h-full bg-gradient-to-br from-[#2E1A66] via-[#1E1242] to-[#140D2B] flex flex-col items-center justify-center p-2 text-center">
+                                <Video className="w-4 h-4 text-purple-300 mb-0.5" />
+                                <span className="text-[9px] font-bold text-gray-300 uppercase tracking-wider line-clamp-1">
+                                  {lecture.chapter || "Lecture"}
                                 </span>
-                              )}
+                              </div>
+                            )}
+
+                            {/* YouTube Duration Chip in Bottom Right */}
+                            <div className="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-black/85 text-white text-[9px] font-bold tracking-wider backdrop-blur-xs shadow-xs">
+                              {displayDuration}
+                            </div>
+
+                            {/* Hover Play button for preview */}
+                            {isPreview && (
+                              <div className="absolute inset-0 bg-black/35 opacity-0 group-hover/thumb:opacity-100 transition-opacity flex items-center justify-center">
+                                <div className="w-8 h-8 rounded-full bg-[#5B32D6] text-white flex items-center justify-center shadow-lg transform group-hover/thumb:scale-110 transition-transform">
+                                  <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
+                                </div>
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="min-w-0 flex-1 space-y-1">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span className="sm:hidden text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-gray-100 text-gray-600">
+                                #{lIdx + 1}
+                              </span>
                               {lecture.chapter && (
-                                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 shrink-0">
+                                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#ECE8FA] text-[#5B32D6]">
                                   {lecture.chapter}
                                 </span>
                               )}
+                              {isPreview && (
+                                <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                                  Free Preview
+                                </span>
+                              )}
                             </div>
-                            <div className="text-[11px] text-gray-400 mt-0.5">
-                              Duration: {lecture.duration || "45 mins"}
+
+                            <h4 className="font-extrabold text-sm text-[#16141B] break-words line-clamp-2 leading-snug">
+                              {lecture.title}
+                            </h4>
+
+                            {lecture.description && (
+                              <p className="text-xs text-gray-500 line-clamp-1 leading-relaxed">
+                                {lecture.description}
+                              </p>
+                            )}
+
+                            <div className="text-[11px] text-gray-400">
+                              Parvesh Kumar • Accountancy
                             </div>
                           </div>
                         </div>
 
-                        <div className="shrink-0">
+                        <div className="shrink-0 self-end sm:self-center">
                           {isPreview ? (
                             <button
                               type="button"
                               onClick={() => handlePreviewLecture(lecture)}
-                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold transition cursor-pointer"
+                              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold transition cursor-pointer"
                             >
                               <Play className="w-3.5 h-3.5 fill-current" />
                               <span>Watch Preview</span>
@@ -402,13 +456,13 @@ function CourseDetailsContent({
                           ) : isEnrolled ? (
                             <Link
                               href={`/learn/${course.id}/${lecture.id}`}
-                              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-[#5B32D6] text-xs font-bold transition"
+                              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-[#5B32D6] text-xs font-bold transition"
                             >
-                              <Play className="w-3 h-3 fill-current" />
+                              <Play className="w-3.5 h-3.5 fill-current" />
                               <span>Watch</span>
                             </Link>
                           ) : (
-                            <span className="inline-flex items-center gap-1 text-gray-400 text-xs font-bold px-2 py-1 bg-gray-50 rounded-lg">
+                            <span className="inline-flex items-center gap-1.5 text-gray-400 text-xs font-bold px-3 py-1.5 bg-gray-50 rounded-xl border border-gray-100">
                               <Lock className="w-3 h-3" />
                               <span>Enrolled Only</span>
                             </span>

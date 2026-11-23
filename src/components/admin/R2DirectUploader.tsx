@@ -12,6 +12,12 @@ interface R2DirectUploaderProps {
   lectureId?: string;
   currentKey?: string | null;
   onUploadSuccess: (key: string) => void;
+  onVideoMetaExtracted?: (meta: {
+    duration: string;
+    durationSeconds: number;
+    thumbnailBlob?: Blob;
+    thumbnailDataUrl?: string;
+  }) => void;
   maxSizeMB?: number;
 }
 
@@ -24,6 +30,7 @@ export function R2DirectUploader({
   lectureId,
   currentKey,
   onUploadSuccess,
+  onVideoMetaExtracted,
   maxSizeMB = 500, // up to 500MB
 }: R2DirectUploaderProps) {
   const [file, setFile] = useState<File | null>(null);
@@ -36,6 +43,77 @@ export function R2DirectUploader({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const xhrRef = useRef<XMLHttpRequest | null>(null);
 
+  const extractVideoMeta = (videoFile: File) => {
+    try {
+      const video = document.createElement("video");
+      video.preload = "metadata";
+      video.muted = true;
+      video.playsInline = true;
+      const objectUrl = URL.createObjectURL(videoFile);
+      video.src = objectUrl;
+
+      video.onloadedmetadata = () => {
+        const totalSec = Math.round(video.duration || 0);
+        const mins = Math.floor(totalSec / 60);
+        const secs = totalSec % 60;
+        const hrs = Math.floor(mins / 60);
+        const remMins = mins % 60;
+        const formatted =
+          hrs > 0
+            ? `${hrs}:${remMins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
+            : `${mins}:${secs.toString().padStart(2, "0")}`;
+
+        // Attempt to seek to 1.5 seconds to capture a representative thumbnail
+        const seekTime = Math.min(2, Math.max(0.5, (video.duration || 10) * 0.1));
+        video.currentTime = seekTime;
+
+        video.onseeked = () => {
+          try {
+            const canvas = document.createElement("canvas");
+            canvas.width = video.videoWidth || 640;
+            canvas.height = video.videoHeight || 360;
+            const ctx = canvas.getContext("2d");
+            if (ctx) {
+              ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+              const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
+              canvas.toBlob(
+                (blob) => {
+                  URL.revokeObjectURL(objectUrl);
+                  if (onVideoMetaExtracted) {
+                    onVideoMetaExtracted({
+                      duration: formatted,
+                      durationSeconds: totalSec,
+                      thumbnailBlob: blob || undefined,
+                      thumbnailDataUrl: dataUrl,
+                    });
+                  }
+                },
+                "image/jpeg",
+                0.85
+              );
+              return;
+            }
+          } catch (canvasErr) {
+            console.warn("Could not capture thumbnail canvas:", canvasErr);
+          }
+          URL.revokeObjectURL(objectUrl);
+          if (onVideoMetaExtracted) {
+            onVideoMetaExtracted({
+              duration: formatted,
+              durationSeconds: totalSec,
+            });
+          }
+        };
+      };
+
+      video.onerror = () => {
+        URL.revokeObjectURL(objectUrl);
+      };
+    } catch (e) {
+      console.warn("Failed to extract video metadata:", e);
+    }
+  };
+
   const handleFileSelect = (selectedFile: File) => {
     setError(null);
     if (selectedFile.size > maxSizeMB * 1024 * 1024) {
@@ -43,6 +121,11 @@ export function R2DirectUploader({
       return;
     }
     setFile(selectedFile);
+
+    if ((fileCategory === "video" || selectedFile.type.startsWith("video/")) && onVideoMetaExtracted) {
+      extractVideoMeta(selectedFile);
+    }
+
     startDirectUpload(selectedFile);
   };
 

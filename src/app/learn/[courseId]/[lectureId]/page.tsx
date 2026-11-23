@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { CourseRecord, CourseModuleRecord, LectureRecord } from "@/types/lms";
+import { formatDuration, getThumbnailUrl } from "@/lib/utils/formatDuration";
 import confetti from "canvas-confetti";
 import {
   ArrowLeft,
@@ -654,42 +655,59 @@ function CourseLearningContent({
               allLecturesFlat.map((lecture, lIdx) => {
                 const isActive = currentLecture?.id === lecture.id;
                 const isDone = completedLectureIds.has(lecture.id);
+                const rawThumb = lecture.thumbnail_object_key || lecture.thumbnail_key;
+                const thumbUrl = getThumbnailUrl(rawThumb);
+                const displayDuration = formatDuration(lecture.duration);
 
                 return (
                   <button
                     key={lecture.id}
                     onClick={() => navigateToLecture(lecture)}
-                    className={`w-full p-3.5 text-left flex items-start gap-3 transition ${
+                    className={`w-full p-2.5 sm:p-3 text-left flex items-start gap-2.5 transition group ${
                       isActive
-                        ? "bg-[#5B32D6]/30 border-l-4 border-[#FDE047] text-white"
+                        ? "bg-[#5B32D6]/40 border-l-4 border-[#FDE047] text-white"
                         : "hover:bg-white/5 text-gray-300"
                     }`}
                   >
-                    <div className="w-6 h-6 rounded-lg bg-white/5 text-[11px] font-bold text-gray-400 flex items-center justify-center shrink-0 mt-0.5">
+                    {/* Index or completion status */}
+                    <div className="w-5 text-center text-[11px] font-bold text-gray-400 shrink-0 pt-2">
                       {isDone ? (
-                        <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 mx-auto" />
                       ) : isActive ? (
-                        <Play className="w-3.5 h-3.5 text-[#FDE047] fill-current" />
+                        <Play className="w-3.5 h-3.5 text-[#FDE047] fill-current mx-auto" />
                       ) : (
                         <span>{lIdx + 1}</span>
                       )}
                     </div>
 
+                    {/* Mini YouTube 16:9 Thumbnail */}
+                    <div className="relative w-24 aspect-video rounded-lg overflow-hidden bg-black/80 shrink-0 border border-white/10 shadow-xs">
+                      {thumbUrl ? (
+                        <img src={thumbUrl} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-[#2E1A66] to-[#120F24] flex items-center justify-center">
+                          <Video className="w-3.5 h-3.5 text-purple-300" />
+                        </div>
+                      )}
+                      <div className="absolute bottom-1 right-1 px-1 py-0.2 rounded bg-black/85 text-white text-[9px] font-bold">
+                        {displayDuration}
+                      </div>
+                    </div>
+
                     <div className="min-w-0 flex-1">
                       <div
-                        className={`text-xs font-semibold line-clamp-2 ${
-                          isActive ? "text-white font-bold" : "text-gray-300"
+                        className={`text-xs font-semibold line-clamp-2 leading-snug ${
+                          isActive ? "text-white font-bold" : "text-gray-300 group-hover:text-white"
                         }`}
                       >
                         {lecture.title}
                       </div>
                       <div className="flex items-center gap-2 text-[10px] text-gray-400 mt-1">
                         {lecture.chapter && (
-                          <span className="text-[#FDE047] font-semibold truncate max-w-[120px]">
+                          <span className="text-[#FDE047] font-semibold truncate max-w-[110px]">
                             {lecture.chapter}
                           </span>
                         )}
-                        <span>{lecture.duration || "45 mins"}</span>
                       </div>
                     </div>
                   </button>

@@ -7,6 +7,7 @@ import { AdminHeader } from "@/components/admin/AdminHeader";
 import { R2DirectUploader } from "@/components/admin/R2DirectUploader";
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
 import { CourseRecord, LectureRecord } from "@/types/lms";
+import { formatDuration, getThumbnailUrl } from "@/lib/utils/formatDuration";
 import {
   ArrowLeft,
   PlusCircle,
@@ -26,6 +27,7 @@ import {
   ListVideo,
   Sliders,
   Settings,
+  Image as ImageIcon,
 } from "lucide-react";
 
 function CourseEditorContent({
@@ -44,15 +46,16 @@ function CourseEditorContent({
   // Lecture Modal State
   const [isLectureModalOpen, setIsLectureModalOpen] = useState<boolean>(false);
   const [editingLecture, setEditingLecture] = useState<LectureRecord | null>(null);
-  const [pdfResourceKey, setPdfResourceKey] = useState<string>("");
+  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
+  const [isExtractingMeta, setIsExtractingMeta] = useState<boolean>(false);
   const [lectureForm, setLectureForm] = useState({
     title: "",
     chapter: "",
     description: "",
-    duration: "45 mins",
-    is_preview: false,
+    duration: "",
     status: "PUBLISHED" as "DRAFT" | "PUBLISHED",
     video_object_key: "",
+    thumbnail_object_key: "",
   });
 
   // Deletion Confirmation State
@@ -95,15 +98,15 @@ function CourseEditorContent({
   // Open Lecture Modal for New Lecture
   const handleOpenNewLecture = () => {
     setEditingLecture(null);
-    setPdfResourceKey("");
+    setThumbnailPreview(null);
     setLectureForm({
       title: "",
       chapter: "",
       description: "",
-      duration: "45 mins",
-      is_preview: false,
+      duration: "",
       status: "PUBLISHED",
       video_object_key: "",
+      thumbnail_object_key: "",
     });
     setIsLectureModalOpen(true);
   };
@@ -111,17 +114,72 @@ function CourseEditorContent({
   // Open Lecture Modal for Editing Existing Lecture
   const handleOpenEditLecture = (lecture: LectureRecord) => {
     setEditingLecture(lecture);
-    setPdfResourceKey("");
+    const existingThumb = lecture.thumbnail_object_key || lecture.thumbnail_key || null;
+    setThumbnailPreview(getThumbnailUrl(existingThumb));
     setLectureForm({
       title: lecture.title,
       chapter: lecture.chapter || "",
       description: lecture.description || "",
-      duration: lecture.duration || "45 mins",
-      is_preview: Boolean(lecture.is_preview || lecture.access_type === "free"),
+      duration: lecture.duration || "",
       status: (lecture.status as any) || (lecture.is_published ? "PUBLISHED" : "DRAFT"),
       video_object_key: lecture.video_object_key || lecture.video_key || "",
+      thumbnail_object_key: existingThumb || "",
     });
     setIsLectureModalOpen(true);
+  };
+
+  // Handle Video Metadata Extraction (duration + thumbnail frame from video)
+  const handleVideoMetaExtracted = async (meta: {
+    duration: string;
+    durationSeconds: number;
+    thumbnailBlob?: Blob;
+    thumbnailDataUrl?: string;
+  }) => {
+    setIsExtractingMeta(true);
+    try {
+      // 1. Auto-set duration from video
+      setLectureForm((prev) => ({
+        ...prev,
+        duration: meta.duration,
+      }));
+
+      // 2. Preview frame immediately
+      if (meta.thumbnailDataUrl) {
+        setThumbnailPreview(meta.thumbnailDataUrl);
+      }
+
+      // 3. Auto-upload thumbnail snapshot to R2
+      if (meta.thumbnailBlob) {
+        const formData = new FormData();
+        const file = new File(
+          [meta.thumbnailBlob],
+          `thumb-${Date.now()}.jpg`,
+          { type: "image/jpeg" }
+        );
+        formData.append("file", file);
+        formData.append("fileCategory", "thumbnail");
+        if (courseId) formData.append("courseId", courseId);
+
+        const res = await fetch("/api/upload/proxy", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.key) {
+            setLectureForm((prev) => ({
+              ...prev,
+              thumbnail_object_key: data.key,
+            }));
+          }
+        }
+      }
+    } catch (err) {
+      console.warn("Could not auto-upload video frame thumbnail:", err);
+    } finally {
+      setIsExtractingMeta(false);
+    }
   };
 
   // Save Lecture (Create or Update synced to Supabase & Cloudflare R2)
@@ -134,20 +192,22 @@ function CourseEditorContent({
 
     setIsSaving(true);
     try {
+      const payload = {
+        title: lectureForm.title.trim(),
+        chapter: lectureForm.chapter.trim() || undefined,
+        description: lectureForm.description.trim(),
+        duration: lectureForm.duration.trim() || "00:00",
+        status: lectureForm.status,
+        video_object_key: lectureForm.video_object_key || undefined,
+        thumbnail_key: lectureForm.thumbnail_object_key || undefined,
+        thumbnail_object_key: lectureForm.thumbnail_object_key || undefined,
+      };
+
       if (editingLecture) {
         const res = await fetch(`/api/admin/lectures/${editingLecture.id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            title: lectureForm.title.trim(),
-            chapter: lectureForm.chapter.trim() || undefined,
-            description: lectureForm.description.trim(),
-            duration: lectureForm.duration.trim() || "45 mins",
-            is_preview: lectureForm.is_preview,
-            status: lectureForm.status,
-            video_object_key: lectureForm.video_object_key || undefined,
-            resource_key: pdfResourceKey || undefined,
-          }),
+          body: JSON.stringify(payload),
         });
         if (!res.ok) {
           const errData = await res.json().catch(() => ({}));
@@ -158,15 +218,8 @@ function CourseEditorContent({
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
+            ...payload,
             course_id: courseId,
-            title: lectureForm.title.trim(),
-            chapter: lectureForm.chapter.trim() || undefined,
-            description: lectureForm.description.trim(),
-            duration: lectureForm.duration.trim() || "45 mins",
-            is_preview: lectureForm.is_preview,
-            status: lectureForm.status,
-            video_object_key: lectureForm.video_object_key || undefined,
-            resource_key: pdfResourceKey || undefined,
           }),
         });
         if (!res.ok) {
@@ -177,7 +230,7 @@ function CourseEditorContent({
 
       setIsLectureModalOpen(false);
       setEditingLecture(null);
-      setPdfResourceKey("");
+      setThumbnailPreview(null);
       await fetchCourseData();
     } catch (err: any) {
       console.error("Failed to save lecture:", err);
@@ -301,7 +354,7 @@ function CourseEditorContent({
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-6">
         <AdminHeader
           title={course.title}
-          subtitle="Manage lectures playlist, video uploads, notes, and batch curriculum"
+          subtitle="Manage lectures playlist, video uploads, and batch curriculum"
         />
 
         {/* Breadcrumb Navigation */}
@@ -451,109 +504,141 @@ function CourseEditorContent({
             ) : (
               <div className="bg-white rounded-3xl border border-gray-200/90 overflow-hidden shadow-sm divide-y divide-gray-100">
                 {lecturesList.map((lecture, idx) => {
-                  const isPreview = Boolean(
-                    lecture.is_preview || lecture.access_type === "free"
-                  );
                   const hasVideo = Boolean(
                     lecture.video_object_key || lecture.video_key
                   );
-                  const hasNotes = Boolean(
-                    lecture.resources && lecture.resources.length > 0
-                  );
+                  const rawThumb = lecture.thumbnail_object_key || lecture.thumbnail_key;
+                  const thumbUrl = getThumbnailUrl(rawThumb);
+                  const displayDuration = formatDuration(lecture.duration);
 
                   return (
                     <div
                       key={lecture.id}
-                      className="p-4 sm:p-5 hover:bg-gray-50/60 transition flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                      className="p-4 sm:p-5 hover:bg-neutral-50/80 transition-colors flex flex-col md:flex-row items-start md:items-center justify-between gap-4 group"
                     >
-                      {/* Left Details */}
-                      <div className="flex items-start gap-3.5 min-w-0">
-                        {/* Number Badge */}
-                        <div className="w-8 h-8 rounded-xl bg-purple-50 text-[#5B32D6] text-xs font-black flex items-center justify-center shrink-0 mt-0.5">
+                      {/* Left: Index + YouTube 16:9 Thumbnail + Metadata */}
+                      <div className="flex items-start gap-3.5 sm:gap-4 min-w-0 w-full md:w-auto flex-1">
+                        {/* Index Number */}
+                        <div className="w-5 text-center text-xs font-black text-gray-400 shrink-0 pt-2 hidden sm:block">
                           {idx + 1}
                         </div>
 
-                        <div className="space-y-1.5 min-w-0">
+                        {/* YouTube 16:9 Thumbnail Container */}
+                        <div
+                          onClick={() => hasVideo && handlePreviewLectureVideo(lecture)}
+                          className={`relative w-36 sm:w-48 aspect-video rounded-xl overflow-hidden bg-neutral-900 shrink-0 border border-neutral-200/90 shadow-xs select-none ${
+                            hasVideo ? "cursor-pointer group/thumb" : ""
+                          }`}
+                        >
+                          {thumbUrl ? (
+                            <img
+                              src={thumbUrl}
+                              alt={lecture.title}
+                              className="w-full h-full object-cover group-hover/thumb:scale-105 transition-transform duration-300"
+                              onError={(e) => {
+                                (e.target as HTMLElement).style.display = "none";
+                              }}
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-gradient-to-br from-[#2E1A66] via-[#1E1242] to-[#140D2B] flex flex-col items-center justify-center p-2 text-center">
+                              <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center mb-1 text-white">
+                                <Video className="w-3.5 h-3.5 text-purple-300" />
+                              </div>
+                              <span className="text-[10px] font-bold text-gray-300 uppercase tracking-wider line-clamp-1">
+                                {lecture.chapter || "Accountancy"}
+                              </span>
+                            </div>
+                          )}
+
+                          {/* YouTube Duration Chip in Bottom Right */}
+                          <div className="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 rounded bg-black/85 text-white text-[10px] font-bold tracking-wider backdrop-blur-xs shadow-xs">
+                            {displayDuration}
+                          </div>
+
+                          {/* Play Hover Overlay */}
+                          {hasVideo && (
+                            <div className="absolute inset-0 bg-black/35 opacity-0 group-hover/thumb:opacity-100 transition-opacity flex items-center justify-center">
+                              <div className="w-10 h-10 rounded-full bg-[#5B32D6] text-white flex items-center justify-center shadow-lg transform group-hover/thumb:scale-110 transition-transform">
+                                <Play className="w-4 h-4 fill-current ml-0.5" />
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Middle: Details */}
+                        <div className="space-y-1.5 min-w-0 flex-1">
                           <div className="flex flex-wrap items-center gap-2">
-                            <h3 className="font-extrabold text-sm text-[#16141B] break-words">
-                              {lecture.title}
-                            </h3>
+                            <span className="sm:hidden text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-gray-100 text-gray-600">
+                              #{idx + 1}
+                            </span>
 
                             {lecture.chapter && (
-                              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#ECE8FA] text-[#5B32D6]">
                                 {lecture.chapter}
                               </span>
                             )}
-                          </div>
 
-                          {/* Metadata row */}
-                          <div className="flex flex-wrap items-center gap-2 text-xs">
-                            <span className="text-[11px] text-gray-400">
-                              Duration: {lecture.duration || "45 mins"}
-                            </span>
-
-                            {/* Access Status */}
-                            {isPreview ? (
-                              <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
-                                Free Preview
-                              </span>
-                            ) : (
-                              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 flex items-center gap-1">
-                                <Lock className="w-2.5 h-2.5" /> Enrolled
-                              </span>
-                            )}
-
-                            {/* Video Status */}
-                            {hasVideo ? (
-                              <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full flex items-center gap-1">
-                                <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                                R2 Video Ready
-                              </span>
-                            ) : (
-                              <span className="text-[10px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">
-                                No Video Attached
-                              </span>
-                            )}
-
-                            {/* Notes PDF Status */}
-                            {hasNotes && (
-                              <span className="text-[10px] font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full flex items-center gap-1">
-                                <FileText className="w-3 h-3 text-blue-600" />
-                                Study Notes PDF
-                              </span>
-                            )}
-
-                            {/* Publication Status */}
+                            {/* Publication Status Badge */}
                             <span
-                              className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                              className={`text-[10px] font-bold px-2 py-0.5 rounded-full inline-flex items-center gap-1 ${
                                 lecture.is_published
                                   ? "text-emerald-700 bg-emerald-50"
-                                  : "text-neutral-500 bg-neutral-100"
+                                  : "text-neutral-600 bg-neutral-100"
                               }`}
                             >
+                              <span
+                                className={`w-1.5 h-1.5 rounded-full ${
+                                  lecture.is_published ? "bg-emerald-500" : "bg-neutral-400"
+                                }`}
+                              />
                               {lecture.is_published ? "Published" : "Draft"}
                             </span>
+
+                            {hasVideo ? (
+                              <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+                                <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                                Video Ready
+                              </span>
+                            ) : (
+                              <span className="text-[10px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+                                <AlertCircle className="w-3 h-3 text-amber-600" />
+                                No Video
+                              </span>
+                            )}
                           </div>
 
+                          <h3
+                            onClick={() => handleOpenEditLecture(lecture)}
+                            className="font-extrabold text-sm sm:text-base text-[#16141B] hover:text-[#5B32D6] transition-colors cursor-pointer break-words line-clamp-2 leading-snug"
+                          >
+                            {lecture.title}
+                          </h3>
+
                           {lecture.description && (
-                            <p className="text-xs text-gray-500 line-clamp-1">
+                            <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed">
                               {lecture.description}
                             </p>
                           )}
+
+                          <div className="flex items-center gap-2 text-[11px] text-gray-400 pt-0.5">
+                            <span className="font-semibold text-gray-600">Parvesh Kumar</span>
+                            <span>•</span>
+                            <span>CBSE Accountancy</span>
+                          </div>
                         </div>
                       </div>
 
                       {/* Right Action Buttons */}
-                      <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
+                      <div className="flex items-center gap-2 shrink-0 self-end md:self-center">
                         {hasVideo && (
                           <button
                             type="button"
                             onClick={() => handlePreviewLectureVideo(lecture)}
-                            className="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-purple-50 text-[#5B32D6] hover:bg-purple-100 transition text-xs font-bold flex items-center gap-1.5 cursor-pointer"
-                            title="Test Playback URL"
+                            className="px-3.5 py-1.5 rounded-xl bg-purple-50 text-[#5B32D6] hover:bg-purple-100 transition text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                            title="Preview Video"
                           >
                             <Play className="w-3.5 h-3.5 fill-current" />
-                            <span className="hidden sm:inline">Preview</span>
+                            <span>Watch</span>
                           </button>
                         )}
 
@@ -561,7 +646,7 @@ function CourseEditorContent({
                           type="button"
                           onClick={() => handleOpenEditLecture(lecture)}
                           className="p-2 rounded-xl text-gray-600 hover:text-black hover:bg-gray-100 text-xs transition cursor-pointer"
-                          title="Edit Lecture Name &amp; Details"
+                          title="Edit Lecture Details"
                         >
                           <Edit className="w-4 h-4" />
                         </button>
@@ -759,25 +844,7 @@ function CourseEditorContent({
                   />
                 </div>
 
-                {/* Duration */}
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-700 uppercase">
-                    Duration
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. 45 mins"
-                    value={lectureForm.duration}
-                    onChange={(e) =>
-                      setLectureForm({ ...lectureForm, duration: e.target.value })
-                    }
-                    className="w-full px-4 py-2 rounded-xl border border-gray-200 text-xs focus:border-[#5B32D6] focus:outline-none"
-                  />
-                </div>
-              </div>
-
-              {/* Publication Status & Free Preview Row */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                {/* Publication Status */}
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-gray-700 uppercase">
                     Publication Status
@@ -795,25 +862,6 @@ function CourseEditorContent({
                     <option value="PUBLISHED">Published (Visible to Students)</option>
                     <option value="DRAFT">Draft (Hidden)</option>
                   </select>
-                </div>
-
-                <div className="flex items-center justify-between p-3 rounded-xl border border-gray-200 bg-gray-50/50">
-                  <div>
-                    <label className="text-xs font-bold text-gray-700 block">
-                      Free Preview
-                    </label>
-                    <p className="text-[11px] text-gray-400">
-                      Allows preview without enrollment
-                    </p>
-                  </div>
-                  <input
-                    type="checkbox"
-                    checked={lectureForm.is_preview}
-                    onChange={(e) =>
-                      setLectureForm({ ...lectureForm, is_preview: e.target.checked })
-                    }
-                    className="w-4 h-4 rounded text-[#5B32D6] focus:ring-[#5B32D6] cursor-pointer"
-                  />
                 </div>
               </div>
 
@@ -833,7 +881,7 @@ function CourseEditorContent({
                 />
               </div>
 
-              {/* Cloudflare R2 Direct Video Upload */}
+              {/* Cloudflare R2 Direct Video Upload with Auto Metadata Extraction */}
               <div className="pt-2">
                 <R2DirectUploader
                   label="Lecture Recording Video (Cloudflare R2)"
@@ -845,23 +893,99 @@ function CourseEditorContent({
                   onUploadSuccess={(key) =>
                     setLectureForm((prev) => ({ ...prev, video_object_key: key }))
                   }
+                  onVideoMetaExtracted={handleVideoMetaExtracted}
                   maxSizeMB={1000}
                 />
               </div>
 
-              {/* Optional Supplementary PDF Notes */}
-              <div className="pt-1">
-                <R2DirectUploader
-                  label="Optional Supplementary Notes / Worksheet (PDF)"
-                  accept="application/pdf"
-                  fileCategory="pdf"
-                  courseId={courseId}
-                  lectureId={editingLecture?.id || "temp-lecture"}
-                  currentKey={pdfResourceKey}
-                  onUploadSuccess={(key) => setPdfResourceKey(key)}
-                  maxSizeMB={50}
-                />
-              </div>
+              {/* Video Thumbnail & Duration (Extracted Directly From Video) */}
+              {(thumbnailPreview || lectureForm.duration || lectureForm.thumbnail_object_key) && (
+                <div className="p-3.5 rounded-2xl bg-gray-50 border border-gray-200/90 flex flex-col sm:flex-row items-start sm:items-center gap-3.5">
+                  {/* 16:9 Thumbnail Preview with Duration Chip */}
+                  <div className="relative w-36 aspect-video rounded-xl overflow-hidden bg-neutral-900 shrink-0 border border-neutral-300 shadow-xs">
+                    {thumbnailPreview || lectureForm.thumbnail_object_key ? (
+                      <img
+                        src={
+                          thumbnailPreview ||
+                          getThumbnailUrl(lectureForm.thumbnail_object_key) ||
+                          ""
+                        }
+                        alt="Lecture Thumbnail"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex flex-col items-center justify-center bg-neutral-900 text-gray-400">
+                        <Video className="w-5 h-5 text-purple-300 mb-0.5" />
+                        <span className="text-[9px] font-bold text-gray-400">Frame Snapshot</span>
+                      </div>
+                    )}
+                    {lectureForm.duration && (
+                      <div className="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-black/85 text-white text-[9px] font-bold tracking-wider">
+                        {formatDuration(lectureForm.duration)}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="min-w-0 flex-1 space-y-1">
+                    <div className="text-xs font-bold text-[#16141B] flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-[#5B32D6]" />
+                      <span>Video Duration &amp; Thumbnail</span>
+                      {isExtractingMeta && (
+                        <Loader2 className="w-3 h-3 animate-spin text-[#5B32D6]" />
+                      )}
+                    </div>
+                    <p className="text-[11px] text-gray-500">
+                      Duration:{" "}
+                      <span className="font-extrabold text-[#5B32D6]">
+                        {formatDuration(lectureForm.duration) || "Auto-detecting from video..."}
+                      </span>{" "}
+                      <span className="text-gray-400">(extracted automatically from video)</span>
+                    </p>
+
+                    <div className="pt-1">
+                      <label className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#5B32D6] hover:text-[#4B23C2] cursor-pointer">
+                        <ImageIcon className="w-3 h-3" />
+                        <span>Change / Upload Custom Thumbnail</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={async (e) => {
+                            const f = e.target.files?.[0];
+                            if (!f) return;
+                            const objectUrl = URL.createObjectURL(f);
+                            setThumbnailPreview(objectUrl);
+
+                            try {
+                              const formData = new FormData();
+                              formData.append("file", f);
+                              formData.append("fileCategory", "thumbnail");
+                              if (courseId) formData.append("courseId", courseId);
+
+                              const res = await fetch("/api/upload/proxy", {
+                                method: "POST",
+                                body: formData,
+                              });
+
+                              if (res.ok) {
+                                const data = await res.json();
+                                if (data.key) {
+                                  setLectureForm((prev) => ({
+                                    ...prev,
+                                    thumbnail_object_key: data.key,
+                                  }));
+                                }
+                              }
+                            } catch (err) {
+                              console.warn("Failed to upload custom thumbnail:", err);
+                            }
+                          }}
+                        />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Form Footer Actions */}
               <div className="flex items-center justify-end gap-2 pt-4 border-t border-gray-100">
