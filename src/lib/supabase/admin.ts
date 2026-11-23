@@ -8,10 +8,16 @@ const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
  * NEVER import or execute this on client-side components.
  */
 export const createAdminClient = () => {
+  const key =
+    serviceRoleKey ||
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+    "placeholder-service-key";
+
   if (!serviceRoleKey) {
-    console.warn("SUPABASE_SERVICE_ROLE_KEY is not set. Admin client operations will fall back to anon key.");
+    console.warn("SUPABASE_SERVICE_ROLE_KEY is not set. Admin client operations will fall back to available key.");
   }
-  return createClient(supabaseUrl, serviceRoleKey || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "", {
+
+  return createClient(supabaseUrl, key, {
     auth: {
       autoRefreshToken: false,
       persistSession: false,

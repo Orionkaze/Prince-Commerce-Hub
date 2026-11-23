@@ -5,7 +5,7 @@ import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import Link from "next/link";
 import { ShieldAlert, ArrowLeft } from "lucide-react";
 
-export const instant = false;
+export const dynamic = "force-dynamic";
 
 export default async function AdminLayout({
   children,
