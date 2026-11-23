@@ -1,1 +1,2 @@
-export { POST, maxDuration } from "../proxy/route";
+export const maxDuration = 120;
+export { POST } from "../proxy/route";
