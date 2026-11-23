@@ -95,9 +95,39 @@ export function R2DirectUploader({
         }
       };
 
+      const uploadViaProxy = async () => {
+        try {
+          const formData = new FormData();
+          formData.append("file", fileToUpload);
+          formData.append("key", key);
+          if (courseId) formData.append("courseId", courseId);
+          if (moduleId) formData.append("moduleId", moduleId);
+          if (lectureId) formData.append("lectureId", lectureId);
+
+          const res = await fetch("/api/upload/proxy", {
+            method: "POST",
+            body: formData,
+          });
+
+          if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.error || "Server proxy upload failed");
+          }
+
+          const data = await res.json();
+          setProgress(100);
+          setIsUploading(false);
+          setUploadedKey(data.key);
+          onUploadSuccess(data.key);
+        } catch (proxyErr: any) {
+          setIsUploading(false);
+          setError(proxyErr?.message || "Upload failed. Please check network or storage settings.");
+        }
+      };
+
       xhr.onerror = () => {
-        setIsUploading(false);
-        setError("Network error occurred during direct Cloudflare R2 upload.");
+        console.warn("Direct upload blocked (likely CORS). Retrying via server proxy...");
+        uploadViaProxy();
       };
 
       xhr.open("PUT", uploadUrl, true);

@@ -74,6 +74,27 @@ export function UploadContentModal({ isOpen, onClose, onSuccess }: UploadContent
     }
   };
 
+  const uploadFileViaProxy = async (file: File, key?: string, fileCategory?: string) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    if (key) formData.append("key", key);
+    if (fileCategory) formData.append("fileCategory", fileCategory);
+    formData.append("courseId", courseChoice);
+
+    const res = await fetch("/api/upload/proxy", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || "Server proxy upload failed");
+    }
+
+    const data = await res.json();
+    return data.key as string;
+  };
+
   const uploadFileToR2 = async (file: File, fileCategory: string) => {
     // 1. Get presigned upload URL from backend
     const res = await fetch("/api/upload/presigned-url", {
@@ -94,30 +115,36 @@ export function UploadContentModal({ isOpen, onClose, onSuccess }: UploadContent
 
     const { uploadUrl, key } = await res.json();
 
-    // 2. Direct upload to R2
-    return new Promise<string>((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.open("PUT", uploadUrl);
-      xhr.setRequestHeader("Content-Type", file.type || "application/octet-stream");
+    // 2. Direct upload to R2 with automatic server proxy fallback if CORS blocks direct upload
+    try {
+      return await new Promise<string>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("PUT", uploadUrl);
+        xhr.setRequestHeader("Content-Type", file.type || "application/octet-stream");
 
-      xhr.upload.onprogress = (evt) => {
-        if (evt.lengthComputable) {
-          const percentComplete = Math.round((evt.loaded / evt.total) * 100);
-          setUploadProgress(percentComplete);
-        }
-      };
+        xhr.upload.onprogress = (evt) => {
+          if (evt.lengthComputable) {
+            const percentComplete = Math.round((evt.loaded / evt.total) * 100);
+            setUploadProgress(percentComplete);
+          }
+        };
 
-      xhr.onload = () => {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          resolve(key);
-        } else {
-          reject(new Error(`Storage returned status ${xhr.status}`));
-        }
-      };
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve(key);
+          } else {
+            reject(new Error(`Storage returned status ${xhr.status}`));
+          }
+        };
 
-      xhr.onerror = () => reject(new Error("Network error during file upload"));
-      xhr.send(file);
-    });
+        xhr.onerror = () => reject(new Error("Direct upload network error"));
+        xhr.send(file);
+      });
+    } catch (directErr) {
+      console.warn("Direct R2 upload blocked (likely CORS). Uploading via server proxy fallback...", directErr);
+      setStatusMessage("Direct storage upload blocked. Uploading via secure server proxy...");
+      return await uploadFileViaProxy(file, key, fileCategory);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
