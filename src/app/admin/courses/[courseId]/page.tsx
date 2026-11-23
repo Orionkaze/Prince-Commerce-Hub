@@ -528,9 +528,8 @@ function CourseEditorContent({
                         {/* YouTube 16:9 Thumbnail Container */}
                         <div
                           onClick={() => hasVideo && handlePreviewLectureVideo(lecture)}
-                          className={`relative w-36 sm:w-48 aspect-video rounded-xl overflow-hidden bg-neutral-900 shrink-0 border border-neutral-200/90 shadow-xs select-none ${
-                            hasVideo ? "cursor-pointer group/thumb" : ""
-                          }`}
+                          className={`relative w-36 sm:w-48 aspect-video rounded-xl overflow-hidden bg-neutral-900 shrink-0 border border-neutral-200/90 shadow-xs select-none ${hasVideo ? "cursor-pointer group/thumb" : ""
+                            }`}
                         >
                           {thumbUrl ? (
                             <img
@@ -582,16 +581,14 @@ function CourseEditorContent({
 
                             {/* Publication Status Badge */}
                             <span
-                              className={`text-[10px] font-bold px-2 py-0.5 rounded-full inline-flex items-center gap-1 ${
-                                lecture.is_published
-                                  ? "text-emerald-700 bg-emerald-50"
-                                  : "text-neutral-600 bg-neutral-100"
-                              }`}
+                              className={`text-[10px] font-bold px-2 py-0.5 rounded-full inline-flex items-center gap-1 ${lecture.is_published
+                                ? "text-emerald-700 bg-emerald-50"
+                                : "text-neutral-600 bg-neutral-100"
+                                }`}
                             >
                               <span
-                                className={`w-1.5 h-1.5 rounded-full ${
-                                  lecture.is_published ? "bg-emerald-500" : "bg-neutral-400"
-                                }`}
+                                className={`w-1.5 h-1.5 rounded-full ${lecture.is_published ? "bg-emerald-500" : "bg-neutral-400"
+                                  }`}
                               />
                               {lecture.is_published ? "Published" : "Draft"}
                             </span>

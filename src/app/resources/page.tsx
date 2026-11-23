@@ -34,15 +34,15 @@ export default function ResourcesPage() {
   const [activePlayerLecture, setActivePlayerLecture] = useState<LectureRecord | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const categories = [
-    "All",
-    "Free Lectures",
-    "Class 11 Resources",
-    "Class 12 Resources",
-    "Accountancy Notes",
-    "PDF Study Materials",
-    "Practice Materials",
-  ];
+  // Dynamically derive category filter pills from database records
+  const dynamicCategories = Array.from(
+    new Set(
+      resources
+        .map((r) => r.category_label?.trim())
+        .filter((cat): cat is string => Boolean(cat && cat.length > 0))
+    )
+  );
+  const categories = Array.from(new Set(["All", "Free Lectures", ...dynamicCategories]));
 
   // Fetch dynamic free content from Supabase / API (strictly dynamic, no hardcoded mock data)
   useEffect(() => {
@@ -126,6 +126,13 @@ export default function ResourcesPage() {
             selectedFilter.toLowerCase().includes((r.category_label || "").toLowerCase())
         );
 
+  const showLectures =
+    (selectedFilter === "All" || selectedFilter === "Free Lectures") &&
+    freeLectures.length > 0;
+  const showResources =
+    selectedFilter !== "Free Lectures" && filteredResources.length > 0;
+  const hasContent = showLectures || showResources;
+
   return (
     <div className="min-h-screen bg-white text-[#16141B] flex flex-col font-sans selection:bg-[#FDE047] selection:text-[#16141B]">
       <Navbar onOpenContact={() => setIsContactModalOpen(true)} />
@@ -180,58 +187,94 @@ export default function ResourcesPage() {
             {isLoading ? (
               <div className="flex flex-col items-center justify-center py-20 space-y-4">
                 <Loader2 className="w-8 h-8 animate-spin text-[#5B32D6]" />
-                <p className="text-sm font-semibold text-neutral-500">Loading resources from API...</p>
+                <p className="text-sm font-semibold text-neutral-500">Loading resources from database...</p>
               </div>
-            ) : filteredResources.length === 0 && freeLectures.length === 0 ? (
+            ) : !hasContent ? (
               <div className="bg-white rounded-[32px] p-12 text-center border border-dashed border-neutral-300 max-w-lg mx-auto space-y-4 shadow-xs">
                 <div className="w-14 h-14 rounded-full bg-[#ECE8FA] text-[#5B32D6] flex items-center justify-center mx-auto">
                   <BookOpen className="w-7 h-7" />
                 </div>
                 <h3 className="text-xl font-extrabold text-[#16141B]">No Resources Available</h3>
                 <p className="text-xs sm:text-sm text-neutral-500 leading-relaxed">
-                  There are currently no free study materials found in this category. Resources added via the database will appear here.
+                  {selectedFilter === "All"
+                    ? "There are currently no free study materials or lectures published yet. Resources added via the admin dashboard will appear here."
+                    : `There are currently no free materials available under "${selectedFilter}".`}
                 </p>
               </div>
             ) : (
               <>
                 {/* Free Video Lectures (if selected or All) */}
-                {(selectedFilter === "All" || selectedFilter === "Free Lectures") &&
-                  freeLectures.length > 0 && (
-                    <div className="space-y-6">
-                      <div className="flex items-center gap-2">
-                        <Video className="w-5 h-5 text-[#5B32D6]" />
-                        <h2 className="text-2xl font-extrabold text-[#16141B]">
-                          Free Recorded Lectures &amp; Masterclasses
-                        </h2>
-                      </div>
+                {showLectures && (
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-2">
+                      <Video className="w-5 h-5 text-[#5B32D6]" />
+                      <h2 className="text-2xl font-extrabold text-[#16141B]">
+                        Free Recorded Lectures &amp; Masterclasses
+                      </h2>
+                    </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {freeLectures.map((lec) => (
-                          <div
-                            key={lec.id}
-                            className="bg-white rounded-[28px] p-6 border border-neutral-200/80 shadow-xs hover:shadow-lg transition-all flex flex-col justify-between space-y-5"
-                          >
-                            <div className="space-y-3">
-                              <div className="flex items-center justify-between">
-                                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-emerald-100 text-emerald-800">
-                                  Free Video Lecture
-                                </span>
-                                <span className="text-xs text-neutral-400 font-semibold">
-                                  {lec.duration || "40 mins"}
-                                </span>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {freeLectures.map((lec) => (
+                        <div
+                          key={lec.id}
+                          className="bg-white rounded-[24px] border border-neutral-200/80 shadow-xs hover:shadow-lg transition-all overflow-hidden flex flex-col justify-between group cursor-pointer"
+                          onClick={() => setActivePlayerLecture(lec)}
+                        >
+                          {/* 16:9 YouTube style Thumbnail Preview */}
+                          <div className="relative aspect-video w-full bg-neutral-900 overflow-hidden">
+                            {lec.thumbnail_key ? (
+                              <img
+                                src={`/api/storage/thumbnail?key=${encodeURIComponent(lec.thumbnail_key)}`}
+                                alt={lec.title}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center bg-gradient-to-br from-[#1F1347] via-[#2F1B69] to-[#120A2B]">
+                                <Play className="w-8 h-8 text-white/50 mb-1" />
+                                <span className="text-[10px] font-bold text-white/40 uppercase tracking-wider">Video Lecture</span>
                               </div>
-                              <h3 className="font-bold text-lg text-[#16141B]">{lec.title}</h3>
-                              <p className="text-xs text-neutral-500">
-                                {lec.description || "Free conceptual session with Parvesh Sir."}
-                              </p>
+                            )}
+
+                            {/* Hover Play Button Overlay */}
+                            <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                              <div className="w-12 h-12 rounded-full bg-white/95 text-[#5B32D6] flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
+                                <Play className="w-5 h-5 fill-current ml-0.5" />
+                              </div>
                             </div>
 
-                            <div className="pt-4 border-t border-neutral-100 flex items-center justify-between">
+                            {/* Duration chip */}
+                            {lec.duration && (
+                              <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-black/80 text-white text-[11px] font-bold font-mono tracking-tight shadow">
+                                {lec.duration}
+                              </div>
+                            )}
+
+                            {/* Free badge */}
+                            <div className="absolute top-2 left-2">
+                              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-emerald-500 text-white shadow">
+                                Free Lecture
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+                            <div className="space-y-2">
+                              <h3 className="font-bold text-base text-[#16141B] group-hover:text-[#5B32D6] transition-colors line-clamp-2">
+                                {lec.title}
+                              </h3>
+                              {lec.description && (
+                                <p className="text-xs text-neutral-500 line-clamp-2">
+                                  {lec.description}
+                                </p>
+                              )}
+                            </div>
+
+                            <div className="pt-3 border-t border-neutral-100 flex items-center justify-between">
                               <span className="text-xs text-[#5B32D6] font-bold">No Paywall</span>
                               <Button
                                 variant="purple"
                                 size="sm"
-                                className="gap-2"
+                                className="gap-2 cursor-pointer"
                                 onClick={() => setActivePlayerLecture(lec)}
                               >
                                 <Play className="w-3.5 h-3.5 fill-current" />
@@ -239,13 +282,14 @@ export default function ResourcesPage() {
                               </Button>
                             </div>
                           </div>
-                        ))}
-                      </div>
+                        </div>
+                      ))}
                     </div>
-                  )}
+                  </div>
+                )}
 
                 {/* PDF & Study Notes Grid */}
-                {selectedFilter !== "Free Lectures" && filteredResources.length > 0 && (
+                {showResources && (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
                     {filteredResources.map((item, idx) => (
                       <motion.div

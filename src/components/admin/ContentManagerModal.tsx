@@ -375,33 +375,47 @@ export function ContentManagerModal({
                 </div>
               </div>
             ))
+          ) : resources.length === 0 ? (
+            <div className="py-16 text-center space-y-3">
+              <FileText className="w-10 h-10 text-neutral-300 mx-auto" />
+              <div className="font-bold text-[#16141B]">No Free Resources Uploaded Yet</div>
+              <p className="text-xs text-neutral-500 max-w-sm mx-auto">
+                Click the <strong>+ Upload New</strong> button above to upload PDF study notes or materials to Cloudflare R2 and Supabase.
+              </p>
+            </div>
           ) : (
-            resources.map((res) => (
-              <div
-                key={res.id}
-                className="p-4 sm:p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs flex items-center justify-between gap-4"
-              >
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 uppercase">
-                      {res.file_type}
-                    </span>
-                    <span className="text-xs text-neutral-400 font-semibold">{res.category_label}</span>
+            resources
+              .filter((r) => r.title.toLowerCase().includes(searchQuery.toLowerCase()))
+              .map((res) => (
+                <div
+                  key={res.id}
+                  className="p-4 sm:p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs flex items-center justify-between gap-4"
+                >
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 uppercase">
+                        {res.file_type}
+                      </span>
+                      <span className="text-xs text-neutral-400 font-semibold">{res.category_label || "Study Material"}</span>
+                    </div>
+                    <h4 className="font-bold text-sm text-[#16141B]">{res.title}</h4>
+                    {res.description && (
+                      <p className="text-xs text-neutral-500 line-clamp-1">{res.description}</p>
+                    )}
                   </div>
-                  <h4 className="font-bold text-sm text-[#16141B]">{res.title}</h4>
-                </div>
 
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => handleDelete("resource", res.id, res.title)}
-                    className="p-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 transition-colors"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleDelete("resource", res.id, res.title)}
+                      className="p-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 transition-colors cursor-pointer"
+                      title="Delete resource"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))
+              ))
           )}
         </div>
       </motion.div>
