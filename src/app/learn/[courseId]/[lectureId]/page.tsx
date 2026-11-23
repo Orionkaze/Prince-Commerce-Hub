@@ -102,17 +102,17 @@ function CourseLearningContent({
         setCourse(c);
         setIsAccessDenied(false);
 
-        // Flatten lectures
-        const flat: LectureRecord[] = [];
-        const exp: Record<string, boolean> = {};
-
-        c.modules?.forEach((m) => {
-          exp[m.id] = true;
-          m.lectures?.forEach((l) => flat.push(l));
-        });
+        // Resolve lectures directly from course
+        let flat: LectureRecord[] = [];
+        if (c.lectures && c.lectures.length > 0) {
+          flat = c.lectures;
+        } else if (c.modules) {
+          c.modules.forEach((m) => {
+            m.lectures?.forEach((l) => flat.push(l));
+          });
+        }
 
         setAllLecturesFlat(flat);
-        setExpandedModules(exp);
 
         // Resolve target lecture
         let target: LectureRecord | null = null;
@@ -638,7 +638,7 @@ function CourseLearningContent({
           <div className="p-4 border-b border-[#2A2634] flex items-center justify-between">
             <h3 className="font-extrabold text-sm text-white flex items-center gap-2">
               <BookOpen className="w-4 h-4 text-[#FDE047]" />
-              Course Curriculum
+              Lectures Playlist
             </h3>
             <span className="text-xs font-bold text-gray-400">
               {completedLectureIds.size} / {allLecturesFlat.length}
@@ -646,82 +646,56 @@ function CourseLearningContent({
           </div>
 
           <div className="flex-1 overflow-y-auto divide-y divide-[#2A2634]">
-            {course?.modules?.map((module, mIdx) => {
-              const isExpanded = expandedModules[module.id];
-              const lectures = module.lectures || [];
+            {allLecturesFlat.length === 0 ? (
+              <div className="p-8 text-center text-xs text-gray-400">
+                No lectures uploaded for this course yet.
+              </div>
+            ) : (
+              allLecturesFlat.map((lecture, lIdx) => {
+                const isActive = currentLecture?.id === lecture.id;
+                const isDone = completedLectureIds.has(lecture.id);
 
-              return (
-                <div key={module.id} className="bg-transparent">
+                return (
                   <button
-                    onClick={() =>
-                      setExpandedModules((prev) => ({
-                        ...prev,
-                        [module.id]: !prev[module.id],
-                      }))
-                    }
-                    className="w-full p-3.5 text-left flex items-center justify-between hover:bg-white/5 transition"
+                    key={lecture.id}
+                    onClick={() => navigateToLecture(lecture)}
+                    className={`w-full p-3.5 text-left flex items-start gap-3 transition ${
+                      isActive
+                        ? "bg-[#5B32D6]/30 border-l-4 border-[#FDE047] text-white"
+                        : "hover:bg-white/5 text-gray-300"
+                    }`}
                   >
-                    <div className="min-w-0 pr-2">
-                      <div className="text-[10px] font-bold uppercase text-[#FDE047]">
-                        Module {mIdx + 1}
+                    <div className="w-6 h-6 rounded-lg bg-white/5 text-[11px] font-bold text-gray-400 flex items-center justify-center shrink-0 mt-0.5">
+                      {isDone ? (
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                      ) : isActive ? (
+                        <Play className="w-3.5 h-3.5 text-[#FDE047] fill-current" />
+                      ) : (
+                        <span>{lIdx + 1}</span>
+                      )}
+                    </div>
+
+                    <div className="min-w-0 flex-1">
+                      <div
+                        className={`text-xs font-semibold line-clamp-2 ${
+                          isActive ? "text-white font-bold" : "text-gray-300"
+                        }`}
+                      >
+                        {lecture.title}
                       </div>
-                      <div className="font-bold text-xs text-white truncate">
-                        {module.title}
+                      <div className="flex items-center gap-2 text-[10px] text-gray-400 mt-1">
+                        {lecture.chapter && (
+                          <span className="text-[#FDE047] font-semibold truncate max-w-[120px]">
+                            {lecture.chapter}
+                          </span>
+                        )}
+                        <span>{lecture.duration || "45 mins"}</span>
                       </div>
                     </div>
-                    {isExpanded ? (
-                      <ChevronUp className="w-4 h-4 text-gray-400 shrink-0" />
-                    ) : (
-                      <ChevronDown className="w-4 h-4 text-gray-400 shrink-0" />
-                    )}
                   </button>
-
-                  {isExpanded && (
-                    <div className="bg-[#16141B]/60 divide-y divide-white/5">
-                      {lectures.map((lecture) => {
-                        const isActive = currentLecture?.id === lecture.id;
-                        const isDone = completedLectureIds.has(lecture.id);
-
-                        return (
-                          <button
-                            key={lecture.id}
-                            onClick={() => navigateToLecture(lecture)}
-                            className={`w-full p-3 text-left flex items-start gap-2.5 transition ${
-                              isActive
-                                ? "bg-[#5B32D6]/30 border-l-4 border-[#FDE047] text-white"
-                                : "hover:bg-white/5 text-gray-300"
-                            }`}
-                          >
-                            <div className="mt-0.5 shrink-0">
-                              {isDone ? (
-                                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                              ) : isActive ? (
-                                <Play className="w-4 h-4 text-[#FDE047] fill-current" />
-                              ) : (
-                                <div className="w-4 h-4 rounded-full border border-gray-600" />
-                              )}
-                            </div>
-
-                            <div className="min-w-0 flex-1">
-                              <div
-                                className={`text-xs font-semibold line-clamp-2 ${
-                                  isActive ? "text-white font-bold" : "text-gray-300"
-                                }`}
-                              >
-                                {lecture.title}
-                              </div>
-                              <div className="text-[10px] text-gray-500 mt-0.5">
-                                {lecture.duration || "45 mins"}
-                              </div>
-                            </div>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+                );
+              })
+            )}
           </div>
         </aside>
       </div>

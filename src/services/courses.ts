@@ -175,28 +175,22 @@ export async function getCourseWithCurriculum(courseIdOrSlug: string) {
     console.warn("Could not fetch lectures:", err);
   }
 
-  // If course_modules table is empty or absent, build modules dynamically from course.topics and distinct lecture chapters
-  if (modules.length === 0) {
-    const rawTopics: string[] = Array.isArray(course.topics) ? course.topics : [];
+  // If course_modules table is empty, only create module groups if lectures have distinct chapters
+  if (modules.length === 0 && lectures.length > 0) {
     const lectureChapters = Array.from(
       new Set(lectures.map((l) => l.chapter).filter(Boolean))
     ) as string[];
 
-    const allChapterTitles = [...rawTopics];
-    for (const ch of lectureChapters) {
-      if (!allChapterTitles.includes(ch)) {
-        allChapterTitles.push(ch);
-      }
+    if (lectureChapters.length > 0) {
+      modules = lectureChapters.map((title, idx) => ({
+        id: `module-${idx + 1}-${title.toLowerCase().replace(/[^a-z0-9]/g, "-").slice(0, 24)}`,
+        course_id: courseId,
+        title,
+        description: `Lectures in ${title}`,
+        position: idx + 1,
+        created_at: course.created_at || new Date().toISOString(),
+      }));
     }
-
-    modules = allChapterTitles.map((title, idx) => ({
-      id: `module-${idx + 1}-${title.toLowerCase().replace(/[^a-z0-9]/g, "-").slice(0, 24)}`,
-      course_id: courseId,
-      title,
-      description: `Comprehensive chapter curriculum for ${title}`,
-      position: idx + 1,
-      created_at: course.created_at || new Date().toISOString(),
-    }));
   }
 
   // 4. Fetch lecture resources

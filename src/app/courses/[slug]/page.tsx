@@ -329,129 +329,96 @@ function CourseDetailsContent({
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Left 2 Cols: Curriculum & FAQs */}
           <div className="lg:col-span-2 space-y-12">
-            {/* Curriculum Accordion */}
+            {/* Course Lectures Playlist */}
             <div>
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h2 className="text-2xl font-black text-[#16141B] tracking-tight">
-                    Course Curriculum
+                    Course Lectures Playlist
                   </h2>
                   <p className="text-xs text-gray-500 mt-1">
-                    {course.modules?.length || 0} Modules • {course.lectures_count || 0} Total Lectures
+                    {course.lectures?.length || 0} Lectures Included in Batch
                   </p>
                 </div>
               </div>
 
-              {/* Modules List */}
-              <div className="space-y-4">
-                {course.modules?.map((module, mIdx) => {
-                  const isExpanded = expandedModules[module.id];
-                  const lectures = module.lectures || [];
+              {/* Playlist Items */}
+              {!course.lectures || course.lectures.length === 0 ? (
+                <div className="bg-white rounded-3xl border border-dashed border-gray-200 p-8 text-center space-y-2">
+                  <Video className="w-10 h-10 text-gray-300 mx-auto" />
+                  <h3 className="text-sm font-bold text-gray-800">Lectures In Production</h3>
+                  <p className="text-xs text-gray-500 max-w-sm mx-auto leading-relaxed">
+                    Lectures are being recorded and uploaded for this batch by Parvesh Sir. Enrolled students will get instant access as each lecture is published.
+                  </p>
+                </div>
+              ) : (
+                <div className="bg-white rounded-3xl border border-gray-200 overflow-hidden shadow-sm divide-y divide-gray-100">
+                  {course.lectures.map((lecture, lIdx) => {
+                    const isPreview = Boolean(
+                      lecture.is_preview || lecture.access_type === "free"
+                    );
 
-                  return (
-                    <div
-                      key={module.id}
-                      className="bg-white rounded-3xl border border-gray-200 overflow-hidden shadow-sm"
-                    >
-                      <button
-                        type="button"
-                        onClick={() => toggleModule(module.id)}
-                        className="w-full p-5 bg-[#F7F7F9] hover:bg-gray-100 text-left flex items-center justify-between transition"
+                    return (
+                      <div
+                        key={lecture.id}
+                        className="p-4 sm:px-6 flex items-center justify-between hover:bg-gray-50/60 transition gap-4"
                       >
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-xl bg-[#5B32D6] text-white font-bold text-xs flex items-center justify-center shrink-0">
-                            {mIdx + 1}
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="w-8 h-8 rounded-xl bg-purple-50 text-[#5B32D6] font-black text-xs flex items-center justify-center shrink-0">
+                            {lIdx + 1}
                           </div>
-                          <div>
-                            <h3 className="font-extrabold text-sm sm:text-base text-[#16141B]">
-                              {module.title}
-                            </h3>
-                            <div className="text-xs text-gray-500 mt-0.5">
-                              {lectures.length} Lectures
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-2">
+                              <h4 className="font-bold text-xs sm:text-sm text-[#16141B] truncate">
+                                {lecture.title}
+                              </h4>
+                              {isPreview && (
+                                <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 shrink-0">
+                                  Free Preview
+                                </span>
+                              )}
+                              {lecture.chapter && (
+                                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 shrink-0">
+                                  {lecture.chapter}
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-[11px] text-gray-400 mt-0.5">
+                              Duration: {lecture.duration || "45 mins"}
                             </div>
                           </div>
                         </div>
 
-                        {isExpanded ? (
-                          <ChevronUp className="w-5 h-5 text-gray-400" />
-                        ) : (
-                          <ChevronDown className="w-5 h-5 text-gray-400" />
-                        )}
-                      </button>
-
-                      {isExpanded && (
-                        <div className="divide-y divide-gray-100">
-                          {lectures.length === 0 ? (
-                            <div className="py-6 text-center text-xs text-gray-400">
-                              Lectures are being uploaded for this chapter.
-                            </div>
+                        <div className="shrink-0">
+                          {isPreview ? (
+                            <button
+                              type="button"
+                              onClick={() => handlePreviewLecture(lecture)}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold transition cursor-pointer"
+                            >
+                              <Play className="w-3.5 h-3.5 fill-current" />
+                              <span>Watch Preview</span>
+                            </button>
+                          ) : isEnrolled ? (
+                            <Link
+                              href={`/learn/${course.id}/${lecture.id}`}
+                              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-[#5B32D6] text-xs font-bold transition"
+                            >
+                              <Play className="w-3 h-3 fill-current" />
+                              <span>Watch</span>
+                            </Link>
                           ) : (
-                            lectures.map((lecture) => {
-                              const isPreview = Boolean(
-                                lecture.is_preview || lecture.access_type === "free"
-                              );
-
-                              return (
-                                <div
-                                  key={lecture.id}
-                                  className="p-4 sm:px-6 flex items-center justify-between hover:bg-gray-50/60 transition"
-                                >
-                                  <div className="flex items-center gap-3 min-w-0">
-                                    <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center shrink-0">
-                                      <Video className="w-4 h-4" />
-                                    </div>
-                                    <div className="min-w-0">
-                                      <div className="flex items-center gap-2">
-                                        <h4 className="font-bold text-xs sm:text-sm text-[#16141B] truncate">
-                                          {lecture.title}
-                                        </h4>
-                                        {isPreview && (
-                                          <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 shrink-0">
-                                            Free Preview
-                                          </span>
-                                        )}
-                                      </div>
-                                      <div className="text-[11px] text-gray-400 mt-0.5">
-                                        Duration: {lecture.duration || "45 mins"}
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  <div className="shrink-0">
-                                    {isPreview ? (
-                                      <button
-                                        type="button"
-                                        onClick={() => handlePreviewLecture(lecture)}
-                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold transition"
-                                      >
-                                        <Play className="w-3.5 h-3.5 fill-current" />
-                                        <span>Watch Preview</span>
-                                      </button>
-                                    ) : isEnrolled ? (
-                                      <Link
-                                        href={`/learn/${course.id}/${lecture.id}`}
-                                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-[#5B32D6] text-xs font-bold transition"
-                                      >
-                                        <Play className="w-3 h-3 fill-current" />
-                                        <span>Watch</span>
-                                      </Link>
-                                    ) : (
-                                      <span className="inline-flex items-center gap-1 text-gray-400 text-xs font-bold px-2 py-1 bg-gray-50 rounded-lg">
-                                        <Lock className="w-3 h-3" />
-                                        <span>Enrolled Only</span>
-                                      </span>
-                                    )}
-                                  </div>
-                                </div>
-                              );
-                            })
+                            <span className="inline-flex items-center gap-1 text-gray-400 text-xs font-bold px-2 py-1 bg-gray-50 rounded-lg">
+                              <Lock className="w-3 h-3" />
+                              <span>Enrolled Only</span>
+                            </span>
                           )}
                         </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             {/* What you'll learn */}

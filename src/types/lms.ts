@@ -48,6 +48,7 @@ export interface CourseRecord {
   created_at: string;
   updated_at?: string;
   modules?: CourseModuleRecord[];
+  lectures?: LectureRecord[];
   lectures_count?: number;
   modules_count?: number;
   enrolled_students_count?: number;
