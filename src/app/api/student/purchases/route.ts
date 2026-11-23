@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAuthenticatedUser } from "@/lib/auth/roles";
+import { getAuthenticatedUser, getUserRole } from "@/lib/auth/roles";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 
@@ -64,6 +64,21 @@ export async function GET() {
       }
     } catch {
       // ignore
+    }
+
+    // 3. Admin bypass: Administrators dynamically have full access to all courses in the database
+    const role = await getUserRole(user.id, user.email);
+    if (role === "admin") {
+      try {
+        const { data: allCourses } = await supabase.from("courses").select("id");
+        if (allCourses && allCourses.length > 0) {
+          allCourses.forEach((c) => {
+            if (!enrolledCourseIds.includes(c.id)) enrolledCourseIds.push(c.id);
+          });
+        }
+      } catch {
+        // ignore
+      }
     }
 
     return NextResponse.json({

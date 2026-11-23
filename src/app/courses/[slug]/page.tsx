@@ -37,7 +37,7 @@ function CourseDetailsContent({
   const resolvedParams = use(params);
   const slug = resolvedParams.slug;
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
 
   const [course, setCourse] = useState<CourseRecord | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -69,8 +69,10 @@ function CourseDetailsContent({
           }
         }
 
-        // Check if user is enrolled
-        if (user) {
+        // Check if user is enrolled or admin
+        if (isAdmin) {
+          setIsEnrolled(true);
+        } else if (user) {
           const pRes = await fetch("/api/student/purchases");
           if (pRes.ok) {
             const pData = await pRes.json();

@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 
 export default function MyCoursesPage() {
-  const { user, isLoading: isAuthLoading } = useAuth();
+  const { user, isAdmin, isLoading: isAuthLoading } = useAuth();
   const router = useRouter();
 
   const [courses, setCourses] = useState<any[]>([]);
@@ -156,13 +156,23 @@ export default function MyCoursesPage() {
                         {c.completedLectures} / {c.totalLectures} Lectures
                       </span>
 
-                      <Link
-                        href={`/learn/${c.id}/${targetLectureId}`}
-                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#5B32D6] hover:bg-[#4A23C2] text-white text-xs font-bold transition shadow-sm"
-                      >
-                        <Play className="w-3.5 h-3.5 fill-current text-[#FDE047]" />
-                        <span>Continue Learning</span>
-                      </Link>
+                      <div className="flex items-center gap-2">
+                        {isAdmin && (
+                          <Link
+                            href={`/admin/courses/${c.id}`}
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold transition"
+                          >
+                            <span>Manage</span>
+                          </Link>
+                        )}
+                        <Link
+                          href={`/learn/${c.id}/${targetLectureId}`}
+                          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#5B32D6] hover:bg-[#4A23C2] text-white text-xs font-bold transition shadow-sm"
+                        >
+                          <Play className="w-3.5 h-3.5 fill-current text-[#FDE047]" />
+                          <span>{isAdmin ? "Classroom Access" : "Continue Learning"}</span>
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -652,14 +652,23 @@ export async function updateLecture(
   if (updates.title !== undefined) payload.title = updates.title;
   if (updates.description !== undefined) payload.description = updates.description;
   if (updates.chapter !== undefined) payload.chapter = updates.chapter;
+  if (updates.lecture_number !== undefined) payload.lecture_number = updates.lecture_number;
   if (updates.duration !== undefined) payload.duration = updates.duration;
   if (updates.video_key !== undefined) payload.video_key = updates.video_key;
   if (updates.video_object_key !== undefined) payload.video_key = updates.video_object_key;
+  if (updates.thumbnail_key !== undefined) payload.thumbnail_key = updates.thumbnail_key;
+  if ((updates as any).thumbnail_object_key !== undefined) payload.thumbnail_key = (updates as any).thumbnail_object_key;
   if (updates.is_preview !== undefined) {
     payload.access_type = updates.is_preview ? "free" : "paid";
   }
+  if (updates.access_type !== undefined) {
+    payload.access_type = updates.access_type;
+  }
   if (updates.status !== undefined) {
     payload.is_published = updates.status === "PUBLISHED";
+  }
+  if (updates.is_published !== undefined) {
+    payload.is_published = updates.is_published;
   }
 
   const { data, error } = await supabase
@@ -694,6 +703,16 @@ export async function updateLecture(
 
 export async function deleteLecture(lectureId: string) {
   const supabase = createAdminClient();
+  try {
+    await supabase.from("resources").delete().eq("lecture_id", lectureId);
+  } catch (err) {
+    console.warn("Could not delete associated resources:", err);
+  }
+  try {
+    await supabase.from("lecture_progress").delete().eq("lecture_id", lectureId);
+  } catch (err) {
+    console.warn("Could not delete associated lecture_progress:", err);
+  }
   const { error } = await supabase.from("lectures").delete().eq("id", lectureId);
   if (error) {
     throw new Error(`Failed to delete lecture: ${error.message}`);

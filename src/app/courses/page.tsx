@@ -96,7 +96,7 @@ export default function CoursesPage() {
   const router = useRouter();
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const { addToCart, isInCart, openCart } = useCart();
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
 
   const [courses, setCourses] = useState<CourseRecord[]>(DEFAULT_COURSES);
   const [enrolledCourseIds, setEnrolledCourseIds] = useState<string[]>([]);
@@ -382,7 +382,7 @@ export default function CoursesPage() {
             ) : (
               filteredCourses.map((course, idx) => {
                 const inCart = isInCart(course.id);
-                const isEnrolled = enrolledCourseIds.includes(course.id);
+                const isEnrolled = isAdmin || enrolledCourseIds.includes(course.id);
                 const isClass11 =
                   course.id === "class-11" ||
                   course.category?.toLowerCase().includes("11") ||
@@ -504,13 +504,23 @@ export default function CoursesPage() {
                         </div>
                         <div className="flex items-center gap-3">
                           {isEnrolled ? (
-                            <Link
-                              href={`/learn/${course.id}/first`}
-                              className="px-5 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold flex items-center gap-2 shadow-xs transition-colors"
-                            >
-                              <CheckCircle2 className="w-4 h-4" />
-                              <span>Enrolled (Access Active)</span>
-                            </Link>
+                            <div className="flex items-center gap-2">
+                              <Link
+                                href={`/learn/${course.id}/first`}
+                                className="px-5 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold flex items-center gap-2 shadow-xs transition-colors"
+                              >
+                                <CheckCircle2 className="w-4 h-4" />
+                                <span>{isAdmin ? "Admin Access (Classroom)" : "Enrolled (Access Active)"}</span>
+                              </Link>
+                              {isAdmin && (
+                                <Link
+                                  href={`/admin/courses/${course.id}`}
+                                  className="px-4 py-2.5 rounded-full bg-[#16141B] hover:bg-gray-800 text-white text-xs font-bold flex items-center gap-1.5 transition-colors"
+                                >
+                                  <span>Manage Batch</span>
+                                </Link>
+                              )}
+                            </div>
                           ) : (
                             <>
                               {inCart ? (

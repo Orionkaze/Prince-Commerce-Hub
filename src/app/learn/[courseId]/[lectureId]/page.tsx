@@ -30,6 +30,8 @@ import {
   AlertCircle,
   Menu,
   X,
+  Settings,
+  Edit,
 } from "lucide-react";
 
 function CourseLearningContent({
@@ -41,7 +43,7 @@ function CourseLearningContent({
   const { courseId, lectureId: rawLectureId } = resolvedParams;
 
   const router = useRouter();
-  const { user, isLoading: isAuthLoading } = useAuth();
+  const { user, isAdmin, isLoading: isAuthLoading } = useAuth();
 
   const [course, setCourse] = useState<CourseRecord | null>(null);
   const [currentLecture, setCurrentLecture] = useState<LectureRecord | null>(null);
@@ -403,6 +405,17 @@ function CourseLearningContent({
 
         {/* Progress & Mobile Sidebar Toggle */}
         <div className="flex items-center gap-4">
+          {isAdmin && (
+            <Link
+              href={`/admin/courses/${courseId}`}
+              className="px-3.5 py-1.5 rounded-xl bg-[#5B32D6] hover:bg-[#4E2EC2] text-white text-xs font-bold flex items-center gap-1.5 transition shadow-sm"
+              title="Edit lectures, upload videos, and organize modules in Admin Dashboard"
+            >
+              <Settings className="w-3.5 h-3.5 text-[#FDE047]" />
+              <span className="hidden sm:inline">Manage in Admin</span>
+            </Link>
+          )}
+
           <div className="hidden sm:flex items-center gap-3 text-xs font-bold text-gray-300">
             <span>Progress: {courseCompletionPercent}%</span>
             <div className="w-24 bg-white/10 h-2 rounded-full overflow-hidden">
@@ -557,6 +570,22 @@ function CourseLearningContent({
                       <Sparkles className="w-3.5 h-3.5 text-[#FDE047]" />
                       <span>Led by Parvesh Kumar (Prime Commerce Hub Founder &amp; Educator)</span>
                     </div>
+
+                    {isAdmin && (
+                      <div className="pt-3 border-t border-[#2A2634] flex items-center justify-between">
+                        <span className="text-xs text-purple-300 font-semibold flex items-center gap-1.5">
+                          <Settings className="w-3.5 h-3.5 text-[#FDE047]" />
+                          Admin Mode Active
+                        </span>
+                        <Link
+                          href={`/admin/courses/${courseId}`}
+                          className="px-3.5 py-1.5 rounded-xl bg-[#5B32D6] hover:bg-[#4E2EC2] text-white text-xs font-bold flex items-center gap-1.5 transition"
+                        >
+                          <Edit className="w-3.5 h-3.5" />
+                          <span>Edit This Lecture / Delete in Admin</span>
+                        </Link>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="space-y-3 bg-[#1D1136] rounded-2xl p-5 border border-[#2A2634]">

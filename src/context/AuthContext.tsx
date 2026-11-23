@@ -48,30 +48,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    // Immediate optimistic check for designated teacher account
-    const isTeacherEmail =
-      currentUser.email?.toLowerCase() === "parveshdhiman1900@gmail.com";
-    if (isTeacherEmail) {
-      setRole("admin");
-      setIsAdmin(true);
-    }
-
     try {
       const res = await fetch("/api/auth/role");
       if (res.ok) {
         const data = await res.json();
-        setRole(data.role || "student");
-        setIsAdmin(Boolean(data.isAdmin || isTeacherEmail));
-      }
-    } catch (err) {
-      console.warn("Failed to fetch verified role from server:", err);
-      if (isTeacherEmail) {
-        setRole("admin");
-        setIsAdmin(true);
+        const userIsAdmin = Boolean(data.isAdmin || data.role === "admin");
+        setRole(data.role || (userIsAdmin ? "admin" : "student"));
+        setIsAdmin(userIsAdmin);
       } else {
         setRole("student");
         setIsAdmin(false);
       }
+    } catch (err) {
+      console.warn("Failed to fetch verified role from server:", err);
+      setRole("student");
+      setIsAdmin(false);
     }
   }, []);
 

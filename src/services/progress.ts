@@ -1,4 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/admin";
+import { ADMIN_EMAILS } from "@/lib/auth/roles";
 import { getCourseWithCurriculum } from "./courses";
 
 /**
@@ -60,6 +61,36 @@ export async function getStudentDashboardData(userId: string) {
     }
   } catch {
     // fallback
+  }
+
+  // C. Admin Access: Administrators dynamically have access to all courses in the database
+  let isAdmin = userRole?.role === "admin";
+  if (!isAdmin) {
+    try {
+      const { data: roleCheck } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", userId)
+        .maybeSingle();
+      if (roleCheck?.role === "admin") {
+        isAdmin = true;
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  if (isAdmin) {
+    try {
+      const { data: allCourses } = await supabase.from("courses").select("id");
+      if (allCourses && allCourses.length > 0) {
+        allCourses.forEach((c) => {
+          if (!enrolledCourseIds.includes(c.id)) enrolledCourseIds.push(c.id);
+        });
+      }
+    } catch {
+      // ignore
+    }
   }
 
   // 3. Fetch lecture progress records for this student

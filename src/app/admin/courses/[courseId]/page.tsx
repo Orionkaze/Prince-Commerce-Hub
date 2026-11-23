@@ -63,7 +63,7 @@ function CourseEditorContent({
     description: "",
     duration: "45 mins",
     is_preview: false,
-    price: 499,
+    price: 0,
     status: "PUBLISHED" as "DRAFT" | "PUBLISHED",
     video_object_key: "",
   });
@@ -146,10 +146,16 @@ function CourseEditorContent({
   const handleDeleteModule = async (moduleId: string) => {
     if (!confirm("Are you sure you want to delete this module and its lectures?")) return;
     try {
-      await fetch(`/api/admin/modules/${moduleId}`, { method: "DELETE" });
+      const res = await fetch(`/api/admin/modules/${moduleId}`, { method: "DELETE" });
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        alert(errData.error || "Failed to delete module");
+        return;
+      }
       await fetchCourseData();
-    } catch (err) {
+    } catch (err: any) {
       console.error("Failed to delete module:", err);
+      alert(err?.message || "Failed to delete module");
     }
   };
 
@@ -193,7 +199,7 @@ function CourseEditorContent({
       description: "",
       duration: "45 mins",
       is_preview: false,
-      price: 499,
+      price: 0,
       status: "PUBLISHED",
       video_object_key: "",
     });
@@ -203,7 +209,11 @@ function CourseEditorContent({
   // Open Lecture Modal for Editing Existing Lecture
   const handleOpenEditLecture = (lecture: LectureRecord) => {
     setEditingLecture(lecture);
-    setTargetModuleId(lecture.module_id || "");
+    const matchedModule = course?.modules?.find(
+      (m) => m.id === lecture.module_id || m.title === lecture.chapter
+    );
+    const modId = matchedModule?.id || lecture.module_id || course?.modules?.[0]?.id || "";
+    setTargetModuleId(modId);
     setIsCreatingInlineModule(false);
     setNewModuleTitle("");
     setPdfResourceKey("");
@@ -212,7 +222,7 @@ function CourseEditorContent({
       description: lecture.description || "",
       duration: lecture.duration || "45 mins",
       is_preview: Boolean(lecture.is_preview || lecture.access_type === "free"),
-      price: lecture.price || 499,
+      price: 0,
       status: (lecture.status as any) || (lecture.is_published ? "PUBLISHED" : "DRAFT"),
       video_object_key: lecture.video_object_key || lecture.video_key || "",
     });
@@ -258,7 +268,7 @@ function CourseEditorContent({
           : targetMod?.title || "";
 
       if (editingLecture) {
-        await fetch(`/api/admin/lectures/${editingLecture.id}`, {
+        const res = await fetch(`/api/admin/lectures/${editingLecture.id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -268,8 +278,12 @@ function CourseEditorContent({
             resource_key: pdfResourceKey || undefined,
           }),
         });
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.error || "Failed to update lecture");
+        }
       } else {
-        await fetch(`/api/admin/courses/${courseId}/lectures`, {
+        const res = await fetch(`/api/admin/courses/${courseId}/lectures`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -279,6 +293,10 @@ function CourseEditorContent({
             resource_key: pdfResourceKey || undefined,
           }),
         });
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.error || "Failed to create lecture");
+        }
       }
 
       setIsLectureModalOpen(false);
@@ -287,8 +305,9 @@ function CourseEditorContent({
       setNewModuleTitle("");
       setPdfResourceKey("");
       await fetchCourseData();
-    } catch (err) {
+    } catch (err: any) {
       console.error("Failed to save lecture:", err);
+      alert(err?.message || "Failed to save lecture. Please try again.");
     } finally {
       setIsSaving(false);
     }
@@ -298,10 +317,16 @@ function CourseEditorContent({
   const handleDeleteLecture = async (lectureId: string) => {
     if (!confirm("Are you sure you want to delete this lecture?")) return;
     try {
-      await fetch(`/api/admin/lectures/${lectureId}`, { method: "DELETE" });
+      const res = await fetch(`/api/admin/lectures/${lectureId}`, { method: "DELETE" });
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        alert(errData.error || "Failed to delete lecture");
+        return;
+      }
       await fetchCourseData();
-    } catch (err) {
+    } catch (err: any) {
       console.error("Failed to delete lecture:", err);
+      alert(err?.message || "Failed to delete lecture");
     }
   };
 

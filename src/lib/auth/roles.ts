@@ -1,12 +1,26 @@
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { UserRole } from "@/types/lms";
 
-// Designated administrator emails
-export const ADMIN_EMAILS = [
-  "parveshdhiman1900@gmail.com",
-  "akshit2046@gmail.com",
-  (process.env.ADMIN_EMAIL || "").toLowerCase(),
-].filter(Boolean);
+// Dynamically resolve designated administrator emails from environment variables
+export function getAdminEmails(): string[] {
+  const envList = [
+    process.env.ADMIN_EMAIL,
+    process.env.ADMIN_EMAILS,
+    process.env.NEXT_PUBLIC_ADMIN_EMAIL,
+    process.env.NEXT_PUBLIC_ADMIN_EMAILS,
+  ]
+    .filter(Boolean)
+    .join(",")
+    .toLowerCase()
+    .split(",")
+    .map((e) => e.trim())
+    .filter(Boolean);
+
+  return Array.from(new Set(envList));
+}
+
+export const ADMIN_EMAILS = getAdminEmails();
 
 /**
  * Server-side helper to fetch authenticated user from session cookies
@@ -28,36 +42,56 @@ export async function getAuthenticatedUser() {
  * Server-side check for user's role ('admin' | 'student')
  */
 export async function getUserRole(userId: string, email?: string): Promise<UserRole> {
-  if (email && ADMIN_EMAILS.includes(email.toLowerCase())) {
+  const adminEmails = getAdminEmails();
+  if (email && adminEmails.length > 0 && adminEmails.includes(email.toLowerCase())) {
     return "admin";
   }
 
-  const supabase = await createClient();
+  // Use service role admin client to query user_roles dynamically from Supabase
+  const supabase = createAdminClient();
 
-  // 1. Check user_roles table
-  const { data: roleData } = await supabase
-    .from("user_roles")
-    .select("role")
-    .eq("user_id", userId)
-    .maybeSingle();
+  // 1. Check user_roles table by user_id
+  try {
+    const { data: roleData } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", userId)
+      .maybeSingle();
 
-  if (roleData?.role === "admin") {
-    return "admin";
+    if (roleData?.role === "admin") {
+      return "admin";
+    }
+  } catch {
+    // ignore
   }
 
-  // 2. Check profiles table fallback
-  const { data: profileData } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", userId)
-    .maybeSingle();
+  // 2. Also check user_roles table by email if user_id wasn't matched
+  if (email) {
+    try {
+      const { data: roleByEmail } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("email", email.toLowerCase())
+        .maybeSingle();
 
-  if (profileData?.role === "admin") {
-    return "admin";
+      if (roleByEmail?.role === "admin") {
+        return "admin";
+      }
+    } catch {
+      // ignore
+    }
   }
 
-  if (email && ADMIN_EMAILS.includes(email.toLowerCase())) {
-    return "admin";
+  // 3. Fallback check: lookup email via auth.admin if email was not supplied
+  if (!email && adminEmails.length > 0) {
+    try {
+      const { data: authUser } = await supabase.auth.admin.getUserById(userId);
+      if (authUser?.user?.email && adminEmails.includes(authUser.user.email.toLowerCase())) {
+        return "admin";
+      }
+    } catch {
+      // ignore
+    }
   }
 
   return "student";
