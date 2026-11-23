@@ -141,7 +141,7 @@ export function CtaAndFooter({ onOpenContact, hideCtaBanner = false }: CtaAndFoo
               <Link href="/about" className="hover:text-white transition-colors">
                 About Founder
               </Link>
-              <Link href="/contact" className="hover:text-white transition-colors">
+              <Link href="/terms-and-privacy" className="hover:text-white transition-colors">
                 Privacy &amp; Terms
               </Link>
             </div>
