@@ -90,8 +90,8 @@ export function R2DirectUploader({
           setUploadedKey(key);
           onUploadSuccess(key);
         } else {
-          setIsUploading(false);
-          setError(`Upload failed with status code ${xhr.status}.`);
+          console.warn(`Direct upload returned status ${xhr.status}. Retrying via server proxy...`);
+          uploadViaProxy();
         }
       };
 

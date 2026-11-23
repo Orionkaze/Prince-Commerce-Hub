@@ -75,6 +75,7 @@ export function UploadContentModal({ isOpen, onClose, onSuccess }: UploadContent
   };
 
   const uploadFileViaProxy = async (file: File, key?: string, fileCategory?: string) => {
+    setUploadProgress(40);
     const formData = new FormData();
     formData.append("file", file);
     if (key) formData.append("key", key);
@@ -97,6 +98,7 @@ export function UploadContentModal({ isOpen, onClose, onSuccess }: UploadContent
     }
 
     const data = await res.json();
+    setUploadProgress(100);
     return data.key as string;
   };
 

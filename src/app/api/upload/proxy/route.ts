@@ -8,6 +8,8 @@ const R2_BUCKET_NAME =
   process.env.CLOUDFLARE_R2_BUCKET_NAME ||
   "prime-commerce-storage";
 
+export const maxDuration = 120;
+
 export async function POST(req: NextRequest) {
   try {
     const auth = await requireAdmin();
