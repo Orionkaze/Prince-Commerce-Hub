@@ -109,7 +109,7 @@ export function CtaAndFooter({ onOpenContact, hideCtaBanner = false }: CtaAndFoo
             <div className="lg:col-span-6 flex flex-col space-y-4 lg:pl-12">
               <a
                 href="mailto:parveshdhiman1900@gmail.com"
-                className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white hover:text-[#FDE047] transition-colors break-all tracking-tight"
+                className="text-xl sm:text-2xl lg:text-[26px] xl:text-[30px] font-extrabold text-white hover:text-[#FDE047] transition-colors whitespace-nowrap tracking-tight block"
               >
                 parveshdhiman1900@gmail.com
               </a>
@@ -122,13 +122,6 @@ export function CtaAndFooter({ onOpenContact, hideCtaBanner = false }: CtaAndFoo
                 <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                   Open for 2026-27
                 </span>
-              </Link>
-
-              <Link
-                href="/resources"
-                className="text-xl sm:text-2xl font-bold text-white/90 hover:text-[#C4B5FD] transition-colors tracking-tight"
-              >
-                Free Accountancy Study Library
               </Link>
 
               <Link
