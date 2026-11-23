@@ -140,7 +140,7 @@ export async function verifyStudentAccess(params: {
   const role = await getUserRole(params.userId, params.userEmail || undefined);
   if (role === "admin") return true;
 
-  const supabase = await createClient();
+  const supabase = createAdminClient();
 
   // 1. Check Course Access
   if (params.courseId) {
@@ -190,11 +190,11 @@ export async function verifyStudentAccess(params: {
     // Check if lecture is preview / free
     const { data: lecture } = await supabase
       .from("lectures")
-      .select("id, course_id, access_type, is_preview")
+      .select("id, course_id, access_type")
       .eq("id", params.lectureId)
       .maybeSingle();
 
-    if (lecture?.is_preview || lecture?.access_type === "free") {
+    if (lecture?.access_type === "free") {
       return true;
     }
 

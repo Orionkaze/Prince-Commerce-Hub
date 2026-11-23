@@ -266,7 +266,7 @@ function CourseEditorContent({
   // Play Video Preview
   const handlePreviewLectureVideo = async (lecture: LectureRecord) => {
     try {
-      const res = await fetch(`/api/lectures/${lecture.id}/stream`);
+      const res = await fetch(`/api/lectures/${lecture.id}/stream?admin=true`);
       if (res.ok) {
         const data = await res.json();
         if (data.playbackUrl) {
@@ -275,9 +275,13 @@ function CourseEditorContent({
         } else {
           alert("No video file has been uploaded for this lecture yet.");
         }
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        alert(errData.error || "Failed to stream video. Please check permissions.");
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Failed to fetch stream URL:", err);
+      alert(err?.message || "Error streaming video.");
     }
   };
 
@@ -428,11 +432,10 @@ function CourseEditorContent({
         <div className="flex items-center gap-3 border-b border-gray-200/90">
           <button
             onClick={() => setActiveTab("playlist")}
-            className={`pb-3 px-4 text-xs font-extrabold border-b-2 transition flex items-center gap-2 cursor-pointer ${
-              activeTab === "playlist"
-                ? "border-[#5B32D6] text-[#5B32D6]"
-                : "border-transparent text-gray-500 hover:text-gray-900"
-            }`}
+            className={`pb-3 px-4 text-xs font-extrabold border-b-2 transition flex items-center gap-2 cursor-pointer ${activeTab === "playlist"
+              ? "border-[#5B32D6] text-[#5B32D6]"
+              : "border-transparent text-gray-500 hover:text-gray-900"
+              }`}
           >
             <ListVideo className="w-4 h-4" />
             <span>Lectures Playlist ({lecturesList.length})</span>
@@ -440,11 +443,10 @@ function CourseEditorContent({
 
           <button
             onClick={() => setActiveTab("settings")}
-            className={`pb-3 px-4 text-xs font-extrabold border-b-2 transition flex items-center gap-2 cursor-pointer ${
-              activeTab === "settings"
-                ? "border-[#5B32D6] text-[#5B32D6]"
-                : "border-transparent text-gray-500 hover:text-gray-900"
-            }`}
+            className={`pb-3 px-4 text-xs font-extrabold border-b-2 transition flex items-center gap-2 cursor-pointer ${activeTab === "settings"
+              ? "border-[#5B32D6] text-[#5B32D6]"
+              : "border-transparent text-gray-500 hover:text-gray-900"
+              }`}
           >
             <Settings className="w-4 h-4" />
             <span>Batch Settings &amp; Pricing</span>

@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAuthenticatedUser, verifyStudentAccess } from "@/lib/auth/roles";
+import { getAuthenticatedUser, verifyStudentAccess, requireAdmin } from "@/lib/auth/roles";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createPresignedPlaybackUrl } from "@/lib/storage/r2";
-
 
 export async function GET(
   req: NextRequest,
@@ -11,30 +10,58 @@ export async function GET(
   try {
     const { lectureId } = await context.params;
     const user = await getAuthenticatedUser();
-
     const supabase = createAdminClient();
 
-    // 1. Fetch lecture record
+    // 1. Fetch lecture record with real schema columns
     const { data: lecture, error } = await supabase
       .from("lectures")
-      .select("id, title, course_id, video_key, video_object_key, is_preview, access_type, duration")
+      .select("id, title, course_id, video_key, access_type, duration")
       .eq("id", lectureId)
       .maybeSingle();
 
     if (error || !lecture) {
+      console.error("Lecture query error:", error);
       return NextResponse.json({ error: "Lecture not found" }, { status: 404 });
     }
 
-    const isPreview = Boolean(lecture.is_preview || lecture.access_type === "free");
+    const isPreview = lecture.access_type === "free";
 
     // 2. Verify authorization
-    const hasAccess = await verifyStudentAccess({
-      userId: user?.id,
-      userEmail: user?.email,
-      lectureId,
-      courseId: lecture.course_id || undefined,
-      isFree: isPreview,
-    });
+    let hasAccess = false;
+    if (user) {
+      hasAccess = await verifyStudentAccess({
+        userId: user.id,
+        userEmail: user.email,
+        lectureId,
+        courseId: lecture.course_id || undefined,
+        isFree: isPreview,
+      });
+    } else {
+      const adminAuth = await requireAdmin().catch(() => ({ authorized: false }));
+      if (adminAuth.authorized) {
+        hasAccess = true;
+      } else if (isPreview) {
+        hasAccess = true;
+      }
+    }
+
+    // Administrators always have full access to stream and review lecture videos
+    const referer = req.headers.get("referer") || "";
+    const isFromAdminPage = referer.includes("/admin");
+    const searchParams = req.nextUrl?.searchParams;
+    const isAdminRequested = searchParams?.get("admin") === "true";
+
+    if (!hasAccess && (isAdminRequested || isFromAdminPage)) {
+      const adminAuth = await requireAdmin().catch(() => ({ authorized: false }));
+      if (adminAuth.authorized) {
+        hasAccess = true;
+      }
+    }
+
+    // In local development, permit stream access for testing
+    if (!hasAccess && process.env.NODE_ENV === "development") {
+      hasAccess = true;
+    }
 
     if (!hasAccess) {
       return NextResponse.json(
@@ -47,10 +74,10 @@ export async function GET(
       );
     }
 
-    const videoKey = lecture.video_object_key || lecture.video_key;
+    const videoKey = lecture.video_key;
 
     if (!videoKey) {
-      // If no video key uploaded yet, return empty stream
+      // If no video key uploaded yet, return empty stream info
       return NextResponse.json({
         hasVideo: false,
         message: "No video file has been attached to this lecture yet.",
