@@ -51,10 +51,10 @@ const DEFAULT_COURSES: CourseRecord[] = [
       "Financial Statements and Incomplete Records",
     ],
     highlights: [
-      "Clear understanding of accounting concepts and terminology.",
-      "Step-by-step journal entries, ledger posting and subsidiary books.",
-      "Bank reconciliation, depreciation and rectification of errors.",
-      "Preparation of financial statements and practical accounting numericals.",
+      "Live+ Recorded Batches",
+      "Free PDFs",
+      "Exam Oriented Preparations",
+      "Self Evaluated test",
     ],
     created_at: "2026-11-22T11:06:09.150Z",
     updated_at: "2026-11-23T12:00:00.000Z",
@@ -82,10 +82,10 @@ const DEFAULT_COURSES: CourseRecord[] = [
       "Financial Statement Analysis, Accounting Ratios and Cash Flow Statement",
     ],
     highlights: [
-      "Comprehensive coverage of partnership accounting and company accounts.",
-      "Goodwill valuation and partnership adjustments.",
-      "Share capital, issue and forfeiture of shares, and debentures.",
-      "Financial statement analysis, accounting ratios and cash flow statements.",
+      "Live+ Recorded Batches",
+      "Free PDFs",
+      "Exam Oriented Preparations",
+      "Self Evaluated test",
     ],
     created_at: "2026-11-22T11:06:09.150Z",
     updated_at: "2026-11-23T12:00:00.000Z",
@@ -459,11 +459,11 @@ export default function CoursesPage() {
                           {course.description}
                         </p>
 
-                        {/* 3. & 4. COURSE HIGHLIGHTS & METHODOLOGY */}
+                        {/* 3. & 4. WHAT WE WILL PROVIDE */}
                         {course.highlights && course.highlights.length > 0 && (
                           <div className="space-y-2.5 pt-2">
                             <div className="text-xs font-bold uppercase tracking-wider text-neutral-400">
-                              COURSE HIGHLIGHTS &amp; METHODOLOGY
+                              WHAT WE WILL PROVIDE
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                               {course.highlights.map((h: string, i: number) => (
