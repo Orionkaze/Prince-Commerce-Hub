@@ -384,10 +384,10 @@ values
       'Financial Statements and Incomplete Records'
     ],
     array[
-      'Clear understanding of accounting concepts and terminology.',
-      'Step-by-step journal entries, ledger posting and subsidiary books.',
-      'Bank reconciliation, depreciation and rectification of errors.',
-      'Preparation of financial statements and practical accounting numericals.'
+      'Live + Recorded Batches',
+      'Free PDFs',
+      'Exam Oriented Preparations',
+      'Self Evaluated Test'
     ]
   ),
   (
@@ -409,10 +409,10 @@ values
       'Financial Statement Analysis, Accounting Ratios and Cash Flow Statement'
     ],
     array[
-      'Comprehensive coverage of partnership accounting and company accounts.',
-      'Goodwill valuation and partnership adjustments.',
-      'Share capital, issue and forfeiture of shares, and debentures.',
-      'Financial statement analysis, accounting ratios and cash flow statements.'
+      'Live + Recorded Batches',
+      'Free PDFs',
+      'Exam Oriented Preparations',
+      'Self Evaluated Test'
     ]
   )
 on conflict (id) do update
