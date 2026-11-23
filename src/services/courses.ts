@@ -98,8 +98,7 @@ export async function getCourseWithCurriculum(courseIdOrSlug: string) {
         highlights: [
           "Live+ Recorded Batches",
           "Free PDFs",
-          "Exam Oriented Preparations",
-          "Self Evaluated test",
+          "Exam Oriented",
         ],
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
@@ -130,8 +129,7 @@ export async function getCourseWithCurriculum(courseIdOrSlug: string) {
         highlights: [
           "Live+ Recorded Batches",
           "Free PDFs",
-          "Exam Oriented Preparations",
-          "Self Evaluated test",
+          "Exam Oriented",
         ],
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),

@@ -53,8 +53,7 @@ const DEFAULT_COURSES: CourseRecord[] = [
     highlights: [
       "Live+ Recorded Batches",
       "Free PDFs",
-      "Exam Oriented Preparations",
-      "Self Evaluated test",
+      "Exam Oriented",
     ],
     created_at: "2026-11-22T11:06:09.150Z",
     updated_at: "2026-11-23T12:00:00.000Z",
@@ -84,8 +83,7 @@ const DEFAULT_COURSES: CourseRecord[] = [
     highlights: [
       "Live+ Recorded Batches",
       "Free PDFs",
-      "Exam Oriented Preparations",
-      "Self Evaluated test",
+      "Exam Oriented",
     ],
     created_at: "2026-11-22T11:06:09.150Z",
     updated_at: "2026-11-23T12:00:00.000Z",
