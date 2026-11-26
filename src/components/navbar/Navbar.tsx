@@ -46,6 +46,7 @@ export function Navbar({ onOpenContact }: NavbarProps) {
   const mainNavLinks = [
     { name: "Home", href: "/" },
     { name: "Courses", href: "/courses" },
+    { name: "Live Classes", href: "/live-classes" },
     { name: "Counseling", href: "/counseling" },
     { name: "Webinars", href: "/webinars" },
     { name: "Free Resources", href: "/resources" },
@@ -54,6 +55,7 @@ export function Navbar({ onOpenContact }: NavbarProps) {
   const allMobileLinks = [
     { name: "Home", href: "/" },
     { name: "Courses", href: "/courses" },
+    { name: "Live Classes", href: "/live-classes" },
     ...(user ? [{ name: "Student Dashboard", href: "/dashboard" }, { name: "My Courses", href: "/my-courses" }] : []),
     ...(isAdmin ? [{ name: "Admin Portal", href: "/admin" }] : []),
     { name: "Counseling", href: "/counseling" },

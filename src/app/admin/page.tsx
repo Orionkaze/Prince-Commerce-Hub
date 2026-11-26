@@ -15,6 +15,7 @@ import {
   TrendingUp,
   FileVideo,
   ShieldCheck,
+  Video,
 } from "lucide-react";
 
 
@@ -232,8 +233,15 @@ export default async function AdminDashboardPage() {
           </div>
           <div className="flex flex-wrap items-center gap-3">
             <Link
-              href="/admin/courses/class-11"
+              href="/admin/live-classes"
               className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-[#5B32D6] hover:bg-[#4A23C2] text-white font-bold text-sm shadow-lg transition"
+            >
+              <Video className="w-4 h-4 text-[#FDE047]" />
+              Manage Live Class
+            </Link>
+            <Link
+              href="/admin/courses/class-11"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold text-sm border border-white/15 backdrop-blur-sm transition"
             >
               <BookOpen className="w-4 h-4 text-[#FDE047]" />
               Manage Class 11 Batch

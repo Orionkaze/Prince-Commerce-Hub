@@ -237,3 +237,39 @@ export interface ContentAccessResponse {
   downloadUrl?: string;
   message?: string;
 }
+
+export type LiveClassStatus = "Upcoming" | "Live Now" | "Completed" | "Cancelled";
+
+export interface LiveClassRecord {
+  id: string;
+  title: string;
+  course_id: string;
+  course?: {
+    id: string;
+    title: string;
+    price?: number;
+    slug?: string;
+  };
+  description: string;
+  teacher_name: string;
+  google_meet_url?: string | null;
+  scheduled_date: string;
+  start_time: string;
+  end_time: string;
+  status: LiveClassStatus;
+  is_published: boolean;
+  created_at: string;
+  updated_at?: string;
+}
+
+export interface StudentLiveClassAccessResponse {
+  liveClass: (Omit<LiveClassRecord, "google_meet_url"> & {
+    google_meet_url?: string | null;
+    computed_status?: LiveClassStatus;
+  }) | null;
+  isAuthenticated: boolean;
+  isEnrolled: boolean;
+  hasAccess: boolean;
+  userEmail?: string | null;
+}
+

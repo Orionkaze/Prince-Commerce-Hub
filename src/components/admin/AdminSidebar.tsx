@@ -15,6 +15,7 @@ import {
   X,
   GraduationCap,
   Sparkles,
+  Video,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
@@ -28,6 +29,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard, exact: true },
   { label: "Courses", href: "/admin/courses", icon: BookOpen },
+  { label: "Live Classes", href: "/admin/live-classes", icon: Video },
   { label: "Students", href: "/admin/students", icon: Users },
   { label: "Orders & Payments", href: "/admin/orders", icon: CreditCard },
   { label: "Platform Status", href: "/admin/settings", icon: Settings },
