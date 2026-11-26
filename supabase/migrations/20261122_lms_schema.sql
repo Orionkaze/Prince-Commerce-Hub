@@ -384,6 +384,7 @@ values
       'Financial Statements and Incomplete Records'
     ],
     array[
+      'what we will provide',
       'Live + Recorded Batches',
       'Free PDFs',
       'Exam Oriented Preparations',
@@ -409,6 +410,7 @@ values
       'Financial Statement Analysis, Accounting Ratios and Cash Flow Statement'
     ],
     array[
+      'what we will provide',
       'Live + Recorded Batches',
       'Free PDFs',
       'Exam Oriented Preparations',
