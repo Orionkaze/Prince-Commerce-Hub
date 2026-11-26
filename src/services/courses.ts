@@ -115,7 +115,7 @@ export async function getCourseWithCurriculum(courseIdOrSlug: string) {
         teacher_name: "Parvesh Kumar",
         subject: "Accountancy",
         thumbnail_key: "/images/class-12-accountancy.jpg",
-        price: 99,
+        price: 1,
         original_price: 1300,
         is_published: true,
         mode: "Accountancy Crash Course",
