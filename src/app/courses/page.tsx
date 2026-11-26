@@ -38,7 +38,7 @@ const DEFAULT_COURSES: CourseRecord[] = [
     teacher_name: "Parvesh Kumar",
     subject: "Accountancy",
     thumbnail_key: "/images/class-11-accountancy.jpg",
-    price: 99,
+    price: 1,
     original_price: 1200,
     is_published: true,
     mode: "Accountancy Crash Course",
@@ -69,7 +69,7 @@ const DEFAULT_COURSES: CourseRecord[] = [
     teacher_name: "Parvesh Kumar",
     subject: "Accountancy",
     thumbnail_key: "/images/class-12-accountancy.jpg",
-    price: 99,
+    price: 1,
     original_price: 1300,
     is_published: true,
     mode: "Accountancy Crash Course",
@@ -437,7 +437,7 @@ export default function CoursesPage() {
                           <div className="text-right">
                             <div className="flex items-baseline gap-2.5 justify-end">
                               <span className="text-2xl sm:text-3xl font-extrabold text-[#16141B]">
-                                ₹{Number(course.price || 99).toLocaleString("en-IN")}
+                                ₹{Number(course.price ?? 1).toLocaleString("en-IN")}
                               </span>
                               <span className="text-sm sm:text-base text-neutral-400 line-through font-medium">
                                 ₹{Number(course.original_price || (isClass11 ? 1200 : 1300)).toLocaleString("en-IN")}
@@ -542,7 +542,7 @@ export default function CoursesPage() {
                                       title: course.title,
                                       category: course.category || (isClass11 ? "Class 11 Commerce" : "Class 12 Commerce"),
                                       badge: classLabel,
-                                      price: Number(course.price || 99),
+                                      price: Number(course.price ?? 1),
                                       image: imageSrc,
                                       description: course.description,
                                       topics: course.topics,
