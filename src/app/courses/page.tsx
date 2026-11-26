@@ -51,6 +51,7 @@ const DEFAULT_COURSES: CourseRecord[] = [
       "Financial Statements and Incomplete Records",
     ],
     highlights: [
+      "what we will provide",
       "Live + Recorded Batches",
       "Free PDFs",
       "Exam Oriented Preparations",
@@ -82,6 +83,7 @@ const DEFAULT_COURSES: CourseRecord[] = [
       "Financial Statement Analysis, Accounting Ratios and Cash Flow Statement",
     ],
     highlights: [
+      "what we will provide",
       "Live + Recorded Batches",
       "Free PDFs",
       "Exam Oriented Preparations",
