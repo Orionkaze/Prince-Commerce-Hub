@@ -50,7 +50,7 @@ export async function getActiveLiveClass(): Promise<LiveClassRecord | null> {
         courseInfo = {
           id: cData.id,
           title: cData.title,
-          price: Number(cData.price ?? 1),
+          price: Number(cData.price ?? 99),
           slug: cData.slug || cData.id,
         };
       }
@@ -110,7 +110,7 @@ export async function getAdminLiveClass(): Promise<LiveClassRecord | null> {
         courseInfo = {
           id: cData.id,
           title: cData.title,
-          price: Number(cData.price ?? 1),
+          price: Number(cData.price ?? 99),
           slug: cData.slug || cData.id,
         };
       }

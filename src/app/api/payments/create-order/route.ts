@@ -39,10 +39,10 @@ export async function POST(req: NextRequest) {
     if (error || !course) {
       // Fallback for default canonical batches
       if (courseId === "class-11") {
-        price = 1;
+        price = 99;
         itemTitle = "Class 11 Accountancy (Crash Course)";
       } else if (courseId === "class-12") {
-        price = 1;
+        price = 99;
         itemTitle = "Class 12 Accountancy (Crash Course)";
       } else {
         return NextResponse.json({ error: "Batch not found." }, { status: 404 });
